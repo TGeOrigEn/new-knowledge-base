@@ -8,6 +8,4 @@ function env() {
     }
 }
 
-
-
 export default env();

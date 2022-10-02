@@ -15,11 +15,12 @@ import RankCell from './cells/Rank.vue';
 
 import Header from './Header.vue';
 
-import handle from '../scripts/handle';
+import handle from '../scripts/hadnler';
+import Menu from './Menu.vue';
 
 export default defineComponent({
     mounted() {
-        handle(document.getElementById('person-table'));
+        handle(document.getElementById('person-table')!, { handler: "column-resize-handler", headline: "headline" });
     },
     props: {
         person: {
@@ -42,7 +43,8 @@ export default defineComponent({
         CareerCell,
         OtherCell,
         RankCell,
-        Header
+        Header,
+        Menu
     }
 });
 </script>
@@ -50,9 +52,11 @@ export default defineComponent({
 <template>
     <table id="person-table">
         <thead>
-            <tr>
+            <tr class="headline">
                 <Header :text="'№'"></Header>
-                <Header :text="'БИО'"></Header>
+                <Header :text="'БИО'">
+                    <Menu></Menu>
+                </Header>
                 <Header :text="'Образование'"></Header>
                 <Header :text="'Награды'"></Header>
                 <Header :text="'Жалование'"></Header>
@@ -90,17 +94,36 @@ table {
     text-align: center;
 }
 
-th {
+table>thead>tr>th {
     position: sticky;
     padding: 0;
     top: 0;
 }
 
 table,
-td,
 th,
-tr {
+tr,
+td {
     height: 100%;
+}
+
+table {
     border: 1px solid black;
+}
+
+table>tbody>tr>td:not(:last-child) {
+    border-right: 1px solid black;
+}
+
+table>tbody>tr:not(:last-child)>td {
+    border-bottom: 1px solid black;
+}
+
+table>thead>tr>th:not(:last-child) {
+    border-right: 1px solid black;
+}
+
+table>thead>tr>th {
+    border-bottom: 1px solid black;
 }
 </style>

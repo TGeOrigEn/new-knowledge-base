@@ -8,5 +8,6 @@
   user-select: none;
   width: 4px;
   right: -4px;
+  z-index: 1;
   top: 0
 }
