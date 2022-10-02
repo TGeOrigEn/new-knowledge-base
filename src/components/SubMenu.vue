@@ -19,16 +19,16 @@ export default defineComponent({
             
 <style scoped>
 .dropdown-menu {
-    background-color: aliceblue;
+    background-color: red;
     list-style: none;
     position: absolute;
     border-top: 1px black solid;
     border-bottom: 1px black solid;
     border-left: 1px black solid;
     width: max-content;
-    right: 0;
+    left: 100%;
     z-index: 10000;
-    top: 100%;
+    top: 0;
     padding: 0;
 }
 </style>

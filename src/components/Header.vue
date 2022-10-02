@@ -9,18 +9,6 @@ export default defineComponent({
         }
     },
     methods: {
-        handlerMenu(event: Event) {
-            const target = ((event.target as HTMLElement).parentElement as HTMLElement);
-
-            const menu = target.getElementsByClassName('dropdown-menu')[0] as HTMLElement;
-            if (!menu) return;
-            if (menu.style.display === 'block') {
-                menu.style.display = 'none';
-                return;
-            }
-            menu.style.display = 'block';
-
-        }
     }
 })
 </script>
@@ -28,10 +16,10 @@ export default defineComponent({
 <template>
     <th>
         <div>
-            <slot></slot>
-            <button>{{ $props.text }}</button>
-            <button @click="handlerMenu" :style="{flex: '1'}" class='dropdown-toggle'>
-            </button>
+            <section style="margin-bottom: 5px; margin-top: 5px;">{{ $props.text }}</section>
+            <section :style="{flex: '1'}" class='dropdown-trigger'>
+                <slot></slot>
+            </section>
         </div>
     </th>
 </template>
@@ -40,11 +28,11 @@ export default defineComponent({
 th {
     min-width: max-content;
     padding: 0;
+    background-color: aliceblue;
 }
 
-button {
-    padding-bottom: 7px;
-    padding-top: 7px;
+section {
+    margin-left: 5px;
     font-size: 14px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-weight: bold;
@@ -61,7 +49,15 @@ div {
     width: 100%;
 }
 
-.dropdown-toggle::after {
+.dropdown-trigger:hover {
+    background-color: antiquewhite;
+}
+
+.dropdown-trigger::after {
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
     pointer-events: all;
     border-right: .4em solid transparent;
     border-left: .4em solid transparent;

@@ -17,6 +17,10 @@ import Header from './Header.vue';
 
 import handle from '../scripts/hadnler';
 import Menu from './Menu.vue';
+import Section from './Section.vue';
+import TextField from './fields/TextField.vue';
+import Trigger from './Trigger.vue';
+import SubMenu from './SubMenu.vue';
 
 export default defineComponent({
     mounted() {
@@ -44,7 +48,11 @@ export default defineComponent({
         OtherCell,
         RankCell,
         Header,
-        Menu
+        Menu,
+        Section,
+        TextField,
+        Trigger,
+        SubMenu
     }
 });
 </script>
@@ -54,14 +62,47 @@ export default defineComponent({
         <thead>
             <tr class="headline">
                 <Header :text="'№'"></Header>
-                <Header :text="'БИО'">
-                    <Menu></Menu>
+                <Header :text="'Биография'">
+                    <Menu>
+                        <Trigger :text="'Равно'">
+                            <SubMenu>
+                                <TextField :label="'Содержит:'"></TextField>
+                                <TextField :label="'Равно:'"></TextField>
+                            </SubMenu>
+                        </Trigger>
+                        <Trigger :text="'Содержит'">
+                            <SubMenu>
+                                <TextField :label="'Содержит:'"></TextField>
+                                <TextField :label="'Равно:'"></TextField>
+                            </SubMenu>
+                        </Trigger>
+                    </Menu>
                 </Header>
                 <Header :text="'Образование'"></Header>
-                <Header :text="'Награды'"></Header>
-                <Header :text="'Жалование'"></Header>
-                <Header :text="'Имущество'"></Header>
-                <Header :text="'Семейное положение'"></Header>
+                <Header :text="'Награды'">
+                    <Menu>
+                        <TextField :label="'Содержит:'"></TextField>
+                        <TextField :label="'Равно:'"></TextField>
+                    </Menu>
+                </Header>
+                <Header :text="'Жалование'">
+                    <Menu>
+                        <TextField :label="'Содержит:'"></TextField>
+                        <TextField :label="'Равно:'"></TextField>
+                    </Menu>
+                </Header>
+                <Header :text="'Имущество'">
+                    <Menu>
+                        <TextField :label="'Содержит:'"></TextField>
+                        <TextField :label="'Равно:'"></TextField>
+                    </Menu>
+                </Header>
+                <Header :text="'Семейное положение'">
+                    <Menu>
+                        <TextField :label="'Содержит:'"></TextField>
+                        <TextField :label="'Равно:'"></TextField>
+                    </Menu>
+                </Header>
                 <Header :text="'Карьера'"></Header>
                 <Header :text="'Чин'"></Header>
                 <Header :text="'Деятельность'"></Header>
