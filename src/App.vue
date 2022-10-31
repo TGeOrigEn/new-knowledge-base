@@ -9,6 +9,9 @@ import Modal from './components/window/Modal.vue';
 import Form from './components/form/Form.vue';
 import TextField from './components/fields/TextField.vue';
 import SelectField from './components/fields/SelectField.vue';
+import BiographyFilter from './components/filter/BiographyFilter.vue';
+import EducationFilter from './components/filter/EducationFilter.vue';
+import SimpleFilter from './components/filter/SimpleFilter.vue';
 
 export default defineComponent({
     mounted() {
@@ -29,7 +32,10 @@ export default defineComponent({
         Table,
         Modal,
         TextField,
-        SelectField
+        SelectField,
+        BiographyFilter,
+        EducationFilter,
+        SimpleFilter
     },
 
     methods: {
@@ -51,21 +57,9 @@ export default defineComponent({
 </script>
 
 <template>
-    <Modal v-if="isOpen" title="Фильтрация столбца: Биография" :cancel="cancel">
-        <Form title="Содержит:" />
-        <TextField :disabled="true" label="Фамилия:"></TextField>
-        <TextField label="Имя:"></TextField>
-        <TextField label="Отчество:"></TextField>
-        <TextField :disabled="true" label="Год рождения:"></TextField>
-        <Form title="Равно:" />
-        <TextField label="Фамилия:"></TextField>
-        <TextField :disabled="true" label="Имя:"></TextField>
-        <TextField :disabled="true" label="Отчество:"></TextField>
-        <TextField label="Год рождения:"></TextField>
-        <SelectField :options="optionsA" label="Вероисповедание:"></SelectField>
-        <SelectField :options="optionsA" label="Происхождение:"></SelectField>
-
-    </Modal>
+    <!-- <BiographyFilter :isOpen="true"></BiographyFilter> -->
+    <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
+    <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter>
     <Table :person="persons" :activity="activitys" :career="careers" :rank="ranks"></Table>
 </template>
 

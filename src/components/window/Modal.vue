@@ -24,7 +24,7 @@ export default defineComponent({
 
                 <div class="header">
                     <span>{{ title }}</span>
-                    <Button :onClick="close" src="/close.svg"></Button>
+                    <Button :onClick="close" style="padding: 5px;" src="/close.svg"></Button>
                 </div>
 
                 <div class="body">
@@ -97,6 +97,7 @@ export default defineComponent({
     display: table;
     height: 100%;
     width: 100%;
+    z-index: 9999999;
 }
 
 .modal-wrapper {

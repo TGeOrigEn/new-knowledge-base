@@ -12,14 +12,18 @@ export default defineComponent({
             type: String,
             default: undefined
         }
+    },
+    computed: {
+        style() {
+            return `background-image: url(${this.src}); background-repeat: no-repeat; background-size: contain;`
+        }
     }
 })
 </script>
             
 <template>
-    <button class="button">
+    <button class="button" :style="style">
         <span v-if="text != undefined">{{ text }}</span>
-        <img v-if="src != undefined" style="padding-top: 3px;" v-bind:src="src" />
     </button>
 </template>
 
@@ -34,6 +38,7 @@ button span {
 }
 
 .button {
+    background-origin: content-box;
     width: max-content;
     background-color: #f8f9fa;
     border: 1px solid #85858560;

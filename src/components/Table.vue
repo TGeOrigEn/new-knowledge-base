@@ -16,11 +16,9 @@ import RankCell from './cells/Rank.vue';
 import Header from './Header.vue';
 
 import handle from '../scripts/hadnler';
-import Menu from './Menu.vue';
 import Section from './Section.vue';
 import TextField from './fields/TextField.vue';
 import Trigger from './Trigger.vue';
-import SubMenu from './SubMenu.vue';
 
 export default defineComponent({
     mounted() {
@@ -48,11 +46,9 @@ export default defineComponent({
         OtherCell,
         RankCell,
         Header,
-        Menu,
         Section,
         TextField,
         Trigger,
-        SubMenu
     }
 });
 </script>
@@ -63,45 +59,15 @@ export default defineComponent({
             <tr class="headline">
                 <Header :text="'№'"></Header>
                 <Header :text="'Биография'">
-                    <Menu>
-                        <Trigger :text="'Равно'">
-                            <SubMenu>
-                                <TextField :label="'Содержит:'"></TextField>
-                                <TextField :label="'Равно:'"></TextField>
-                            </SubMenu>
-                        </Trigger>
-                        <Trigger :text="'Содержит'">
-                            <SubMenu>
-                                <TextField :label="'Содержит:'"></TextField>
-                                <TextField :label="'Равно:'"></TextField>
-                            </SubMenu>
-                        </Trigger>
-                    </Menu>
                 </Header>
                 <Header :text="'Образование'"></Header>
                 <Header :text="'Награды'">
-                    <Menu>
-                        <TextField :label="'Содержит:'"></TextField>
-                        <TextField :label="'Равно:'"></TextField>
-                    </Menu>
                 </Header>
                 <Header :text="'Жалование'">
-                    <Menu>
-                        <TextField :label="'Содержит:'"></TextField>
-                        <TextField :label="'Равно:'"></TextField>
-                    </Menu>
                 </Header>
                 <Header :text="'Имущество'">
-                    <Menu>
-                        <TextField :label="'Содержит:'"></TextField>
-                        <TextField :label="'Равно:'"></TextField>
-                    </Menu>
                 </Header>
                 <Header :text="'Семейное положение'">
-                    <Menu>
-                        <TextField :label="'Содержит:'"></TextField>
-                        <TextField :label="'Равно:'"></TextField>
-                    </Menu>
                 </Header>
                 <Header :text="'Карьера'"></Header>
                 <Header :text="'Чин'"></Header>
@@ -110,7 +76,7 @@ export default defineComponent({
         </thead>
         <tbody>
             <tr v-for="(item, index) in $props.person" :key="index">
-                <td>{{index + 1}}</td>
+                <td>{{ index + 1 }}</td>
                 <InforamtionCell :person="item" />
                 <EducationCell :person="item" />
                 <OtherCell :value="item.awards" />
