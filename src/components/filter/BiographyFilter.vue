@@ -24,13 +24,13 @@ export default defineComponent({
                 
 <template>
     <Modal :close="close" :save="save" v-if="isOpen" title="Фильтрация столбца: Биография">
-        <Form title="Содержит:">
+        <Form title="Содержит">
             <TextField label="Фамилия:"></TextField>
             <TextField label="Имя:"></TextField>
             <TextField label="Отчество:"></TextField>
             <TextField label="Год рождения:"></TextField>
         </Form>
-        <Form title="Равно:">
+        <Form title="Равно">
             <TextField label="Фамилия:"></TextField>
             <TextField label="Имя:"></TextField>
             <TextField label="Отчество:"></TextField>

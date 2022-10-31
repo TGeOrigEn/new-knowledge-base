@@ -37,6 +37,7 @@ export default defineComponent({
     font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;
     font-size: 14px;
+    width: 0px;
 }
 
 .input {

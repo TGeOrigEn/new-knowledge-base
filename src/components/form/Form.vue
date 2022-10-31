@@ -25,16 +25,14 @@ export default defineComponent({
 </script>
                 
 <template>
-    <div style="display: table;">
-        <div style="display: table-cell; vertical-align: middle;
-text-align: center;">
-            <span class="label" v-if="title != undefined">{{ title }}</span>
-        </div>
-        <div class="none">
-            <Button :style="style" @click="close" src="/arrow.svg"></Button>
+    <div style="display: table; width: 100%;">
+        <div style="display: table-caption;" class="label">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <span style="flex: 1;">{{ title }}</span>
+                <Button :style="style" @click="close" src="/arrow.svg"></Button>
+            </div>
         </div>
         <slot v-if="isOpen">
-
         </slot>
     </div>
 </template>
@@ -44,7 +42,6 @@ text-align: center;">
     vertical-align: middle;
     text-align: center;
     font-family: Helvetica, Arial, sans-serif;
-    padding: 15px;
     font-weight: bold;
     font-size: 18px;
     white-space: nowrap;
@@ -55,8 +52,10 @@ text-align: center;">
     width: 100%;
 }
 
-.none .button {
-    float: right;
+.label button {
+    margin-left: auto;
     margin-right: 15px;
 }
+
+.label span {}
 </style>

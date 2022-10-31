@@ -57,9 +57,9 @@ export default defineComponent({
 </script>
 
 <template>
-    <!-- <BiographyFilter :isOpen="true"></BiographyFilter> -->
+    <BiographyFilter :isOpen="true"></BiographyFilter>
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
-    <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter>
+    <!-- <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter> -->
     <Table :person="persons" :activity="activitys" :career="careers" :rank="ranks"></Table>
 </template>
 

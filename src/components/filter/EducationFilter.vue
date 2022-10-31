@@ -25,10 +25,10 @@ export default defineComponent({
                 
 <template>
     <Modal :close="close" :save="save" v-if="isOpen" title="Фильтрация столбца: Образование">
-        <Form title="Содержит:">
+        <Form title="Фильтрация по содержанию">
             <TextField label="Учебное учреждение:"></TextField>
         </Form>
-        <Form title="Равно:">
+        <Form title="Фильрация по равенству">
             <TextField label="Учебное учреждение:"></TextField>
             <SelectField label="Место учёбы:" :options="optionsPlace"></SelectField>
             <SelectField label="Уровень образования:" :options="optionsLevel"></SelectField>

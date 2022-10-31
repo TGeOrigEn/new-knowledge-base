@@ -29,10 +29,10 @@ export default defineComponent({
                 
 <template>
     <Modal :close="close" :save="save" v-if="isOpen" :title="title">
-        <Form title="Содержит:">
+        <Form title="Содержит">
             <TextField label="Текст:"></TextField>
         </Form>
-        <Form title="Равно:">
+        <Form title="Равно">
             <TextField label="Текст:"></TextField>
         </Form>
     </Modal>
