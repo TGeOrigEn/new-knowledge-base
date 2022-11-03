@@ -35,8 +35,14 @@ export const size = () => {
             for (var i = 0; i < rows.length; i++)
                 nextColumns.push(rows[i].getElementsByTagName('td')[index + 1]);
 
-        handler.addEventListener('mousedown', function (e) {
+        currentColumn.style.width = getComputedPropertyValue(currentColumn, 'width');
+        currentColumns.forEach(column => column.style.width = getComputedPropertyValue(currentColumn, 'width'));
 
+        if (index == 8) return;
+
+        handler.style.cursor = 'col-resize';
+
+        handler.addEventListener('mousedown', function (e) {
             pageX = e.pageX;
 
             var padding = getPaddingDifference(currentColumn);
@@ -86,7 +92,6 @@ export const size = () => {
     function createHandler(): HTMLDivElement {
         var divElement = document.createElement('div');
         divElement.style.position = 'absolute';
-        divElement.style.cursor = 'col-resize';
         divElement.style.userSelect = 'none';
         divElement.style.width = '5px';
         divElement.style.height = '100%'

@@ -83,8 +83,8 @@ const mounted = onUpdated(() => size());
     </PersonCard>
     <div style="height: 100vh; background-color: #f5f5f5;">
 
-        <div style="padding-top: 50px;">
-            <div style="width: 1500px; margin-left: auto; margin-right: auto; display: flex; align-items: center;">
+        <div style="padding-top: 25px;">
+            <div style="width: 90vw; margin-left: auto; margin-right: auto; display: flex; align-items: center;">
                 <Button class="x-button" :src="'/plus.svg'"
                     :onClick="() => { card.id = -1; card.disabled = true; }"></Button>
                 <Button :src="'/refresh.svg'" class="x-button" :onClick="refresh"></Button>
@@ -101,7 +101,7 @@ const mounted = onUpdated(() => size());
                 <Search style="flex: 1; height: 20px; margin-left: auto;"></Search>
             </div>
             <div
-                style="border: 1px solid #85858560; width: 1500px; overflow: auto; margin-left: auto; margin-right: auto;">
+                style="margin-top: 5px; border: 1px solid #85858560; width: 90vw; overflow: auto; margin-left: auto; margin-right: auto;">
                 <table id="table-head" style="width: 100%; border: 0px solid black;">
                     <thead>
                         <tr>
