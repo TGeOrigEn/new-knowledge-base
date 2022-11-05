@@ -4,14 +4,18 @@ import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
 import Form from '../form/Form.vue';
 import Modal from '../window/Modal.vue';
-import EducationFilter from '@/entities/filter/educationFilter';
+import ActivityFilter from '../../entities/filter/activityFilter'
 
 export default defineComponent({
     props: {
+        title: {
+            type: String,
+            required: true
+        },
         isOpen: Boolean,
         close: Function,
         save: Function,
-        data: EducationFilter
+        data: ActivityFilter
     },
     data() {
         return {
@@ -24,14 +28,16 @@ export default defineComponent({
 </script>
                 
 <template>
-    <Modal :close="close" :save="save" v-if="isOpen" title="Фильтрация столбца: Образование">
-        <Form title="Фильтрация по содержанию">
-            <TextField label="Учебное учреждение:"></TextField>
+    <Modal :close="close" :save="save" v-if="isOpen" :title="title">
+        <Form title="Содержит">
+            <TextField label="Место:"></TextField>
+            <TextField label="Название:"></TextField>
+            <TextField label="Описание:"></TextField>
         </Form>
-        <Form title="Фильрация по равенству">
-            <TextField label="Учебное учреждение:"></TextField>
-            <SelectField label="Место учёбы:" :options="optionsPlace"></SelectField>
-            <SelectField label="Уровень образования:" :options="optionsLevel"></SelectField>
+        <Form title="Равно">
+            <TextField label="Место:"></TextField>
+            <TextField label="Название:"></TextField>
+            <TextField label="Описание:"></TextField>
         </Form>
     </Modal>
 </template>
