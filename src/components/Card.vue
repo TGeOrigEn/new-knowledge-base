@@ -23,7 +23,13 @@ export default defineComponent({
     data() {
         return {
             optionsLevel: ["Любое", "Нет образования", "Начальное образование", "Домашнее образование", "Среднее образование", "Среднее военное образование", "Высшее образование", "Высшее военное образование"],
-            optionsPlace: ["Любое", "Неизвестно", "Европейская часть", "Сибирь"]
+            optionsPlace: ["Любое", "Неизвестно", "Европейская часть", "Сибирь"],
+            value: "123"
+        }
+    },
+    methods: {
+        show() {
+            console.log(this.value);
         }
     },
     components: { Modal, Form, TextField, SelectField, TextAreaField, ButtonGroupe, Item }
@@ -31,9 +37,9 @@ export default defineComponent({
 </script>
                 
 <template>
-    <Modal :close="close" :save="save" v-if="isOpen" :title="title">
+    <Modal :close="show" :save="save" v-if="isOpen" :title="title">
         <Form title="Биография">
-            <TextField label="Фамилия:"></TextField>
+            <TextField :readonly="true" v-model:value="value" label="Фамилия:"></TextField>
             <TextField label="Имя:"></TextField>
             <TextField label="Отчество:"></TextField>
             <TextField label="Дата рождения:"></TextField>
@@ -57,7 +63,7 @@ export default defineComponent({
             <TextField label="Дата окончания:"></TextField>
             <TextField label="Должность:"></TextField>
             <TextField label="Место:"></TextField>
-            <ButtonGroupe></ButtonGroupe> 
+            <ButtonGroupe></ButtonGroupe>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
@@ -70,14 +76,16 @@ export default defineComponent({
             <ButtonGroupe></ButtonGroupe>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
-            <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>      
+            <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
         </Form>
         <Form title="Деятельность">
             <TextField label="Название:"></TextField>
             <TextField label="Место:"></TextField>
             <TextAreaField label="Описание:"></TextAreaField>
-            <ButtonGroupe></ButtonGroupe> 
-            <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся 1233333333333333333333333333333333333"></Item>
+            <ButtonGroupe></ButtonGroupe>
+            <Item
+                label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся 1233333333333333333333333333333333333">
+            </Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
         </Form>

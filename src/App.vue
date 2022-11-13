@@ -26,19 +26,20 @@ export default defineComponent({
             activitys: undefined,
             careers: undefined,
             ranks: undefined,
+            value: "213123"
         }
     },
     components: {
-    Form,
-    Table,
-    Modal,
-    TextField,
-    SelectField,
-    BiographyFilter,
-    EducationFilter,
-    SimpleFilter,
-    Card
-},
+        Form,
+        Table,
+        Modal,
+        TextField,
+        SelectField,
+        BiographyFilter,
+        EducationFilter,
+        SimpleFilter,
+        Card
+    },
 
     methods: {
         refresh() {
@@ -52,15 +53,16 @@ export default defineComponent({
                 .then(response => this.ranks = response.data);
         },
         cancel() {
-            this.isOpen = false;
+            //this.isOpen = false;
+            console.log(this.value);
         }
     }
 })
 </script>
 
 <template>
-    
-    <Card title="Карточка личности" :isOpen="true"></Card>
+
+    <Card :close="cancel" :value="value" title="Карточка личности" :isOpen="true"></Card>
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
     <!-- <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter> -->
     <Table :person="persons" :activity="activitys" :career="careers" :rank="ranks"></Table>

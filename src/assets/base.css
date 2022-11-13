@@ -25,9 +25,59 @@
 *::-webkit-scrollbar {
   display: none;
 }
- 
+
 /* Скрываем scrollbar для IE, Edge и Firefox */
 * {
-  -ms-overflow-style: none;  /* IE и Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Стили для полей */
+
+.x-field {
+  display: table-row;
+}
+
+.x-field .x-field-label {
+  user-select: none;
+  vertical-align: middle;
+  display: table-cell;
+  padding-right: 15px;
+  padding-left: 15px;
+  white-space: nowrap;
+  font-weight: bold;
+  font-size: 14px;
+  width: 0px;
+}
+
+.x-field .x-field-input {
+  width: calc(100% - 30px);
+  display: table-cell;
+  padding: 5px;
+  background-color: #f8f9fa;
+  border: 1px solid #85858560;
+  border-radius: 4px;
+  margin: 5px;
+  touch-action: manipulation;
+  white-space: pre;
+}
+
+.x-field .x-field-input:disabled {
+  background-color: #7e7e7e77;
+  pointer-events: none;
+  cursor: default;
+}
+
+.x-field .x-field-input:read-only {
+  pointer-events: none;
+  cursor: default;
+}
+
+.x-field .x-field-input:focus {
+  border: 1px solid black;
+  border-radius: 5px;
+  outline: 0;
+  border-color: #777777;
+  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  color: #202124;
 }
