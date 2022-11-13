@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import SelectField from '../fields/SelectField.vue';
-import TextField from '../fields/TextField.vue';
+import Select from '../fields/Select.vue';
+import Text from '../fields/Text.vue';
 import Form from '../form/Form.vue';
 import Modal from '../window/Modal.vue';
 import EducationFilter from '@/entities/filter/educationFilter';
@@ -19,19 +19,19 @@ export default defineComponent({
             optionsPlace: ["Любое", "Неизвестно", "Европейская часть", "Сибирь"]
         }
     },
-    components: { Modal, Form, TextField, SelectField }
+    components: { Modal, Form, Text, Select }
 })
 </script>
                 
 <template>
     <Modal :close="close" :save="save" v-if="isOpen" title="Фильтрация столбца: Образование">
         <Form title="Фильтрация по содержанию">
-            <TextField label="Учебное учреждение:"></TextField>
+            <Text label="Учебное учреждение:"></Text>
         </Form>
         <Form title="Фильрация по равенству">
-            <TextField label="Учебное учреждение:"></TextField>
-            <SelectField label="Место учёбы:" :options="optionsPlace"></SelectField>
-            <SelectField label="Уровень образования:" :options="optionsLevel"></SelectField>
+            <Text label="Учебное учреждение:"></Text>
+            <Select label="Место учёбы:" :options="optionsPlace"></Select>
+            <Select label="Уровень образования:" :options="optionsLevel"></Select>
         </Form>
     </Modal>
 </template>

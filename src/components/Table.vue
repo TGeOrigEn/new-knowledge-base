@@ -17,7 +17,6 @@ import Header from './Header.vue';
 
 import handle from '../scripts/hadnler';
 import Section from './Section.vue';
-import TextField from './fields/TextField.vue';
 import Trigger from './Trigger.vue';
 
 export default defineComponent({
@@ -47,7 +46,6 @@ export default defineComponent({
         RankCell,
         Header,
         Section,
-        TextField,
         Trigger,
     }
 });

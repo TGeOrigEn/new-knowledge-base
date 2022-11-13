@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = defineProps({
-    options: Array<String>,
+    options: { type: Array<String>, required: true },
+    label: { type: String, required: true },
     disabled: Boolean,
-    label: String,
     value: String,
     name: String
 });

@@ -1,11 +1,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import SelectField from './fields/SelectField.vue';
-import TextField from './fields/TextField.vue';
+import Select from './fields/Select.vue';
+import Text from './fields/Text.vue';
 import Form from './form/Form.vue';
 import Modal from './window/Modal.vue';
 import ActivityFilter from './../entities/filter/activityFilter'
-import TextAreaField from './fields/TextAreaField.vue';
+import TextArea from './fields/TextArea.vue';
 import ButtonGroupe from './button/ButtonGroupe.vue';
 import Item from './form/Item.vue';
 
@@ -32,56 +32,56 @@ export default defineComponent({
             console.log(this.value);
         }
     },
-    components: { Modal, Form, TextField, SelectField, TextAreaField, ButtonGroupe, Item }
+    components: { Modal, Form, Text, Select, TextArea, ButtonGroupe, Item }
 })
 </script>
                 
 <template>
     <Modal :close="show" :save="save" v-if="isOpen" :title="title">
         <Form title="Биография">
-            <TextField :readonly="true" v-model:value="value" label="Фамилия:"></TextField>
-            <TextField label="Имя:"></TextField>
-            <TextField label="Отчество:"></TextField>
-            <TextField label="Дата рождения:"></TextField>
-            <TextField label="Вероисповедание:"></TextField>
-            <TextField label="Происхождение:"></TextField>
+            <Text :readonly="true" v-model:value="value" label="Фамилия:"></Text>
+            <Text label="Имя:"></Text>
+            <Text label="Отчество:"></Text>
+            <Text label="Дата рождения:"></Text>
+            <Text label="Вероисповедание:"></Text>
+            <Text label="Происхождение:"></Text>
         </Form>
         <Form title="Образование">
-            <TextField label="Уровень образования:"></TextField>
-            <TextField label="Учебное учреждение:"></TextField>
-            <TextField label="Место учёбы:"></TextField>
+            <Text label="Уровень образования:"></Text>
+            <Text label="Учебное учреждение:"></Text>
+            <Text label="Место учёбы:"></Text>
         </Form>
         <Form title="Личная информация">
-            <TextAreaField label="Имущество:"></TextAreaField>
-            <TextAreaField label="Награды:"></TextAreaField>
-            <TextAreaField label="Жалование:"></TextAreaField>
-            <TextAreaField label="Семейное положение:"></TextAreaField>
-            <TextAreaField label="Разное:"></TextAreaField>
+            <TextArea label="Имущество:"></TextArea>
+            <TextArea label="Награды:"></TextArea>
+            <TextArea label="Жалование:"></TextArea>
+            <TextArea label="Семейное положение:"></TextArea>
+            <TextArea label="Разное:"></TextArea>
         </Form>
         <Form title="Карьера">
-            <TextField label="Дата начала:"></TextField>
-            <TextField label="Дата окончания:"></TextField>
-            <TextField label="Должность:"></TextField>
-            <TextField label="Место:"></TextField>
+            <Text label="Дата начала:"></Text>
+            <Text label="Дата окончания:"></Text>
+            <Text label="Должность:"></Text>
+            <Text label="Место:"></Text>
             <ButtonGroupe></ButtonGroupe>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
         </Form>
         <Form title="Чин">
-            <TextField label="Дата начала:"></TextField>
-            <TextField label="Дата окончания:"></TextField>
-            <TextField label="Класс:"></TextField>
-            <TextField label="Название:"></TextField>
+            <Text label="Дата начала:"></Text>
+            <Text label="Дата окончания:"></Text>
+            <Text label="Класс:"></Text>
+            <Text label="Название:"></Text>
             <ButtonGroupe></ButtonGroupe>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
         </Form>
         <Form title="Деятельность">
-            <TextField label="Название:"></TextField>
-            <TextField label="Место:"></TextField>
-            <TextAreaField label="Описание:"></TextAreaField>
+            <Text label="Название:"></Text>
+            <Text label="Место:"></Text>
+            <Text label="Описание:"></Text>
             <ButtonGroupe></ButtonGroupe>
             <Item
                 label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся 1233333333333333333333333333333333333">

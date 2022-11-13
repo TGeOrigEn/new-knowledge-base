@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import SelectField from '../fields/SelectField.vue';
-import TextField from '../fields/TextField.vue';
+import Select from '../fields/Select.vue';
+import Text from '../fields/Text.vue';
 import Form from '../form/Form.vue';
 import Modal from '../window/Modal.vue';
 import BiographyFilter from '../../entities/filter/biographyFilter'
@@ -18,25 +18,25 @@ export default defineComponent({
             options: ["Любое", "Православное", "Римско-католическое", "Евангельско-лютеранское", "Иное"]
         }
     },
-    components: { Modal, Form, TextField, SelectField }
+    components: { Modal, Form, Text, Select }
 })
 </script>
                 
 <template>
     <Modal :close="close" :save="save" v-if="isOpen" title="Фильтрация столбца: Биография">
         <Form title="Содержит">
-            <TextField label="Фамилия:"></TextField>
-            <TextField label="Имя:"></TextField>
-            <TextField label="Отчество:"></TextField>
-            <TextField label="Год рождения:"></TextField>
+            <Text label="Фамилия:"></Text>
+            <Text label="Имя:"></Text>
+            <Text label="Отчество:"></Text>
+            <Text label="Год рождения:"></Text>
         </Form>
         <Form title="Равно">
-            <TextField label="Фамилия:"></TextField>
-            <TextField label="Имя:"></TextField>
-            <TextField label="Отчество:"></TextField>
-            <TextField label="Год рождения:"></TextField>
-            <TextField label="Происхождение:"></TextField>
-            <SelectField label="Вероисповедание:" :options="options"></SelectField>
+            <Text label="Фамилия:"></Text>
+            <Text label="Имя:"></Text>
+            <Text label="Отчество:"></Text>
+            <Text label="Год рождения:"></Text>
+            <Text label="Происхождение:"></Text>
+            <Select label="Вероисповедание:" :options="options"></Select>
         </Form>
     </Modal>
 </template>

@@ -7,8 +7,8 @@ import Person from './entities/tables/person';
 import env from './entities/settings'
 import Modal from './components/window/Modal.vue';
 import Form from './components/form/Form.vue';
-import TextField from './components/fields/TextField.vue';
-import SelectField from './components/fields/SelectField.vue';
+import Text from './components/fields/Text.vue';
+import Select from './components/fields/Select.vue';
 import BiographyFilter from './components/filter/BiographyFilter.vue';
 import EducationFilter from './components/filter/EducationFilter.vue';
 import SimpleFilter from './components/filter/SimpleFilter.vue';
@@ -33,8 +33,8 @@ export default defineComponent({
         Form,
         Table,
         Modal,
-        TextField,
-        SelectField,
+        Text,
+        Select,
         BiographyFilter,
         EducationFilter,
         SimpleFilter,

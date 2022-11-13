@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import SelectField from '../fields/SelectField.vue';
-import TextField from '../fields/TextField.vue';
+import SelectField from '../fields/Select.vue';
+import Text from '../fields/Text.vue';
 import Form from '../form/Form.vue';
 import Modal from '../window/Modal.vue';
 import ActivityFilter from '../../entities/filter/activityFilter'
@@ -23,21 +23,21 @@ export default defineComponent({
             optionsPlace: ["Любое", "Неизвестно", "Европейская часть", "Сибирь"]
         }
     },
-    components: { Modal, Form, TextField, SelectField }
+    components: { Modal, Form, Text, SelectField }
 })
 </script>
                 
 <template>
     <Modal :close="close" :save="save" v-if="isOpen" :title="title">
         <Form title="Содержит">
-            <TextField label="Место:"></TextField>
-            <TextField label="Название:"></TextField>
-            <TextField label="Описание:"></TextField>
+            <Text label="Место:"></Text>
+            <Text label="Название:"></Text>
+            <Text label="Описание:"></Text>
         </Form>
         <Form title="Равно">
-            <TextField label="Место:"></TextField>
-            <TextField label="Название:"></TextField>
-            <TextField label="Описание:"></TextField>
+            <Text label="Место:"></Text>
+            <Text label="Название:"></Text>
+            <Text label="Описание:"></Text>
         </Form>
     </Modal>
 </template>

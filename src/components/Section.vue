@@ -1,7 +1,5 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import SelectField from './fields/SelectField.vue'
-import TextField from './fields/TextField.vue'
 
 export default defineComponent({
     props: {
@@ -9,13 +7,12 @@ export default defineComponent({
             type: String
         }
     },
-    components: { SelectField, TextField }
 })
 </script>
                     
 <template>
     <section class="section">
-        <label>{{label}}</label>
+        <label>{{ label }}</label>
         <slot></slot>
     </section>
 </template>
