@@ -34,6 +34,10 @@ export default defineComponent({
                 </div>
 
                 <div class="footer">
+                    <div style=" margin-right: auto; ">
+                        <Button style=" height: 32px; " :onClick="save"
+                            text="Удалить"></Button>
+                    </div>
                     <div class="container-buttons">
                         <Button style="background-color: rgba(169, 255, 169, 0.5);" :onClick="save"
                             text="Сохранить"></Button>
@@ -77,6 +81,9 @@ export default defineComponent({
     padding-left: 5px;
     display: flex;
     align-items: center;
+    background-color: #f5f5f5;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .footer .container-buttons {
@@ -105,8 +112,14 @@ export default defineComponent({
     vertical-align: middle;
 }
 
+.body {
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+}
+
 .modal-container {
     width: max-content;
+    min-width: 744px;
     margin: 0px auto;
     background-color: #fff;
     border-radius: 5px;

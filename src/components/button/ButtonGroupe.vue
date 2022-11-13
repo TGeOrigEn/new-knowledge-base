@@ -25,15 +25,13 @@ export default defineComponent({
 </script>
                 
 <template>
-    <div style="display: table;   width: 100%;">
-        <div style="display: table-caption; background-color: #f5f5f5; margin: 5px; border-radius: 5px; border: 1px;" class="label">
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <span style="flex: 1;">{{ title }}</span>
-                <Button :style="style" @click="close" src="/arrow.svg"></Button>
+    <div style="display: table-row; width: 100%;">
+        <div style="display: table-cell;"></div>
+        <div style="display: table-cell;">
+            <div style="display: flex;">
+                <Button style="background-color: rgba(169, 255, 169, 0.5); margin-left: auto; height: 32px; margin-right: 13px;" text="Добавить"></Button>
             </div>
         </div>
-        <slot v-if="isOpen">
-        </slot>
     </div>
 </template>
                 

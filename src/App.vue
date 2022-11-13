@@ -12,6 +12,7 @@ import SelectField from './components/fields/SelectField.vue';
 import BiographyFilter from './components/filter/BiographyFilter.vue';
 import EducationFilter from './components/filter/EducationFilter.vue';
 import SimpleFilter from './components/filter/SimpleFilter.vue';
+import Card from './components/Card.vue';
 
 export default defineComponent({
     mounted() {
@@ -28,15 +29,16 @@ export default defineComponent({
         }
     },
     components: {
-        Form,
-        Table,
-        Modal,
-        TextField,
-        SelectField,
-        BiographyFilter,
-        EducationFilter,
-        SimpleFilter
-    },
+    Form,
+    Table,
+    Modal,
+    TextField,
+    SelectField,
+    BiographyFilter,
+    EducationFilter,
+    SimpleFilter,
+    Card
+},
 
     methods: {
         refresh() {
@@ -57,7 +59,8 @@ export default defineComponent({
 </script>
 
 <template>
-    <BiographyFilter :isOpen="true"></BiographyFilter>
+    
+    <Card title="Карточка личности" :isOpen="true"></Card>
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
     <!-- <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter> -->
     <Table :person="persons" :activity="activitys" :career="careers" :rank="ranks"></Table>

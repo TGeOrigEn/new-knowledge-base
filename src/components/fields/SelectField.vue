@@ -29,6 +29,7 @@ export default defineComponent({
 }
 
 .label {
+    vertical-align: middle;
     display: table-cell;
     text-align: start;
     padding-right: 15px;

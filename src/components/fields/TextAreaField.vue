@@ -14,7 +14,7 @@ export default defineComponent({
 <template>
     <div class="field">
         <label class="label">{{ label }} </label>
-        <input :disabled="disabled" class="input" type="text" />
+        <textarea :disabled="disabled" class="input" type="text" ></textarea>
     </div>
 </template>
                 
@@ -38,6 +38,8 @@ export default defineComponent({
 }
 
 .input {
+    overflow: auto;
+    resize: none;
     width: calc(100% - 30px);
     display: table-cell;
     padding: 5px;
