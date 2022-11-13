@@ -16,8 +16,6 @@ import RankCell from './cells/Rank.vue';
 import Header from './Header.vue';
 
 import handle from '../scripts/hadnler';
-import Section from './Section.vue';
-import Trigger from './Trigger.vue';
 
 export default defineComponent({
     mounted() {
@@ -45,8 +43,6 @@ export default defineComponent({
         OtherCell,
         RankCell,
         Header,
-        Section,
-        Trigger,
     }
 });
 </script>

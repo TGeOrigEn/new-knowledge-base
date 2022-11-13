@@ -15,7 +15,7 @@ export default defineComponent({
     },
     computed: {
         style() {
-            return `background-image: url(${this.src}); background-repeat: no-repeat; background-size: contain;`
+            return `background-image: url(${this.src});`
         }
     }
 })
@@ -38,6 +38,8 @@ button span {
 }
 
 .button {
+    background-repeat: no-repeat;
+    background-size: contain;
     background-origin: content-box;
     width: max-content;
     background-color: #f8f9fa;

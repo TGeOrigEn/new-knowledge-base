@@ -6,7 +6,6 @@ import Table from "./components/Table.vue";
 import Person from './entities/tables/person';
 import env from './entities/settings'
 import Modal from './components/window/Modal.vue';
-import Form from './components/form/Form.vue';
 import Text from './components/fields/Text.vue';
 import Select from './components/fields/Select.vue';
 import BiographyFilter from './components/filter/BiographyFilter.vue';
@@ -30,7 +29,6 @@ export default defineComponent({
         }
     },
     components: {
-        Form,
         Table,
         Modal,
         Text,

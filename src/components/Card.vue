@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue'
 import Select from './fields/Select.vue';
 import Text from './fields/Text.vue';
-import Form from './form/Form.vue';
+import Section from './form/Section.vue';
 import Modal from './window/Modal.vue';
 import ActivityFilter from './../entities/filter/activityFilter'
 import TextArea from './fields/TextArea.vue';
@@ -32,33 +32,33 @@ export default defineComponent({
             console.log(this.value);
         }
     },
-    components: { Modal, Form, Text, Select, TextArea, ButtonGroupe, Item }
+    components: { Modal, Section, Text, Select, TextArea, ButtonGroupe, Item }
 })
 </script>
                 
 <template>
     <Modal :close="show" :save="save" v-if="isOpen" :title="title">
-        <Form title="Биография">
+        <Section label="Биография">
             <Text :readonly="true" v-model:value="value" label="Фамилия:"></Text>
             <Text label="Имя:"></Text>
             <Text label="Отчество:"></Text>
             <Text label="Дата рождения:"></Text>
             <Text label="Вероисповедание:"></Text>
             <Text label="Происхождение:"></Text>
-        </Form>
-        <Form title="Образование">
+        </Section>
+        <Section label="Образование">
             <Text label="Уровень образования:"></Text>
             <Text label="Учебное учреждение:"></Text>
             <Text label="Место учёбы:"></Text>
-        </Form>
-        <Form title="Личная информация">
+        </Section>
+        <Section label="Личная информация">
             <TextArea label="Имущество:"></TextArea>
             <TextArea label="Награды:"></TextArea>
             <TextArea label="Жалование:"></TextArea>
             <TextArea label="Семейное положение:"></TextArea>
             <TextArea label="Разное:"></TextArea>
-        </Form>
-        <Form title="Карьера">
+        </Section>
+        <Section label="Карьера">
             <Text label="Дата начала:"></Text>
             <Text label="Дата окончания:"></Text>
             <Text label="Должность:"></Text>
@@ -67,8 +67,8 @@ export default defineComponent({
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
-        </Form>
-        <Form title="Чин">
+        </Section>
+        <Section label="Чин">
             <Text label="Дата начала:"></Text>
             <Text label="Дата окончания:"></Text>
             <Text label="Класс:"></Text>
@@ -77,8 +77,8 @@ export default defineComponent({
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
-        </Form>
-        <Form title="Деятельность">
+        </Section>
+        <Section label="Деятельность">
             <Text label="Название:"></Text>
             <Text label="Место:"></Text>
             <Text label="Описание:"></Text>
@@ -88,7 +88,7 @@ export default defineComponent({
             </Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
             <Item label="Благотворительность; Россия, г. Омск; Давал деньги всем нуждающимся"></Item>
-        </Form>
+        </Section>
     </Modal>
 </template>
                 

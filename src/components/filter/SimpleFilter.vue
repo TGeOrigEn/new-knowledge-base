@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Text from '../fields/Text.vue';
-import Form from '../form/Form.vue';
+import Section from '../form/Section.vue';
 import Modal from '../window/Modal.vue';
 import BiographyFilter from '../../entities/filter/biographyFilter'
 
@@ -22,18 +22,18 @@ export default defineComponent({
             optionsPlace: ["Любое", "Неизвестно", "Европейская часть", "Сибирь"]
         }
     },
-    components: { Modal, Form, Text }
+    components: { Modal, Section, Text }
 })
 </script>
                 
 <template>
     <Modal :close="close" :save="save" v-if="isOpen" :title="title">
-        <Form title="Содержит">
+        <Section label="Содержит">
             <Text label="Текст:"></Text>
-        </Form>
-        <Form title="Равно">
+        </Section>
+        <Section label="Равно">
             <Text label="Текст:"></Text>
-        </Form>
+        </Section>
     </Modal>
 </template>
                 
