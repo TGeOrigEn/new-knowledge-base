@@ -1,47 +1,27 @@
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from '@vue/reactivity';
 
-import { defineComponent } from 'vue'
+const style = computed(() => `background-image: url(${props.src});`);
 
-export default defineComponent({
-    props: {
-        text: {
-            type: String,
-            default: undefined
-        },
-        src: {
-            type: String,
-            default: undefined
-        }
-    },
-    computed: {
-        style() {
-            return `background-image: url(${this.src});`
-        }
-    }
-})
+const props = defineProps({
+    disabled: Boolean,
+    text: String,
+    src: String
+});
 </script>
             
 <template>
-    <button class="button" :style="style">
-        <span v-if="text != undefined">{{ text }}</span>
+    <button :disabled="disabled" class="x-button" :style="style">
+        <span  class="x-button-text" v-if="text != undefined">{{ text }}</span>
     </button>
 </template>
 
             
-<style scoped>
-button span {
-    font-family: Helvetica, Arial, sans-serif;
-    font-weight: bold;
-    padding-left: 5px;
-    padding-right: 5px;
-    font-size: 14px;
-}
-
-.button {
+<style>
+.x-button {
     background-repeat: no-repeat;
     background-size: contain;
     background-origin: content-box;
-    width: max-content;
     background-color: #f8f9fa;
     border: 1px solid #85858560;
     border-radius: 4px;
@@ -51,13 +31,22 @@ button span {
     white-space: pre;
 }
 
-.button:hover {
+.x-button .x-button-text {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 14px;
+}
+
+
+.x-button:hover {
     border-color: #777777;
     box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
     color: #202124;
 }
 
-.button:focus {
+.x-button:focus {
     outline: none;
 }
 </style>
