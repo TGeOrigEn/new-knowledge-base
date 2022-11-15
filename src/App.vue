@@ -62,7 +62,7 @@ export default defineComponent({
 
 <template>
 
-    <PersonCard :mask="true"></PersonCard>
+    <PersonCard :readonly="true" :width="'700px'" :mask="true"></PersonCard>
     <!-- <Card :close="cancel" :value="value" title="Карточка личности" :isOpen="true"></Card> -->
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
     <!-- <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter> -->

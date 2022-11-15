@@ -35,6 +35,7 @@ const props = defineProps({
 .x-item-text {
     max-width: 100px;
     margin-left: 5px;
+    margin-right: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -42,6 +43,7 @@ const props = defineProps({
 
 .x-item-button-remove {
     background-size: 6px;
+    margin-left: 0px;
     height: 12px;
     width: 12px;
 }

@@ -27,6 +27,8 @@ const props = defineProps({
     remove: { type: Function },
     save: { type: Function },
 
+    readonly: Boolean,
+    width: String,
     mask: Boolean
 });
 
@@ -42,39 +44,42 @@ const rank = ref(props.rank);
 </script>
 
 <template>
-    <Window :mask="mask" :close="close" header="Карточка личности">
+    <Window :width="width" :mask="mask" :close="close" header="Карточка личности">
         <Section header="Биография">
-            <TextField label="Имя:" />
-            <TextField label="Отчество:" />
-            <TextField label="Дата рождения:" />
-            <SelectField label="Вероисповедание:" :options="religionOptions" />
-            <TextField label="Происхождение:" />
+            <TextField label="Имя:" :readonly="readonly" />
+            <TextField label="Отчество:" :readonly="readonly" />
+            <TextField label="Дата рождения:" :readonly="readonly" />
+            <SelectField label="Вероисповедание:" :disabled="readonly" :options="religionOptions" />
+            <TextField label="Происхождение:" :readonly="readonly" />
         </Section>
         <Section header="Образование">
-            <SelectField label="Уровень образования:" :options="educationOptions" />
-            <TextField label="Учебное учреждение:" />
-            <SelectField label="Место учёбы:" :options="locationOptions" />
+            <SelectField label="Уровень образования:" :disabled="readonly" :options="educationOptions" />
+            <TextField label="Учебное учреждение:" :readonly="readonly" />
+            <SelectField label="Место учёбы:" :disabled="readonly" :options="locationOptions" />
         </Section>
         <Section header="Личная информация">
-            <TextAreaField label="Имущество:" />
-            <TextAreaField label="Награды:" />
-            <TextAreaField label="Жалование:" />
-            <TextAreaField label="Семейное положение:" />
-            <TextAreaField label="Другое:" />
+            <TextAreaField label="Имущество:" :readonly="readonly" />
+            <TextAreaField label="Награды:" :readonly="readonly" />
+            <TextAreaField label="Жалование:" :readonly="readonly" />
+            <TextAreaField label="Семейное положение:" :readonly="readonly" />
+            <TextAreaField label="Другое:" :readonly="readonly" />
         </Section>
         <Section header="Достижения">
-            <ItemsField :value="activity.map(item => item.name)" label="Деятельность:"></ItemsField>
-            <ItemsField :value="career.map(item => item.post)" label="Карьера:"></ItemsField>
-            <ItemsField :value="rank.map(item => item.name)" label="Чин:"></ItemsField>
+            <ItemsField :readonly="readonly" :value="activity == undefined ? ['123'] : activity.map(item => item.name)"
+                label="Деятельность:"></ItemsField>
+            <ItemsField :readonly="readonly" :value="career == undefined ? [] : career.map(item => item.post)"
+                label="Карьера:"></ItemsField>
+            <ItemsField :readonly="readonly" :value="rank == undefined ? [] : rank.map(item => item.name)" label="Чин:">
+            </ItemsField>
         </Section>
         <Footer style="height: 42px;">
-            <ButtonGroup :left="true">
-                <Button v-if="remove != undefined" :onClick="remove" text="Удалить"
-                    style="background-color: rgba(255, 169, 169, 0.5);" />
-            </ButtonGroup>
             <ButtonGroup :right="true">
-                <Button v-if="remove != undefined" :onClick="save" text="Сохранить"
-                    style="background-color: rgba(169, 255, 169, 0.5);" />
+                <Button :onClick="remove" text="Удалить"
+                    style="height: 32px; background-color: rgba(255, 169, 169, 0.5);" />
+            </ButtonGroup>
+            <ButtonGroup :right="false">
+                <Button :onClick="save" text="Сохранить"
+                    style="height: 32px; background-color: rgba(169, 255, 169, 0.5);" />
             </ButtonGroup>
         </Footer>
     </Window>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
 import Button from '../buttons/Button.vue';
+import ButtonGroup from '../buttons/ButtonGroup.vue';
 
 const maskStyle = computed(() => props.mask
     ? `z-index: ${props.index}; background-color: rgba(0, 0, 0, 0.5);`
@@ -24,9 +25,13 @@ const props = defineProps({
             <div :style="containerStyle" class="x-window-container">
                 <div class="x-window-header-container">
                     <span class="x-window-header">{{ header }}</span>
-                    <Button :onClick="close" style="padding: 5px;" src="/close.svg"></Button>
+                    <ButtonGroup>
+                        <Button class="x-window-button-close" :onClick="close" style="padding: 5px;" src="/close.svg" />
+                    </ButtonGroup>
                 </div>
-                <slot></slot>
+                <div class="x-window-body">
+                    <slot></slot>
+                </div>
             </div>
         </div>
     </div>
@@ -47,7 +52,6 @@ const props = defineProps({
 }
 
 .x-window-container {
-    width: max-content;
     margin: 0px auto;
     background-color: #fff;
     border-radius: 5px;
@@ -62,7 +66,11 @@ const props = defineProps({
     display: flex;
     align-items: center;
     background-color: #f5f5f5;
-    margin-bottom: 10px;
+}
+
+.x-window-body {
+    max-height: calc(100vh - 100px);
+    overflow: auto;
 }
 
 .x-window-header {
@@ -70,5 +78,10 @@ const props = defineProps({
     margin-left: 15px;
     font-weight: bold;
     font-size: 18px;
+}
+
+.x-window-button-close {
+    width: 32px;
+    height: 32px;
 }
 </style>

@@ -18,7 +18,7 @@ const props = defineProps({
         <div class="x-field-container">
             <div class="x-field-items-container">
                 <ul class="x-field-items-list">
-                    <Item v-for="item in value" :remove="remove" :open="open" :text="(item as string)" />
+                    <Item :readonly="readonly" v-for="item in value" :remove="remove" :open="open" :text="(item as string)" />
                 </ul>
             </div>
             <Button src="/plus.svg" class="x-field-button-add"></Button>
@@ -37,6 +37,7 @@ const props = defineProps({
 }
 
 .x-field-items-container {
+    height: 26px;
     display: flex;
     align-items: center;
     width: 100%;
