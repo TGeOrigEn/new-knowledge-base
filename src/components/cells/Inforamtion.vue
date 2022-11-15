@@ -13,7 +13,10 @@ export default defineComponent({
 
 <template>
     <td>
-        <p>{{ $props.person!.surname }} {{ $props.person!.name }} {{ $props.person!.patronymic }};</p>
+        <p>
+            <span>{{ $props.person?.surname }}</span>
+            <span>{{ $props.person?.name }}</span>
+            <span>{{ $props.person?.patronymic }}</span></p>
         <p>Год рождения: {{ $props.person!.date_birth }};</p>
         <p>Вероисповедание: {{ $props.person!.religion }};</p>
         <p>Происхождение: {{ $props.person!.origin }};</p>
@@ -21,6 +24,11 @@ export default defineComponent({
 </template>
 
 <style scoped>
+
+span {
+    margin: 2px;
+}
+
 td p {
     padding-top: 5px;
     padding-left: 5px;
