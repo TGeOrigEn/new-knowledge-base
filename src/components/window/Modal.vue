@@ -113,13 +113,12 @@ export default defineComponent({
 }
 
 .body {
-    max-height: calc(100vh - 200px);
+    max-height: 700px;
     overflow: auto;
 }
 
 .modal-container {
-    width: max-content;
-    min-width: 744px;
+    width: 700px;
     margin: 0px auto;
     background-color: #fff;
     border-radius: 5px;

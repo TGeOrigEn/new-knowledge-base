@@ -62,8 +62,24 @@
   white-space: pre;
 }
 
+.x-field .x-field-select {
+  width: calc(100% - 18px);
+  display: table-cell;
+  padding: 5px;
+  background-color: #f8f9fa;
+  border: 1px solid #85858560;
+  border-radius: 4px;
+  margin: 5px;
+  touch-action: manipulation;
+  white-space: pre;
+}
+
 .x-field .x-field-input:disabled {
-  background-color: #7e7e7e77;
+  pointer-events: none;
+  cursor: default;
+}
+
+.x-field .x-field-select:disabled {
   pointer-events: none;
   cursor: default;
 }
@@ -74,6 +90,15 @@
 }
 
 .x-field .x-field-input:focus {
+  border: 1px solid black;
+  border-radius: 5px;
+  outline: 0;
+  border-color: #777777;
+  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  color: #202124;
+}
+
+.x-field .x-field-select:focus {
   border: 1px solid black;
   border-radius: 5px;
   outline: 0;

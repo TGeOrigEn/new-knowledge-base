@@ -12,6 +12,7 @@ import BiographyFilter from './components/filter/BiographyFilter.vue';
 import EducationFilter from './components/filter/EducationFilter.vue';
 import SimpleFilter from './components/filter/SimpleFilter.vue';
 import Card from './components/Card.vue';
+import PersonCard from './update/components/card/PersonCard.vue';
 
 export default defineComponent({
     mounted() {
@@ -36,7 +37,8 @@ export default defineComponent({
         BiographyFilter,
         EducationFilter,
         SimpleFilter,
-        Card
+        Card,
+        PersonCard
     },
 
     methods: {
@@ -60,7 +62,8 @@ export default defineComponent({
 
 <template>
 
-    <Card :close="cancel" :value="value" title="Карточка личности" :isOpen="true"></Card>
+    <PersonCard :mask="true"></PersonCard>
+    <!-- <Card :close="cancel" :value="value" title="Карточка личности" :isOpen="true"></Card> -->
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
     <!-- <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter> -->
     <Table :person="persons" :activity="activitys" :career="careers" :rank="ranks"></Table>

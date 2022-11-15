@@ -8,6 +8,9 @@ import ActivityFilter from './../entities/filter/activityFilter'
 import TextArea from './fields/TextArea.vue';
 import ButtonGroupe from './button/ButtonGroupe.vue';
 import Item from './form/Item.vue';
+import Items from './fields/Items.vue';
+import ItemsField from '@/update/components/fields/itemsField/ItemsField.vue';
+import SelectField from '@/update/components/fields/SelectField.vue';
 
 export default defineComponent({
     props: {
@@ -32,16 +35,16 @@ export default defineComponent({
             console.log(this.value);
         }
     },
-    components: { Modal, Section, Text, Select, TextArea, ButtonGroupe, Item }
+    components: { Modal, Section, Text, Select, TextArea, ButtonGroupe, Item, Items, ItemsField, SelectField }
 })
 </script>
                 
 <template>
     <Modal :close="show" :save="save" v-if="isOpen" :title="title">
         <Section label="Биография">
-            <Text :readonly="true" v-model:value="value" label="Фамилия:"></Text>
-            <Text label="Имя:"></Text>
-            <Text label="Отчество:"></Text>
+            <Text v-model:value="value" label="Фамилия:"></Text>
+            <ItemsField label="Имя:" :value="optionsLevel"></ItemsField>
+            <SelectField label="Отчество:" :options="optionsLevel"></SelectField>
             <Text label="Дата рождения:"></Text>
             <Text label="Вероисповедание:"></Text>
             <Text label="Происхождение:"></Text>
