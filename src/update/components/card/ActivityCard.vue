@@ -81,7 +81,7 @@ function dropdownFilter(): Array<Place> {
                     <Item :open="() => { data.mask = false; show.place = true; select = item; }" :readonly="readonly"
                         v-for="item in listFilter()" :remove="remove" :text="item.name" />
                 </List>
-                <Dropdown v-if="dropdownFilter().length != 0">
+                <Dropdown :readonly="activity.id != 0" v-if="dropdownFilter().length != 0">
                     <Item :width="'100%'" :readonly="readonly" v-for="item in dropdownFilter()" :remove="remove"
                         :text="item.name" />
                 </Dropdown>

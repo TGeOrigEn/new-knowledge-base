@@ -3,6 +3,7 @@ export default class Activity {
     public static EMPTY: Activity = new Activity({
         id: 0,
         person_id: 0,
+        description: ""
     });
 
     public id: number;

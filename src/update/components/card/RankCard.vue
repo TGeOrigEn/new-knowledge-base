@@ -15,6 +15,7 @@ import { ref, onBeforeMount } from 'vue';
 const props = defineProps({
     rank: { type: Rank, required: true, default: Rank.EMPTY },
     remove: { type: Function },
+    close: { type: Function, required: true },
     index: { type: Number, default: 2 },
     readonly: Boolean,
     width: String,
@@ -30,25 +31,21 @@ const data = ref({
 
 const show = ref(false);
 
-const beforeMount = onBeforeMount(() => {
-    data.value.rank = new Rank(props.rank);
-})
-
-function close() {
+function check() {
     if (JSON.stringify(props.rank) !== JSON.stringify(data.value.rank)) {
         show.value = true;
         data.value.mask = false;
-    }
+    } else props.close();
 }
 </script>
 
 <template>
 
     <AlertCard v-if="show" :close="() => { show = false; data.mask = true; }" :mask="show" :save="() => { }"
-        :accept="() => { }" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
+        :accept="close" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
     </AlertCard>
 
-    <Window :index="index" :width="width" :mask="mask" :close="close" header="Карточка чина">
+    <Window :index="index" :width="width" :mask="mask" :close="check" header="Карточка чина">
 
         <Body style="width: 100%; display: table;">
             <TextField label="Название:" v-model:value="data.rank.name" :readonly="readonly" />
