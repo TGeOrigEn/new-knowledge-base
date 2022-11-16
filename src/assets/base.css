@@ -88,6 +88,10 @@
   color: black;
 }
 
+.x-field .x-field-input:read-only {
+  color: black;
+}
+
 .x-field .x-field-input:focus {
   border: 1px solid black;
   border-radius: 5px;

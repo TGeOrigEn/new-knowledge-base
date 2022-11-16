@@ -14,17 +14,34 @@ const props = defineProps({
         <label class="x-field-label">{{ label }}</label>
         <div class="x-field-container">
             <div class="x-field-items-container">
-                <ul class="x-field-items-list">
+                <div class="x-dropdown-container">
                     <slot></slot>
-                </ul>
-                <Button :readonly="readonly" :onClick="create" src="/arrow.svg" class="x-field-button-add"></Button>
+                    
+                </div>
             </div>
-            <Button :readonly="readonly" :onClick="create" src="/plus.svg" class="x-field-button-add"></Button>
+            <Button :disabled="readonly" :onClick="create" src="/plus.svg" class="x-field-button-add"></Button>
         </div>
     </div>
 </template>
 
 <style>
+.x-dropdown-container {
+    display: flex;
+    flex: 0 0 100%;
+    margin-left: auto;
+    position: relative;
+}
+
+.x-dropdown-button {
+    align-self: center;
+    background-size: 14px;
+    flex: 0 0 24px;
+    margin-left: auto;
+    width: 24px;
+    height: 24px;
+}
+
+
 .x-field-container {
     display: flex;
     align-items: center;

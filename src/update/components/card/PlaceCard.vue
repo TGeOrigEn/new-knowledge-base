@@ -17,7 +17,7 @@ const props = defineProps({
     close: { type: Function, required: true },
     remove: { type: Function },
     save: { type: Function },
-    index: { type: Number, default: 2 },
+    index: { type: Number, default: 3 },
     readonly: Boolean,
     width: String,
     mask: Boolean
@@ -43,7 +43,7 @@ const data = ref({
         </Body>
         <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button :onClick="remove" text="Удалить"
+                <Button  v-if="place.id != 0" :onClick="remove" text="Удалить"
                     style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">

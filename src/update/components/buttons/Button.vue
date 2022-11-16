@@ -33,6 +33,17 @@ const props = defineProps({
     white-space: pre;
 }
 
+.x-button:disabled {
+    background-color: #85858560;
+}
+
+.x-button:disabled:hover {
+    cursor: default;
+    border-color: #85858560;
+    box-shadow: 0 !important;
+    color: #85858560;
+}
+
 .x-button .x-button-text {
     font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;

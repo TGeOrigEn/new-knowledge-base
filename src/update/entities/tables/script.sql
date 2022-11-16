@@ -37,14 +37,9 @@ create TABLE activity(
     id SERIAL NOT NULL PRIMARY KEY,
     --Уникальный номер Личности
     person_id SERIAL NOT NULL,
-    --Уникальный номер места деятельности
-    place_id SERIAL NOT NULL,
-    --Тип деятельности
-    type TEXT NOT NULL,
     --Описание деятельности
     description TEXT NOT NULL,
-    FOREIGN KEY (person_id) REFERENCES person (id),
-    FOREIGN KEY (place_id) REFERENCES place (id)
+    FOREIGN KEY (person_id) REFERENCES person (id)
 );
 --Карьера
 create TABLE career(

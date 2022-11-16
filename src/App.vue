@@ -27,6 +27,7 @@ export default defineComponent({
             careers: undefined,
             ranks: undefined,
             places: undefined,
+            links: undefined,
             value: "213123"
         }
     },
@@ -55,6 +56,8 @@ export default defineComponent({
                 .then(response => this.ranks = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/place/all`)
                 .then(response => this.places = response.data);
+                axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity_place/all`)
+                .then(response => this.links = response.data);
         },
         cancel() {
             //this.isOpen = false;
@@ -66,7 +69,7 @@ export default defineComponent({
 
 <template>
 
-    <PersonCard v-if="persons != undefined" :close="cancel" :place="places" :person="persons[0]" :activity="activitys" :rank="ranks"
+    <PersonCard v-if="persons != undefined" :close="cancel" :link="links" :place="places" :person="persons[0]" :activity="activitys" :rank="ranks"
         :career="careers" :readonly="false" :width="'700px'" :mask="true"></PersonCard>
     <!-- <Card :close="cancel" :value="value" title="Карточка личности" :isOpen="true"></Card> -->
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->

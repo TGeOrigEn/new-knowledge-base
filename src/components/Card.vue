@@ -9,7 +9,6 @@ import TextArea from './fields/TextArea.vue';
 import ButtonGroupe from './button/ButtonGroupe.vue';
 import Item from './form/Item.vue';
 import Items from './fields/Items.vue';
-import ListField from '@/update/components/fields/list/ListField.vue';
 import SelectField from '@/update/components/fields/SelectField.vue';
 
 export default defineComponent({
@@ -35,7 +34,7 @@ export default defineComponent({
             console.log(this.value);
         }
     },
-    components: { Modal, Section, Text, Select, TextArea, ButtonGroupe, Item, Items, ListField, SelectField }
+    components: { Modal, Section, Text, Select, TextArea, ButtonGroupe, Item, Items, SelectField }
 })
 </script>
                 
@@ -43,7 +42,6 @@ export default defineComponent({
     <Modal :close="show" :save="save" v-if="isOpen" :title="title">
         <Section label="Биография">
             <Text v-model:value="value" label="Фамилия:"></Text>
-            <ListField label="Имя:" :value="optionsLevel"></ListField>
             <SelectField label="Отчество:" :options="optionsLevel"></SelectField>
             <Text label="Дата рождения:"></Text>
             <Text label="Вероисповедание:"></Text>

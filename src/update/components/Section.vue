@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 import Button from './buttons/Button.vue';
 
-const props = defineProps({ isOpen: Boolean, header: { type: String, required: true } });
+const props = defineProps({ isOpen: Boolean, header: { type: String, required: true }, disabled: Boolean });
 const style = computed(() => isOpen.value ? 'transform: rotate(180deg);' : '')
 const isOpen = ref<boolean>(props.isOpen);
 </script>
@@ -14,7 +14,7 @@ const isOpen = ref<boolean>(props.isOpen);
         <div class="x-section-container">
             <div class="x-section-label-container">
                 <label class="x-section-label">{{ header }}</label>
-                <Button class="x-section-button" src="/arrow.svg" :style="style"
+                <Button :disabled="disabled" class="x-section-button" src="/arrow.svg" :style="style"
                     @click="() => isOpen = !isOpen"></Button>
             </div>
         </div>

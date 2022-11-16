@@ -58,7 +58,7 @@ const data = ref({
         </Body>
         <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button :onClick="remove" text="Удалить"
+                <Button  v-if="career.id != 0" :onClick="remove" text="Удалить"
                     style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">

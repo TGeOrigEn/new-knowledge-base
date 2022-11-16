@@ -2,7 +2,8 @@
 import Activity from '@/update/entities/tables/Activity';
 import Career from '@/update/entities/tables/Career';
 import Rank from '@/update/entities/tables/Rank';
-import Place from '@/update/entities/tables/Place';
+import type Place from '@/update/entities/tables/Place';
+import type Link from '@/update/entities/tables/Link';
 
 import Person from '@/update/entities/tables/Person';
 
@@ -16,21 +17,22 @@ import Section from '../Section.vue';
 import TextAreaField from '../fields/TextAreaField.vue';
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
-import { ref, onBeforeMount, onMounted, onUpdated } from 'vue';
-import ListField from '../fields/list/ListField.vue';
+import { ref, onUpdated } from 'vue';
+import DropdownField from '../fields/dropdown/DropdownField.vue';
+import List from '../fields/list/List.vue';
 
-import PlaceCard from './PlaceCard.vue';
 import ActivityCard from './ActivityCard.vue';
 import CareerCard from './CareerCard.vue';
 import RankCard from './RankCard.vue';
 import Item from '../fields/list/Item.vue';
 
 const props = defineProps({
+    person: { type: Person, required: true, default: Person.EMPTY },
     activity: { type: Array<Activity>, required: true, default: [] },
     career: { type: Array<Career>, required: true, default: [] },
     place: { type: Array<Place>, required: true, default: [] },
+    link: { type: Array<Link>, required: true, default: [] },
     rank: { type: Array<Rank>, required: true, default: [] },
-    person: { type: Person, required: true, default: Person.EMPTY },
 
     remove: { type: Function, required: true },
     close: { type: Function, required: true },
@@ -51,6 +53,8 @@ const beforeMount = onUpdated(() => {
     data.value.career = [...props.career];
     data.value.place = [...props.place];
     data.value.rank = [...props.rank];
+
+    console.log(data.value);
 })
 
 const data = ref({
@@ -65,30 +69,23 @@ const data = ref({
 const select = ref({
     activity: Activity.EMPTY,
     career: Career.EMPTY,
-    place: Place.EMPTY,
     rank: Rank.EMPTY
 });
 
 const show = ref({
     activity: false,
     career: false,
-    place: false,
     rank: false
 });
-
-function openCard() {
-}
 </script>
 
 <template>
-    <ActivityCard v-if="show.activity" :mask="true" :close="() => { show.activity = false; data.mask = true; }"
-        :activity="select.activity" />
-    <CareerCard v-if="show.career" :mask="true" :close="() => { show.career = false; data.mask = true; }"
+    <ActivityCard :readonly="readonly" :link="link" :place="place" :width="'450px'" v-if="show.activity" :mask="true"
+        :close="() => { show.activity = false; data.mask = true; }" :activity="select.activity" />
+    <CareerCard :readonly="readonly" v-if="show.career" :mask="true" :close="() => { show.career = false; data.mask = true; }"
         :career="select.career" />
-    <PlaceCard v-if="show.place" :mask="true" :close="() => { show.place = false; data.mask = true; }"
-        :place="select.place" />
-    <RankCard v-if="show.rank" :mask="true" :close="() => { show.rank = false; data.mask = true; }"
-   type :rank="select.rank" />
+    <RankCard :readonly="readonly" v-if="show.rank" :mask="true" :close="() => { show.rank = false; data.mask = true; }" type
+        :rank="select.rank" />
     <Window :width="width" :mask="data.mask" :close="close" header="Карточка личности">
 
         <Body>
@@ -121,34 +118,40 @@ function openCard() {
                 <TextAreaField label="Другое:" v-model:value="data.person.other" :required="false"
                     :readonly="readonly" />
             </Section>
-            <Section header="Достижения">
+            <Section header="Достижения" :disabled="data.person.id == 0">
 
-                <ListField label="Карьера:" :readonly="readonly"
+                <DropdownField label="Карьера:" :readonly="readonly"
                     :create="() => { data.mask = false; show.career = true; select.career = Career.EMPTY; }">
-                    <Item :readonly="readonly" v-for="item in career.filter(item => item.person_id == person.id)"
-                        :open="() => { data.mask = false; select.career = item; show.career = true; }" :remove="remove"
-                        :text="item.post" />
-                </ListField>
+                    <List>
+                        <Item :readonly="readonly" v-for="item in data.career"
+                            :open="() => { data.mask = false; select.career = item; show.career = true; }"
+                            :remove="remove" :text="item.post" />
+                    </List>
+                </DropdownField>
 
-                <ListField label="Чин:" :readonly="readonly"
+                <DropdownField label="Чин:" :readonly="readonly"
                     :create="() => { data.mask = false; show.rank = true; select.rank = Rank.EMPTY; }">
-                    <Item :readonly="readonly" v-for="item in rank.filter(item => item.person_id == person.id)"
-                        :open="() => { data.mask = false; select.rank = item; show.rank = true; }" :remove="remove"
-                        :text="item.name" />
-                </ListField>
+                    <List>
+                        <Item :readonly="readonly" v-for="item in data.rank"
+                            :open="() => { data.mask = false; select.rank = item; show.rank = true; }" :remove="remove"
+                            :text="item.name" />
+                    </List>
+                </DropdownField>
 
-                <ListField label="Деятельность:" :readonly="readonly"
+                <DropdownField label="Деятельность:" :readonly="readonly"
                     :create="() => { data.mask = false; show.activity = true; select.activity = Activity.EMPTY; }">
-                    <Item :readonly="readonly" v-for="item in activity.filter(item => item.person_id == person.id)"
-                        :open="() => { data.mask = false; select.activity = item; show.activity = true; }"
-                        :remove="remove" :text="item.description" />
-                </ListField>
+                    <List>
+                        <Item :readonly="readonly" v-for="item in data.activity"
+                            :open="() => { data.mask = false; select.activity = item; show.activity = true; }"
+                            :remove="remove" :text="item.description" />
+                    </List>
+                </DropdownField>
 
             </Section>
         </Body>
         <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button :onClick="remove" text="Удалить" style="height: 32px;" />
+                <Button  v-if="person.id != 0" :onClick="remove" text="Удалить" style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">
                 <Button :onClick="save" text="Сохранить" style="height: 32px;" />

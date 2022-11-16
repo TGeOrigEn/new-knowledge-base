@@ -1,55 +1,17 @@
 <script setup lang="ts">
-import Button from '../../buttons/Button.vue';
-
-const props = defineProps({
-    remove: { type: Function, required: true },
-    open: { type: Function, required: true },
-    text: { type: String, required: true },
-    readonly: Boolean
-});
 </script>
 
 <template>
-    <li class="x-item-wrapper" :title="text">
-        <Button class="x-item" :onClick="open">
-            <div class="x-item-container">
-                <span class="x-item-text">{{ text }}</span>
-                <Button  src="/close.svg" v-if="!readonly" class="x-item-button-remove"
-                    :onClick="(event: MouseEvent) => { remove; event.stopImmediatePropagation(); }" />
-            </div>
-        </Button>
-    </li>
+    <ul class="x-field-items-list">
+        <slot></slot>
+    </ul>
 </template>
 
 <style>
-.x-item-wrapper {
-    flex-flow: wrap;
+.x-field-items-list {
+    flex-flow: row wrap;
+    list-style-type: none;
     display: flex;
-}
-
-.x-item-container {
     align-items: center;
-    display: flex;
-}
-
-.x-item-text {
-    max-width: 100px;
-    margin-left: 5px;
-    margin-right: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.x-item-button-remove {
-    background-size: 6px;
-    margin-left: 0px;
-    height: 12px;
-    width: 12px;
-}
-
-.x-item {
-    margin: 2px;
-    white-space: unset;
 }
 </style>
