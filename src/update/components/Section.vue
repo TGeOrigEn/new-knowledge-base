@@ -4,9 +4,9 @@ import { ref } from 'vue'
 
 import Button from './buttons/Button.vue';
 
-const isOpen = ref<boolean>(false);
-const props = defineProps({ header: { type: String, required: true } });
+const props = defineProps({ isOpen: Boolean, header: { type: String, required: true } });
 const style = computed(() => isOpen.value ? 'transform: rotate(180deg);' : '')
+const isOpen = ref<boolean>(props.isOpen);
 </script>
                 
 <template>

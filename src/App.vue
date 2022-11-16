@@ -3,7 +3,6 @@ import axios from 'axios';
 import { defineComponent } from 'vue'
 
 import Table from "./components/Table.vue";
-import type Person from './entities/tables/person';
 import env from './entities/settings'
 import Modal from './components/window/Modal.vue';
 import Text from './components/fields/Text.vue';
@@ -27,6 +26,7 @@ export default defineComponent({
             activitys: undefined,
             careers: undefined,
             ranks: undefined,
+            places: undefined,
             value: "213123"
         }
     },
@@ -53,6 +53,8 @@ export default defineComponent({
                 .then(response => this.careers = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank/all`)
                 .then(response => this.ranks = response.data);
+            axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/place/all`)
+                .then(response => this.places = response.data);
         },
         cancel() {
             //this.isOpen = false;
@@ -64,8 +66,8 @@ export default defineComponent({
 
 <template>
 
-    <PersonCard v-if="persons != undefined" :close="cancel" :person="persons[0]" :activity="activitys" :rank="ranks" :career="careers" :readonly="true" :width="'700px'"
-        :mask="true"></PersonCard>
+    <PersonCard v-if="persons != undefined" :close="cancel" :place="places" :person="persons[0]" :activity="activitys" :rank="ranks"
+        :career="careers" :readonly="false" :width="'700px'" :mask="true"></PersonCard>
     <!-- <Card :close="cancel" :value="value" title="Карточка личности" :isOpen="true"></Card> -->
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
     <!-- <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter> -->

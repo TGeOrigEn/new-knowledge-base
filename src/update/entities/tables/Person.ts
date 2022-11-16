@@ -2,6 +2,24 @@ import axios from 'axios';
 
 export default class Person {
 
+    public static EMPTY: Person = new Person({
+        id: 0,
+        surname: "",
+        name: "",
+        patronymic: "",
+        date_birth: "",
+        religion: "",
+        origin: "",
+        level_education: "",
+        educational_institution: "",
+        location_educational_institution: "",
+        property: "",
+        awards: "",
+        salary: "",
+        marital_status: "",
+        other: ""
+    });
+
     public id: number;
     public surname: string;
     public name: string;

@@ -1,5 +1,13 @@
 export default class Activity {
 
+    public static EMPTY: Activity = new Activity({
+        id: 0,
+        person_id: 0,
+        name: "",
+        description: "",
+        place: ""
+    });
+
     public id: number;
     public person_id: number;
     public name: string;

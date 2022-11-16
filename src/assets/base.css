@@ -38,6 +38,11 @@
   display: table-row;
 }
 
+.x-field-required {
+  color: red;
+  margin: 1px;
+}
+
 .x-field .x-field-label {
   user-select: none;
   vertical-align: middle;
@@ -60,6 +65,11 @@
   margin: 5px;
   touch-action: manipulation;
   white-space: pre;
+  max-height: 28px;
+}
+
+.x-field .x-field-input[type=date] {
+  white-space: unset;
 }
 
 .x-field .x-field-select {
