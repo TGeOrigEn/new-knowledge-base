@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type Activity from '@/update/entities/tables/Activity';
-import type Career from '@/update/entities/tables/Career';
-import type Rank from '@/update/entities/tables/Rank';
-import type Place from '@/update/entities/tables/Place';
+import Activity from '@/update/entities/tables/Activity';
+import Career from '@/update/entities/tables/Career';
+import Rank from '@/update/entities/tables/Rank';
+import Place from '@/update/entities/tables/Place';
 
 import Person from '@/update/entities/tables/Person';
 
@@ -16,12 +16,14 @@ import Section from '../Section.vue';
 import TextAreaField from '../fields/TextAreaField.vue';
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
-import { ref, onBeforeMount } from 'vue';
-import ItemsField from '../fields/itemsField/ItemsField.vue';
-import RankCard from './RankCard.vue';
-import CareerCard from './CareerCard.vue';
-import ActivityCard from './ActivityCard.vue';
+import { ref, onBeforeMount, onMounted, onUpdated } from 'vue';
+import ListField from '../fields/list/ListField.vue';
+
 import PlaceCard from './PlaceCard.vue';
+import ActivityCard from './ActivityCard.vue';
+import CareerCard from './CareerCard.vue';
+import RankCard from './RankCard.vue';
+import Item from '../fields/list/Item.vue';
 
 const props = defineProps({
     activity: { type: Array<Activity>, required: true, default: [] },
@@ -43,7 +45,7 @@ const educationOptions = ref(["Нет образования", "Начально
 const religionOptions = ref(["Православное", "Римско-католическое", "Евангельско-лютеранское", "Иное"]);
 const locationOptions = ref(["Неизвестно", "Европейская часть", "Сибирь"]);
 
-const beforeMount = onBeforeMount(() => {
+const beforeMount = onUpdated(() => {
     data.value.person = new Person(props.person);
     data.value.activity = [...props.activity];
     data.value.career = [...props.career];
@@ -56,16 +58,38 @@ const data = ref({
     person: props.person,
     career: props.career,
     place: props.place,
-    rank: props.rank
+    rank: props.rank,
+    mask: true
 });
+
+const select = ref({
+    activity: Activity.EMPTY,
+    career: Career.EMPTY,
+    place: Place.EMPTY,
+    rank: Rank.EMPTY
+});
+
+const show = ref({
+    activity: false,
+    career: false,
+    place: false,
+    rank: false
+});
+
+function openCard() {
+}
 </script>
 
 <template>
-    <!-- <PlaceCard :place="data.place[0]"></PlaceCard> -->
-    <!-- <ActivityCard :activity="data.activity[0]"></ActivityCard> -->
-    <!-- <CareerCard :readonly="false"  :career="data.career[0]"></CareerCard> -->
-    <!-- <RankCard :rank="data.rank[0]" ></RankCard> -->
-    <Window :width="width" :mask="true" :close="close" header="Карточка личности">
+    <ActivityCard v-if="show.activity" :mask="true" :close="() => { show.activity = false; data.mask = true; }"
+        :activity="select.activity" />
+    <CareerCard v-if="show.career" :mask="true" :close="() => { show.career = false; data.mask = true; }"
+        :career="select.career" />
+    <PlaceCard v-if="show.place" :mask="true" :close="() => { show.place = false; data.mask = true; }"
+        :place="select.place" />
+    <RankCard v-if="show.rank" :mask="true" :close="() => { show.rank = false; data.mask = true; }"
+   type :rank="select.rank" />
+    <Window :width="width" :mask="data.mask" :close="close" header="Карточка личности">
 
         <Body>
             <Section header="Биография">
@@ -98,14 +122,28 @@ const data = ref({
                     :readonly="readonly" />
             </Section>
             <Section header="Достижения">
-                <ItemsField :readonly="readonly" :value="career == undefined ? [] : career.map(item => item.post)"
-                    label="Карьера:"></ItemsField>
-                <ItemsField :readonly="readonly" :value="rank == undefined ? [] : rank.map(item => item.name)"
-                    label="Чин:">
-                </ItemsField>
-                <ItemsField :readonly="readonly"
-                    :value="activity == undefined ? ['123'] : activity.map(item => item.name)" label="Деятельность:">
-                </ItemsField>
+
+                <ListField label="Карьера:" :readonly="readonly"
+                    :create="() => { data.mask = false; show.career = true; select.career = Career.EMPTY; }">
+                    <Item :readonly="readonly" v-for="item in career.filter(item => item.person_id == person.id)"
+                        :open="() => { data.mask = false; select.career = item; show.career = true; }" :remove="remove"
+                        :text="item.post" />
+                </ListField>
+
+                <ListField label="Чин:" :readonly="readonly"
+                    :create="() => { data.mask = false; show.rank = true; select.rank = Rank.EMPTY; }">
+                    <Item :readonly="readonly" v-for="item in rank.filter(item => item.person_id == person.id)"
+                        :open="() => { data.mask = false; select.rank = item; show.rank = true; }" :remove="remove"
+                        :text="item.name" />
+                </ListField>
+
+                <ListField label="Деятельность:" :readonly="readonly"
+                    :create="() => { data.mask = false; show.activity = true; select.activity = Activity.EMPTY; }">
+                    <Item :readonly="readonly" v-for="item in activity.filter(item => item.person_id == person.id)"
+                        :open="() => { data.mask = false; select.activity = item; show.activity = true; }"
+                        :remove="remove" :text="item.description" />
+                </ListField>
+
             </Section>
         </Body>
         <Footer v-if="!readonly" style="height: 42px;">

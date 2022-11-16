@@ -1,12 +1,9 @@
 <script setup lang="ts">
 
 import Button from '../../buttons/Button.vue';
-import Item from './Item.vue';
 
 const props = defineProps({
-    value: { type: Array<String>, required: true },
-    remove: { type: Function, required: true },
-    open: { type: Function, required: true },
+    create: { type: Function, required: true },
     label: { type: String, required: true },
     readonly: Boolean
 });
@@ -18,10 +15,11 @@ const props = defineProps({
         <div class="x-field-container">
             <div class="x-field-items-container">
                 <ul class="x-field-items-list">
-                    <Item :readonly="readonly" v-for="item in value" :remove="remove" :open="open" :text="(item as string)" />
+                    <slot></slot>
                 </ul>
+                <Button :readonly="readonly" :onClick="create" src="/arrow.svg" class="x-field-button-add"></Button>
             </div>
-            <Button src="/plus.svg" class="x-field-button-add"></Button>
+            <Button :readonly="readonly" :onClick="create" src="/plus.svg" class="x-field-button-add"></Button>
         </div>
     </div>
 </template>

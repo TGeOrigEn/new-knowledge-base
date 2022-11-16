@@ -7,9 +7,9 @@ import Body from '../windows/Body.vue';
 import Footer from '../windows/Footer.vue';
 import Button from '../buttons/Button.vue';
 
-import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
 import { ref, onBeforeMount } from 'vue';
+import DropdownField from '../fields/dropdown/DropdownField.vue';
 
 const props = defineProps({
     activity: { type: Activity, required: true, default: Activity.EMPTY },
@@ -36,19 +36,19 @@ const data = ref({
 
 <template>
     <Window :index="index" :width="width" :mask="mask" :close="close" header="Карточка активности">
+
         <Body style="width: 100%; display: table;">
-            <TextField label="Название:" v-model:value="data.activity.name" :readonly="readonly" />
             <TextField label="Описание:" v-model:value="data.activity.description" :readonly="readonly" />
-            <SelectField label="Место:" v-model:value="data.activity.place" :disabled="readonly" :options="options" />
+            <DropdownField label="Место:" v-model:value="data.activity.place" :disabled="readonly" :options="options" />
         </Body>
-        <Footer v-if="remove != undefined" style="height: 42px;">
+        <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button v-if="remove != undefined" :onClick="remove" text="Удалить"
-                    style="height: 32px; background-color: rgba(255, 169, 169, 0.5);" />
+                <Button :onClick="remove" text="Удалить"
+                    style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">
-                <Button v-if="save != undefined" :onClick="save" text="Сохранить"
-                    style="height: 32px; background-color: rgba(169, 255, 169, 0.5);" />
+                <Button :onClick="save" text="Сохранить"
+                    style="height: 32px;" />
             </ButtonGroup>
         </Footer>
     </Window>

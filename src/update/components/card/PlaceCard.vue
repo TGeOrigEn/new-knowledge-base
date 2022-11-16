@@ -13,7 +13,7 @@ import { ref, onBeforeMount } from 'vue';
 
 const props = defineProps({
     place: { type: Place, required: true, default: Place.EMPTY },
-
+    isOpen: Boolean,
     close: { type: Function, required: true },
     remove: { type: Function },
     save: { type: Function },
@@ -41,14 +41,14 @@ const data = ref({
             <TextField label="Долгота:" v-model:value="data.place.longitude" :readonly="readonly" />
             <TextField label="Широта:" v-model:value="data.place.latitude" :readonly="readonly" />
         </Body>
-        <Footer v-if="remove != undefined" style="height: 42px;">
+        <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button v-if="remove != undefined" :onClick="remove" text="Удалить"
-                    style="height: 32px; background-color: rgba(255, 169, 169, 0.5);" />
+                <Button :onClick="remove" text="Удалить"
+                    style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">
-                <Button v-if="save != undefined" :onClick="save" text="Сохранить"
-                    style="height: 32px; background-color: rgba(169, 255, 169, 0.5);" />
+                <Button :onClick="save" text="Сохранить"
+                    style="height: 32px;" />
             </ButtonGroup>
         </Footer>
     </Window>

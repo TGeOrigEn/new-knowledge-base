@@ -56,14 +56,14 @@ const data = ref({
                 :type="'date'" />
             <SelectField label="Место:" v-model:value="data.career.place" :disabled="readonly" :options="options" />
         </Body>
-        <Footer v-if="remove != undefined" style="height: 42px;">
+        <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button v-if="remove != undefined" :onClick="remove" text="Удалить"
-                    style="height: 32px; background-color: rgba(255, 169, 169, 0.5);" />
+                <Button :onClick="remove" text="Удалить"
+                    style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">
-                <Button v-if="save != undefined" :onClick="save" text="Сохранить"
-                    style="height: 32px; background-color: rgba(169, 255, 169, 0.5);" />
+                <Button :onClick="save" text="Сохранить"
+                    style="height: 32px;" />
             </ButtonGroup>
         </Footer>
     </Window>

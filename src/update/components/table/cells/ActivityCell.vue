@@ -7,7 +7,7 @@ const props = defineProps({ value: { type: Array<Activity>, required: true } });
 <template>
     <td>
         <p v-for="activity in value">
-            <span>{{ activity.name }}:</span>
+            <span>{{ activity.type }}:</span>
             <span>{{ activity.description }};</span>
         </p>
     </td>
