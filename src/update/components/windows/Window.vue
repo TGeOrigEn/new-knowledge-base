@@ -29,9 +29,7 @@ const props = defineProps({
                         <Button class="x-window-button-close" :onClick="close" style="padding: 5px;" src="/close.svg" />
                     </ButtonGroup>
                 </div>
-                <div class="x-window-body">
-                    <slot></slot>
-                </div>
+                <slot></slot>
             </div>
         </div>
     </div>
@@ -66,11 +64,6 @@ const props = defineProps({
     display: flex;
     align-items: center;
     background-color: #f5f5f5;
-}
-
-.x-window-body {
-    max-height: calc(100vh - 100px);
-    overflow: auto;
 }
 
 .x-window-header {

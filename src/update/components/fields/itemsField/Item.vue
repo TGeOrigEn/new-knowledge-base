@@ -10,11 +10,11 @@ const props = defineProps({
 </script>
 
 <template>
-    <li class="x-item-wrapper">
+    <li class="x-item-wrapper" :title="text">
         <Button class="x-item" :onClick="open">
             <div class="x-item-container">
                 <span class="x-item-text">{{ text }}</span>
-                <Button src="/close.svg" v-if="!readonly" class="x-item-button-remove"
+                <Button  src="/close.svg" v-if="!readonly" class="x-item-button-remove"
                     :onClick="(event: MouseEvent) => { remove; event.stopImmediatePropagation(); }" />
             </div>
         </Button>

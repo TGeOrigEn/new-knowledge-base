@@ -37,7 +37,7 @@ const props = defineProps({
 }
 
 .x-field-items-container {
-    height: 26px;
+    min-height: 26px;
     display: flex;
     align-items: center;
     width: 100%;

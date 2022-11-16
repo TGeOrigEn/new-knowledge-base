@@ -74,19 +74,8 @@
   white-space: pre;
 }
 
-.x-field .x-field-input:disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
 .x-field .x-field-select:disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-.x-field .x-field-input:read-only {
-  pointer-events: none;
-  cursor: default;
+  color: black;
 }
 
 .x-field .x-field-input:focus {
