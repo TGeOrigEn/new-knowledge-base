@@ -17,7 +17,7 @@ import Section from '../Section.vue';
 import TextAreaField from '../fields/TextAreaField.vue';
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
-import { ref, onUpdated } from 'vue';
+import { ref, onUpdated, onBeforeUnmount, onBeforeMount } from 'vue';
 import DropdownField from '../fields/dropdown/DropdownField.vue';
 import List from '../fields/list/List.vue';
 
@@ -25,6 +25,7 @@ import ActivityCard from './ActivityCard.vue';
 import CareerCard from './CareerCard.vue';
 import RankCard from './RankCard.vue';
 import Item from '../fields/list/Item.vue';
+import AlertCard from './AlertCard.vue';
 
 const props = defineProps({
     person: { type: Person, required: true, default: Person.EMPTY },
@@ -35,7 +36,6 @@ const props = defineProps({
     rank: { type: Array<Rank>, required: true, default: [] },
 
     remove: { type: Function, required: true },
-    close: { type: Function, required: true },
     save: { type: Function, required: true },
 
     readonly: Boolean,
@@ -47,7 +47,7 @@ const educationOptions = ref(["Нет образования", "Начально
 const religionOptions = ref(["Православное", "Римско-католическое", "Евангельско-лютеранское", "Иное"]);
 const locationOptions = ref(["Неизвестно", "Европейская часть", "Сибирь"]);
 
-const beforeMount = onUpdated(() => {
+const beforeMount = onBeforeMount(() => {
     data.value.person = new Person(props.person);
     data.value.activity = [...props.activity];
     data.value.career = [...props.career];
@@ -75,17 +75,28 @@ const select = ref({
 const show = ref({
     activity: false,
     career: false,
-    rank: false
+    rank: false,
+    alert: false
 });
+
+function close() {
+    if (JSON.stringify(props.person) !== JSON.stringify(data.value.person)) {
+        show.value.alert = true;
+        data.value.mask = false;
+    }
+}
 </script>
 
 <template>
+    <AlertCard v-if="show.alert" :close="() => { show.alert = false; data.mask = true; }" :mask="show.alert"
+        :save="() => { }" :accept="() => { }" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
+    </AlertCard>
     <ActivityCard :readonly="readonly" :link="link" :place="place" :width="'450px'" v-if="show.activity" :mask="true"
         :close="() => { show.activity = false; data.mask = true; }" :activity="select.activity" />
-    <CareerCard :readonly="readonly" v-if="show.career" :mask="true" :close="() => { show.career = false; data.mask = true; }"
-        :career="select.career" />
-    <RankCard :readonly="readonly" v-if="show.rank" :mask="true" :close="() => { show.rank = false; data.mask = true; }" type
-        :rank="select.rank" />
+    <CareerCard :readonly="readonly" v-if="show.career" :mask="true"
+        :close="() => { show.career = false; data.mask = true; }" :career="select.career" />
+    <RankCard :readonly="readonly" v-if="show.rank" :mask="true" :close="() => { show.rank = false; data.mask = true; }"
+        type :rank="select.rank" />
     <Window :width="width" :mask="data.mask" :close="close" header="Карточка личности">
 
         <Body>
@@ -107,13 +118,13 @@ const show = ref({
                     :disabled="readonly" :options="locationOptions" />
             </Section>
             <Section header="Личная информация">
-                <TextAreaField label="Имущество:" v-model:value="data.person.property" :required="false"
+                <TextAreaField label="Имущество:" v-model:value="data.person.property" 
                     :readonly="readonly" />
-                <TextAreaField label="Награды:" v-model:value="data.person.awards" :required="false"
+                <TextAreaField label="Награды:" v-model:value="data.person.awards" 
                     :readonly="readonly" />
-                <TextAreaField label="Жалование:" v-model:value="data.person.salary" :required="false"
+                <TextAreaField label="Жалование:" v-model:value="data.person.salary" 
                     :readonly="readonly" />
-                <TextAreaField label="Семейное положение:" v-model:value="data.person.marital_status" :required="false"
+                <TextAreaField label="Семейное положение:" v-model:value="data.person.marital_status" 
                     :readonly="readonly" />
                 <TextAreaField label="Другое:" v-model:value="data.person.other" :required="false"
                     :readonly="readonly" />
@@ -151,7 +162,7 @@ const show = ref({
         </Body>
         <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button  v-if="person.id != 0" :onClick="remove" text="Удалить" style="height: 32px;" />
+                <Button v-if="person.id != 0" :onClick="remove" text="Удалить" style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">
                 <Button :onClick="save" text="Сохранить" style="height: 32px;" />

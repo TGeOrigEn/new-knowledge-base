@@ -48,7 +48,7 @@ const data = ref({
 <template>
     <Window :index="index" :width="width" :mask="mask" :close="close" header="Карточка карьеры">
 
-        <Body style="width: 100%; display: table;">
+        <Body style="display: table;">
             <TextField label="Должность:" v-model:value="data.career.post" :readonly="readonly" />
             <TextField label="Дата начала:" v-model:value="data.career.start_date" :readonly="readonly"
                 :type="'date'" />

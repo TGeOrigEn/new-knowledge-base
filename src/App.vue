@@ -21,8 +21,7 @@ export default defineComponent({
         return {
             optionsA: ["1", "2", "3"],
             isOpen: true,
-            persons: axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person/all`)
-                .then(response => this.persons = response.data),
+            persons: undefined,
             activitys: undefined,
             careers: undefined,
             ranks: undefined,
@@ -56,7 +55,7 @@ export default defineComponent({
                 .then(response => this.ranks = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/place/all`)
                 .then(response => this.places = response.data);
-                axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity_place/all`)
+            axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity_place/all`)
                 .then(response => this.links = response.data);
         },
         cancel() {
@@ -69,7 +68,8 @@ export default defineComponent({
 
 <template>
 
-    <PersonCard v-if="persons != undefined" :close="cancel" :link="links" :place="places" :person="persons[0]" :activity="activitys" :rank="ranks"
+    <PersonCard v-if="persons != undefined && activitys != undefined && careers != undefined && ranks != undefined"
+        :close="cancel" :link="links" :place="places" :person="persons[0]" :activity="activitys" :rank="ranks"
         :career="careers" :readonly="false" :width="'700px'" :mask="true"></PersonCard>
     <!-- <Card :close="cancel" :value="value" title="Карточка личности" :isOpen="true"></Card> -->
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->

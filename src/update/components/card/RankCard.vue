@@ -7,15 +7,13 @@ import Body from '../windows/Body.vue';
 import Footer from '../windows/Footer.vue';
 import Button from '../buttons/Button.vue';
 import Section from '../Section.vue';
-
+import AlertCard from './AlertCard.vue';
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
 import { ref, onBeforeMount } from 'vue';
 
 const props = defineProps({
     rank: { type: Rank, required: true, default: Rank.EMPTY },
-
-    close: { type: Function, required: true },
     remove: { type: Function },
     index: { type: Number, default: 2 },
     readonly: Boolean,
@@ -26,11 +24,30 @@ const props = defineProps({
 const options = ref(["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]);
 
 const data = ref({
-    rank: props.rank
+    rank: props.rank,
+    mask: props.mask
 });
+
+const show = ref(false);
+
+const beforeMount = onBeforeMount(() => {
+    data.value.rank = new Rank(props.rank);
+})
+
+function close() {
+    if (JSON.stringify(props.rank) !== JSON.stringify(data.value.rank)) {
+        show.value = true;
+        data.value.mask = false;
+    }
+}
 </script>
 
 <template>
+
+    <AlertCard v-if="show" :close="() => { show = false; data.mask = true; }" :mask="show" :save="() => { }"
+        :accept="() => { }" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
+    </AlertCard>
+
     <Window :index="index" :width="width" :mask="mask" :close="close" header="Карточка чина">
 
         <Body style="width: 100%; display: table;">
