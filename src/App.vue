@@ -14,12 +14,12 @@ export default defineComponent({
         return {
             optionsA: ["1", "2", "3"],
             isOpen: true,
-            persons: undefined,
-            activitys: undefined,
-            careers: undefined,
-            ranks: undefined,
-            places: undefined,
-            links: undefined,
+            person: undefined,
+            activity: undefined,
+            career: undefined,
+            rank: undefined,
+            place: undefined,
+            link: undefined,
             value: "213123"
         }
     },
@@ -31,22 +31,18 @@ export default defineComponent({
     methods: {
         refresh() {
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person/all`)
-                .then(response => this.persons = response.data);
+                .then(response => this.person = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity/all`)
-                .then(response => this.activitys = response.data);
+                .then(response => this.activity = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career/all`)
-                .then(response => this.careers = response.data);
+                .then(response => this.career = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank/all`)
-                .then(response => this.ranks = response.data);
+                .then(response => this.rank = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/place/all`)
-                .then(response => this.places = response.data);
+                .then(response => this.place = response.data);
             axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity_place/all`)
-                .then(response => this.links = response.data);
+                .then(response => this.link = response.data);
         },
-        cancel() {
-            this.isOpen = false;
-            console.log(this.$data.persons);
-        }
     }
 })
 </script>
@@ -58,7 +54,7 @@ export default defineComponent({
     <!-- <EducationFilter :isOpen="true"></EducationFilter> -->
     <!-- <SimpleFilter :isOpen="true" title="Фильтрация столбца: Награды"></SimpleFilter> -->
     <!-- <OldTable :person="persons" :activity="activitys" :career="careers" :rank="ranks"></OldTable> -->
-    <Table :refresh="refresh" :person="persons" :activity="activitys" :career="careers" :rank="ranks"></Table>
+    <Table :refresh="refresh" :person="person" :activity="activity" :career="career" :rank="rank"></Table>
 </template>
 
 <style scoped>

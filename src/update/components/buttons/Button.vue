@@ -12,7 +12,7 @@ const props = defineProps({
             
 <template>
     <button :disabled="disabled" class="x-button" :style="style">
-        <span class="x-button-text" v-if="text != undefined">{{ text }}</span>
+        <label class="x-button-text" v-if="text != undefined">{{ text }}</label>
         <slot></slot>
     </button>
 </template>
@@ -51,7 +51,6 @@ const props = defineProps({
     padding-right: 5px;
     font-size: 14px;
 }
-
 
 .x-button:hover {
     border-color: #777777;

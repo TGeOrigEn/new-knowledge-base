@@ -16,6 +16,7 @@ import Header from './Header.vue';
 
 import handle from '../../entities/hadnler';
 import PersonCard from '../card/PersonCard.vue';
+import * as DataBase from '@/update/entities/DataBase';
 
 const props = defineProps({
     refresh: { type: Function, required: true },
@@ -31,6 +32,10 @@ const card = ref({
     id: 0,
     show: false,
 });
+
+const value = ref<DataBase.Person>();
+
+DataBase.Command.select<DataBase.Person>(DataBase.Person.NAME).then(link => { value.value = link[0]; console.log(link[0]); });
 </script>
 
 <template>
