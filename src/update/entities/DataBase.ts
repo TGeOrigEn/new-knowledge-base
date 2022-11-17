@@ -5,30 +5,36 @@ class Command {
 
     private static readonly CONNECTION_STRING: string = "http://194.87.232.70:5050/api";
 
-    public static async select<T>(table: string, condition?: any[]) {
+    public static async select<T>(table: string, condition?: any): Promise<T[] | undefined> {
         return condition == undefined
             ? await [(await axios.get<T>(`${Command.CONNECTION_STRING}/${table}/all`)).data]
             : await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
     }
 
-    public static async delete<T>(table: string, id: number) {
-        return await (await axios.delete<T[]>(`${Command.CONNECTION_STRING}/${table}/${id}`)).data;
+    public static async delete<T>(table: string, id: number): Promise<T | undefined> {
+        return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}/${id}`)).data;
     }
 
-    public static async update<T>(table: string, id: number, source: T) {
+    public static async update<T>(table: string, id: number, source: T): Promise<T | undefined> {
         return await (await axios.put<T>(`${Command.CONNECTION_STRING}/${table}/${id}`, source)).data;
     }
 
-    public static async insert<T>(table: string, person: T) {
+    public static async insert<T>(table: string, person: T): Promise<T | undefined> {
         return await (await axios.post<T>(`${Command.CONNECTION_STRING}/${table}`, person)).data;
     }
 }
 
-
-
 class Activity {
 
     public static NAME: string = "activity";
+
+    public static instance(): Activity {
+        return new Activity({
+            id: 0,
+            person_id: 0,
+            description: ""
+        });
+    }
 
     public id: number;
     public person_id: number;
@@ -44,6 +50,18 @@ class Activity {
 class Career {
 
     public static NAME: string = "career";
+
+    public static instance(): Career {
+        return new Career({
+            id: 0,
+            person_id: 0,
+            start_date: "",
+            end_date: "",
+            post: "",
+            place: ""
+        });
+    }
+
 
     public id: number;
     public person_id: number;
@@ -65,6 +83,26 @@ class Career {
 class Person {
 
     public static NAME: string = "person";
+
+    public static instance(): Person {
+        return new Person({
+            id: 0,
+            surname: "",
+            name: "",
+            patronymic: "",
+            date_birth: "",
+            religion: "",
+            origin: "",
+            level_education: "",
+            educational_institution: "",
+            location_educational_institution: "",
+            property: "",
+            awards: "",
+            salary: "",
+            marital_status: "",
+            other: ""
+        });
+    }
 
     public id: number;
     public surname: string;
@@ -105,6 +143,16 @@ class Place {
 
     public static NAME: string = "place";
 
+    public static instance(): Place {
+        return new Place({
+            id: 0,
+            name: "",
+            description: "",
+            longitude: 0,
+            latitude: 0
+        });
+    }
+
     public id: number;
     public name: string;
     public description: string;
@@ -124,6 +172,14 @@ class Link {
 
     public static NAME: string = "activity_place";
 
+    public static instance(): Link {
+        return new Link({
+            id: 0,
+            activity_id: 0,
+            place_id: 0,
+        });
+    }
+
     public id: number;
     public activity_id: number;
     public place_id: number;
@@ -138,6 +194,17 @@ class Link {
 class Rank {
 
     public static NAME: string = "rank";
+
+    public static instance(): Rank {
+        return new Rank({
+            id: -1,
+            person_id: 0,
+            start_date: "",
+            end_date: "",
+            degree: "",
+            name: ""
+        });
+    }
 
     public id: number;
     public person_id: number;

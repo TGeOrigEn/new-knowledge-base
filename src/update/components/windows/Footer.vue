@@ -12,6 +12,7 @@
 .x-window-footer {
     margin-bottom: 0;
     padding-left: 5px;
+    height: 42px;
     display: flex;
     align-items: center;
     background-color: #f5f5f5;

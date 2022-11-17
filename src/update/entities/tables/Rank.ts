@@ -1,7 +1,7 @@
 export default class Rank {
 
     public static EMPTY: Rank = new Rank({
-        id: 0,
+        id: -1,
         person_id: 0,
         start_date: "",
         end_date: "",

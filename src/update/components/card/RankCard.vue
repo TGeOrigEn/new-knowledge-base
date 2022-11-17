@@ -1,90 +1,95 @@
 <script setup lang="ts">
-import Rank from '../../entities/tables/Rank';
+import { ref, onBeforeMount } from 'vue';
+
+import { Command, Rank } from '../../entities/DataBase';
 
 import ButtonGroup from '../buttons/ButtonGroup.vue';
-import Window from '../windows/Window.vue';
-import Body from '../windows/Body.vue';
-import Footer from '../windows/Footer.vue';
-import Button from '../buttons/Button.vue';
-import AlertCard from './AlertCard.vue';
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
-import { ref, onBeforeMount } from 'vue';
-import env from '../../entities/settings';
-import axios from 'axios';
+import Footer from '../windows/Footer.vue';
+import Button from '../buttons/Button.vue';
+import Window from '../windows/Window.vue';
+import Body from '../windows/Body.vue';
 
 const props = defineProps({
-    id: Number,
-    person_id: Number,
+    person_id: { type: Number, required: true },
+    id: { type: Number, default: -1 },
+
     refresh: { type: Function, required: true },
     close: { type: Function, required: true },
-    index: { type: Number, default: 2 },
-    readonly: Boolean,
-    width: String,
-    mask: Boolean
+
+    readonly: { type: Boolean, required: true },
+    mask: { type: Boolean, required: true },
 });
 
 const options = ref(["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]);
 
-const data = ref({
-    rank: new Rank(Rank.EMPTY),
-    mask: props.mask
-});
+const rank = ref<Rank>({ ...Rank.instance(), person_id: props.person_id });
+
+const mask = ref<Boolean>(props.mask);
 
 const beforeMount = onBeforeMount(() => {
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank`, { params: { id: props.id } })
-        .then(response => { const value = response.data[0]; if (value == undefined) data.value.rank = new Rank(Rank.EMPTY); else data.value.rank = response.data[0] });
-})
-
-const show = ref(false);
-
-function saveCard() {
-    if (data.value.rank.id != 0)
-        axios.put(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank/${data.value.rank.id}`, data.value.rank)
-            .then(response => { const value = response.data; if (value == undefined) data.value.rank = new Rank(Rank.EMPTY); else { props.refresh(); data.value.rank = response.data; } });
-    else axios.post(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank`, {
-        person_id: props.person_id,
-        start_date: data.value.rank.start_date,
-        end_date: data.value.rank.end_date,
-        degree: data.value.rank.degree,
-        name: data.value.rank.name
-    })
-        .then(response => { const value = response.data; if (value == undefined) data.value.rank = new Rank(Rank.EMPTY); else { props.refresh(); data.value.rank = response.data; } });
-}
+    Command.select<Rank>(Rank.NAME, { id: props.id }).then(response => {
+        if (response == undefined) return;
+        if (response.length == 0) return;
+        rank.value = response[0];
+    });
+});
 
 function remove() {
-    axios.delete(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank/${data.value.rank.id}`)
-        .then(response => { const value = response.data; if (value == undefined) data.value.rank = new Rank(Rank.EMPTY); else { props.refresh(); data.value.rank = response.data; } });
-}
+    Command.delete<Rank>(Rank.NAME, rank.value.id).then(() => {
+        props.refresh();
+        props.close();
+    });
+};
+
+function save() {
+    Command.update<Rank>(Rank.NAME, rank.value.id, rank.value).then(response => {
+        if (response == undefined) return;
+        rank.value = response;
+        props.refresh();
+    });
+};
+
+function create() {
+    Command.insert<Rank>(Rank.NAME, rank.value).then(response => {
+        if (response == undefined) return;
+        rank.value = response;
+        props.refresh();
+    });
+};
 </script>
 
 <template>
+    <Window :index="2" :mask="mask" :close="props.close" header="Карточка чина">
 
-    <AlertCard v-if="show" :close="() => { show = false; data.mask = true; }" :mask="show" :save="() => { }"
-        :accept="close" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
-    </AlertCard>
-
-    <Window :index="index" :width="width" :mask="mask" :close="() => { props.refresh(); props.close(); }"
-        header="Карточка чина">
-
-        <Body style="width: 100%; display: table;">
-            <TextField label="Название:" v-model:value="data.rank.name" :readonly="readonly" />
-            <TextField label="Дата начала:" v-model:value="data.rank.start_date" :readonly="readonly" :type="'date'" />
-            <TextField label="Дата окончания:" v-model:value="data.rank.end_date" :readonly="readonly" :type="'date'" />
-            <SelectField label="Степень:" v-model:value="data.rank.degree" :disabled="readonly" :options="options" />
+        <Body class="x-dody">
+            <TextField label="Название:" v-model:value="rank.name" :readonly="readonly" />
+            <TextField label="Дата начала:" v-model:value="rank.start_date" :readonly="readonly" :type="'date'" />
+            <TextField label="Дата окончания:" v-model:value="rank.end_date" :readonly="readonly" :type="'date'" />
+            <SelectField label="Степень:" v-model:value="rank.degree" :disabled="readonly" :options="options" />
         </Body>
-        <Footer v-if="!readonly" style="height: 42px;">
+
+        <Footer v-if="!readonly">
             <ButtonGroup :right="true">
-                <Button v-if="data.rank.id != 0" :onClick="() => { remove(); props.close(); }" text="Удалить"
-                    style="height: 32px;" />
+                <Button v-if="rank.id != -1" class="x-button" text="Удалить" :onClick="remove" />
             </ButtonGroup>
-            <ButtonGroup :right="false">
-                <Button :onClick="() => { saveCard(); props.refresh(); }" text="Сохранить" style="height: 32px; " />
+            <ButtonGroup :left="true">
+                <Button v-if="rank.id != -1" class="x-button" text="Сохранить" :onClick="save"></Button>
+                <Button v-if="rank.id == -1" class="x-button" text="Создать" :onClick="create"></Button>
             </ButtonGroup>
         </Footer>
+
     </Window>
 </template>
 
-<style>
+<style scoped>
+.x-button {
+    height: 32px;
+}
 
+.x-dody {
+    width: 100%;
+    display: table;
+}
 </style>
