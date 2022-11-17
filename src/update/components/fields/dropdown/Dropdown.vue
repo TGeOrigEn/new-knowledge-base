@@ -4,7 +4,6 @@ import { ref } from 'vue';
 import Button from '../../buttons/Button.vue';
 
 const props = defineProps({
-    label: { type: String, required: true },
     readonly: Boolean,
     show: Boolean
 });
@@ -19,7 +18,7 @@ const data = ref({
     <div v-if="data.show" class="lol">
         <slot></slot>
     </div>
-    <Button :readonly="readonly" :onClick="() => data.show = !data.show" src="/arrow.svg"
+    <Button :disabled="readonly" :onClick="() => data.show = !data.show" src="/arrow.svg"
         class="x-dropdown-button"></Button>
 </template>
 

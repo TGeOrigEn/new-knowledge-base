@@ -11,13 +11,14 @@ import Section from '../Section.vue';
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
 import { ref, onBeforeMount } from 'vue';
+import env from '../../entities/settings';
+import axios from 'axios';
 
 const props = defineProps({
-    career: { type: Career, required: true, default: Career.EMPTY },
-
+    id: Number,
+    person_id: Number,
+    refresh: { type: Function, required: true },
     close: { type: Function, required: true },
-    remove: { type: Function },
-    save: { type: Function },
     index: { type: Number, default: 2 },
     readonly: Boolean,
     width: String,
@@ -37,16 +38,37 @@ const options = ref([
     "Восточная сибирь"]);
 
 const beforeMount = onBeforeMount(() => {
-    data.value.career = new Career(props.career);
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, { params: { id: props.id } })
+        .then(response => { const value = response.data[0]; if (value == undefined) data.value.career = new Career(Career.EMPTY); else data.value.career = response.data[0] });
 })
 
 const data = ref({
-    career: props.career
+    career: Career.EMPTY
 });
+
+function saveCard() {
+    if (data.value.career.id != 0)
+        axios.put(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career/${data.value.career.id}`, data.value.career)
+            .then(response => { const value = response.data; if (value == undefined) data.value.career = new Career(Career.EMPTY); else { props.refresh(); data.value.career = response.data; } });
+    else axios.post(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, {
+        person_id: props.person_id,
+        start_date: data.value.career.start_date,
+        end_date: data.value.career.end_date,
+        post: data.value.career.post,
+        place: data.value.career.place
+    })
+        .then(response => { const value = response.data; if (value == undefined) data.value.career = new Career(Career.EMPTY); else { props.refresh(); data.value.career = response.data; } });
+}
+
+function remove() {
+    axios.delete(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career/${data.value.career.id}`)
+        .then(response => { const value = response.data; if (value == undefined) data.value.career = new Career(Career.EMPTY); else { props.refresh(); data.value.career = response.data; } });
+}
 </script>
 
 <template>
-    <Window :index="index" :width="width" :mask="mask" :close="close" header="Карточка карьеры">
+    <Window :index="index" :width="width" :mask="mask" :close="() => { props.refresh(); props.close(); }"
+        header="Карточка карьеры">
 
         <Body style="display: table;">
             <TextField label="Должность:" v-model:value="data.career.post" :readonly="readonly" />
@@ -58,12 +80,11 @@ const data = ref({
         </Body>
         <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button  v-if="career.id != 0" :onClick="remove" text="Удалить"
+                <Button v-if="data.career.id != 0" :onClick="() => { remove(); props.close(); }" text="Удалить"
                     style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">
-                <Button :onClick="save" text="Сохранить"
-                    style="height: 32px;" />
+                <Button :onClick="() => { saveCard(); props.refresh(); }" text="Сохранить" style="height: 32px;" />
             </ButtonGroup>
         </Footer>
     </Window>

@@ -6,6 +6,7 @@ const props = defineProps({
     remove: { type: Function, required: true },
     open: { type: Function, required: true },
     text: { type: String, required: true },
+    removable: { type: Boolean, default: true },
     readonly: Boolean,
     width: String
 });
@@ -19,8 +20,8 @@ const style = computed(() => `width: ${props.width}; max-width: unset;`)
         <Button class="x-item" :onClick="open" :style="style">
             <div class="x-item-container" :style="style">
                 <span class="x-item-text" :style="style">{{ text }}</span>
-                <Button src="/close.svg" v-if="!readonly" class="x-item-button-remove"
-                    :onClick="(event: MouseEvent) => { remove; event.stopImmediatePropagation(); }" />
+                <Button src="/close.svg" v-if="!readonly && removable" class="x-item-button-remove"
+                    :onClick="(event: MouseEvent) => { remove(); event.stopImmediatePropagation(); }" />
             </div>
         </Button>
     </li>

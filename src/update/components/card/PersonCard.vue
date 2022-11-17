@@ -2,7 +2,7 @@
 import Activity from '@/update/entities/tables/Activity';
 import Career from '@/update/entities/tables/Career';
 import Rank from '@/update/entities/tables/Rank';
-import type Place from '@/update/entities/tables/Place';
+import Place from '@/update/entities/tables/Place';
 import type Link from '@/update/entities/tables/Link';
 
 import Person from '@/update/entities/tables/Person';
@@ -20,23 +20,19 @@ import TextField from '../fields/TextField.vue';
 import { ref, onUpdated, onBeforeUnmount, onBeforeMount } from 'vue';
 import DropdownField from '../fields/dropdown/DropdownField.vue';
 import List from '../fields/list/List.vue';
+import env from '../../entities/settings'
 
 import ActivityCard from './ActivityCard.vue';
 import CareerCard from './CareerCard.vue';
 import RankCard from './RankCard.vue';
 import Item from '../fields/list/Item.vue';
 import AlertCard from './AlertCard.vue';
+import axios from 'axios';
 
 const props = defineProps({
-    person: { type: Person, required: true, default: Person.EMPTY },
-    activity: { type: Array<Activity>, required: true, default: [] },
-    career: { type: Array<Career>, required: true, default: [] },
-    place: { type: Array<Place>, required: true, default: [] },
-    link: { type: Array<Link>, required: true, default: [] },
-    rank: { type: Array<Rank>, required: true, default: [] },
-
-    remove: { type: Function, required: true },
-    save: { type: Function, required: true },
+    id: Number,
+    refresh: { type: Function, required: true },
+    close: { type: Function, required: true },
 
     readonly: Boolean,
     mask: Boolean,
@@ -48,21 +44,22 @@ const religionOptions = ref(["Православное", "Римско-като�
 const locationOptions = ref(["Неизвестно", "Европейская часть", "Сибирь"]);
 
 const beforeMount = onBeforeMount(() => {
-    data.value.person = new Person(props.person);
-    data.value.activity = [...props.activity];
-    data.value.career = [...props.career];
-    data.value.place = [...props.place];
-    data.value.rank = [...props.rank];
-
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person`, { params: { id: props.id } })
+        .then(response => { const value = response.data[0]; if (value == undefined) data.value.person = new Person(Person.EMPTY); else data.value.person = response.data[0]; });
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity`, { params: { person_id: props.id } })
+        .then(response => data.value.activity = response.data);
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, { params: { person_id: props.id } })
+        .then(response => data.value.career = response.data);
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank`, { params: { person_id: props.id } })
+        .then(response => data.value.rank = response.data);
     console.log(data.value);
 })
 
 const data = ref({
-    activity: props.activity,
-    person: props.person,
-    career: props.career,
-    place: props.place,
-    rank: props.rank,
+    activity: [Activity.EMPTY],
+    person: Person.EMPTY,
+    career: [Career.EMPTY],
+    rank: [Rank.EMPTY],
     mask: true
 });
 
@@ -79,11 +76,42 @@ const show = ref({
     alert: false
 });
 
-function close() {
-    if (JSON.stringify(props.person) !== JSON.stringify(data.value.person)) {
-        show.value.alert = true;
-        data.value.mask = false;
-    }
+
+function cardRefresh() {
+    props.refresh();
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity`, { params: { person_id: data.value.person.id } })
+        .then(response => data.value.activity = response.data);
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, { params: { person_id: data.value.person.id } })
+        .then(response => data.value.career = response.data);
+    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank`, { params: { person_id: data.value.person.id } })
+        .then(response => data.value.rank = response.data);
+}
+
+function remove() {
+    axios.delete(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person/${data.value.person.id}`).then(() => props.refresh());
+}
+
+function saveCard() {
+    if (data.value.person.id != 0)
+        axios.put(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person/${data.value.person.id}`, data.value.person)
+            .then(response => { const value = response.data; if (value == undefined) data.value.person = new Person(Person.EMPTY); else { props.refresh(); data.value.person = response.data; } });
+    else axios.post(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person`, {
+        surname: data.value.person.surname,
+        name: data.value.person.name,
+        patronymic: data.value.person.patronymic,
+        date_birth: data.value.person.date_birth,
+        religion: data.value.person.religion,
+        origin: data.value.person.origin,
+        level_education: data.value.person.level_education,
+        educational_institution: data.value.person.educational_institution,
+        location_educational_institution: data.value.person.location_educational_institution,
+        property: data.value.person.property,
+        awards: data.value.person.awards,
+        salary: data.value.person.salary,
+        marital_status: data.value.person.marital_status,
+        other: data.value.person.other
+    })
+        .then(response => { const value = response.data; if (value == undefined) data.value.person = new Person(Person.EMPTY); else { props.refresh(); data.value.person = response.data; } });
 }
 </script>
 
@@ -91,13 +119,14 @@ function close() {
     <AlertCard v-if="show.alert" :close="() => { show.alert = false; data.mask = true; }" :mask="show.alert"
         :save="() => { }" :accept="() => { }" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
     </AlertCard>
-    <ActivityCard :readonly="readonly" :link="link" :place="place" :width="'450px'" v-if="show.activity" :mask="true"
-        :close="() => { show.activity = false; data.mask = true; }" :activity="select.activity" />
-    <CareerCard :readonly="readonly" v-if="show.career" :mask="true"
-        :close="() => { show.career = false; data.mask = true; }" :career="select.career" />
-    <RankCard :readonly="readonly" v-if="show.rank" :mask="true" :close="() => { show.rank = false; data.mask = true; }"
-        type :rank="select.rank" />
-    <Window :width="width" :mask="data.mask" :close="close" header="Карточка личности">
+    <ActivityCard :refresh="cardRefresh" :readonly="readonly" :width="'450px'" v-if="show.activity" :mask="true"
+        :close="() => { show.activity = false; data.mask = true; }" :id="select.activity.id"
+        :person_id="data.person.id" />
+    <CareerCard :refresh="cardRefresh" :readonly="readonly" v-if="show.career" :mask="true"
+        :close="() => { show.career = false; data.mask = true; }" :id="select.career.id" :person_id="data.person.id" />
+    <RankCard :refresh="cardRefresh" :readonly="readonly" v-if="show.rank" :mask="true"
+        :close="() => { show.rank = false; data.mask = true; }" type :id="select.rank.id" :person_id="data.person.id" />
+    <Window :width="width" :mask="data.mask" :close="() => { refresh(); close(); }" header="Карточка личности">
 
         <Body>
             <Section header="Биография">
@@ -118,13 +147,10 @@ function close() {
                     :disabled="readonly" :options="locationOptions" />
             </Section>
             <Section header="Личная информация">
-                <TextAreaField label="Имущество:" v-model:value="data.person.property" 
-                    :readonly="readonly" />
-                <TextAreaField label="Награды:" v-model:value="data.person.awards" 
-                    :readonly="readonly" />
-                <TextAreaField label="Жалование:" v-model:value="data.person.salary" 
-                    :readonly="readonly" />
-                <TextAreaField label="Семейное положение:" v-model:value="data.person.marital_status" 
+                <TextAreaField label="Имущество:" v-model:value="data.person.property" :readonly="readonly" />
+                <TextAreaField label="Награды:" v-model:value="data.person.awards" :readonly="readonly" />
+                <TextAreaField label="Жалование:" v-model:value="data.person.salary" :readonly="readonly" />
+                <TextAreaField label="Семейное положение:" v-model:value="data.person.marital_status"
                     :readonly="readonly" />
                 <TextAreaField label="Другое:" v-model:value="data.person.other" :required="false"
                     :readonly="readonly" />
@@ -136,16 +162,16 @@ function close() {
                     <List>
                         <Item :readonly="readonly" v-for="item in data.career"
                             :open="() => { data.mask = false; select.career = item; show.career = true; }"
-                            :remove="remove" :text="item.post" />
+                            :remove="remove" :text="item.post" :removable="false" />
                     </List>
                 </DropdownField>
 
                 <DropdownField label="Чин:" :readonly="readonly"
-                    :create="() => { data.mask = false; show.rank = true; select.rank = Rank.EMPTY; }">
+                    :create="() => { select.rank = Rank.EMPTY; data.mask = false; show.rank = true; }">
                     <List>
                         <Item :readonly="readonly" v-for="item in data.rank"
-                            :open="() => { data.mask = false; select.rank = item; show.rank = true; }" :remove="remove"
-                            :text="item.name" />
+                            :open="() => { data.mask = false; select.rank = item; show.rank = true; }"
+                            :remove="() => { }" :text="item.name" :removable="false" />
                     </List>
                 </DropdownField>
 
@@ -154,7 +180,7 @@ function close() {
                     <List>
                         <Item :readonly="readonly" v-for="item in data.activity"
                             :open="() => { data.mask = false; select.activity = item; show.activity = true; }"
-                            :remove="remove" :text="item.description" />
+                            :remove="() => { }" :text="item.description" :removable="false" />
                     </List>
                 </DropdownField>
 
@@ -162,10 +188,11 @@ function close() {
         </Body>
         <Footer v-if="!readonly" style="height: 42px;">
             <ButtonGroup :right="true">
-                <Button v-if="person.id != 0" :onClick="remove" text="Удалить" style="height: 32px;" />
+                <Button v-if="data.person.id != 0" :onClick="() => { remove(); close(); }" text="Удалить"
+                    style="height: 32px;" />
             </ButtonGroup>
             <ButtonGroup :right="false">
-                <Button :onClick="save" text="Сохранить" style="height: 32px;" />
+                <Button :onClick="() => { saveCard(); }" text="Сохранить" style="height: 32px;" />
             </ButtonGroup>
         </Footer>
     </Window>
