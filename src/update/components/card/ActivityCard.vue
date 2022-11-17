@@ -71,8 +71,6 @@ function dropdownFilter(): Array<Place> {
 
 function cardRefresh() {
     props.refresh();
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity`, { params: { id: data.value.activity.id } })
-        .then(response => { const value = response.data[0]; if (value == undefined) data.value.activity = new Activity(Activity.EMPTY); else data.value.activity = response.data[0] });
     axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/place/all`)
         .then(response => { const value = response.data; if (value == undefined) data.value.place = []; else data.value.place = response.data });
     axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity_place`, { params: { activity_id: data.value.activity.id } })
