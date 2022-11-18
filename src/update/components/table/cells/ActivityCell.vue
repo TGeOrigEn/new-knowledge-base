@@ -10,10 +10,9 @@ const props = defineProps({
 <template>
     <td>
         <p v-for="activity in value">
-            <p>Описание:</p>
             <span>{{ activity.description }};</span>
-            <p>Места:</p>
-            <span>{{ activity.description }};</span>
+        <p v-if="place.length != 0">Места:</p>
+        <p v-for="item in place">{{ item.name }};</p>
         </p>
     </td>
 </template>

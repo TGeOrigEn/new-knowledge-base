@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeMount, ref } from 'vue';
 
-import { Command, Activity, Career, Person, Rank } from '@/update/entities/DataBase';
+import { Command, Activity, Career, Person, Rank, Place, Link } from '@/update/entities/DataBase';
 
 import BiographyCell from './cells/BiographyCell.vue';
 import EducationCell from './cells/EducationCell.vue';
@@ -18,6 +18,10 @@ const activity = ref<Activity[]>([]);
 const person = ref<Person[]>([]);
 
 const career = ref<Career[]>([]);
+
+const place = ref<Place[]>([]);
+
+const link = ref<Link[]>([]);
 
 const rank = ref<Rank[]>([]);
 
@@ -45,6 +49,16 @@ const beforeMount = onBeforeMount(() => {
     Command.select<Rank>(Rank.NAME).then(response => {
         if (response == undefined) return;
         rank.value = response;
+    });
+
+    Command.select<Place>(Place.NAME).then(response => {
+        if (response == undefined) return;
+        place.value = response;
+    });
+
+    Command.select<Link>(Link.NAME).then(response => {
+        if (response == undefined) return;
+        link.value = response;
     });
 })
 
@@ -83,7 +97,9 @@ const mounted = onMounted(() => {
                 <TextCell :value="item.marital_status" />
                 <CareerCell :value="career?.filter(element => element.person_id === item.id)" />
                 <RankCell :value="rank?.filter(element => element.person_id === item.id)" />
-                <ActivityCell :value="activity?.filter(element => element.person_id === item.id)" />
+                <ActivityCell
+                    :place="place.filter(element => link.filter(element => activity?.filter(element => element.person_id === item.id).map(element => element.id).includes(element.activity_id)).map(element => element.place_id).includes(element.id))"
+                    :value="activity?.filter(element => element.person_id === item.id)" />
             </tr>
         </tbody>
     </table>
