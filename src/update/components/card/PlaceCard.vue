@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue';
 
-import { Command, Place } from '../../entities/DataBase';
+import { Command, Link, Place } from '../../entities/DataBase';
 
 import TextAreaField from '../fields/TextAreaField.vue';
 import ButtonGroup from '../buttons/ButtonGroup.vue';
@@ -40,9 +40,11 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Place>(Place.NAME, place.value.id).then(() => {
-        props.refresh();
-        props.close();
+    Command.delete<Link>(Link.NAME, { place_id: place.value.id }).then(() => {
+        Command.delete<Place>(Place.NAME, place.value.id).then(() => {
+            props.refresh();
+            props.close();
+        })
     });
 };
 

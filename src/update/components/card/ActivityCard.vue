@@ -35,13 +35,11 @@ const card = ref({
     refresh: function refresh() {
         Command.select<Link>(Link.NAME, { activity_id: activity.value.id }).then(response => {
             if (response == undefined) return;
-            if (response.length == 0) return;
             link.value = response;
         });
 
         Command.select<Place>(Place.NAME).then(response => {
             if (response == undefined) return;
-            if (response.length == 0) return;
             place.value = response;
         });
     }
@@ -61,28 +59,24 @@ const beforeMount = onBeforeMount(() => {
 
     Command.select<Link>(Link.NAME, { activity_id: props.id }).then(response => {
         if (response == undefined) return;
-        if (response.length == 0) return;
         link.value = response;
     });
 
     Command.select<Place>(Place.NAME).then(response => {
         if (response == undefined) return;
-        if (response.length == 0) return;
         place.value = response;
     });
 });
 
 function deleteLink(place_id: number) {
     Command.delete<Link>(Link.NAME, { place_id: place_id, activity_id: activity.value.id }).then(response => {
-        if (response == undefined) return;
-        props.refresh();
+        card.value.refresh();
     });
 };
 
 function createLink(place_id: number) {
     Command.insert<Link>(Link.NAME, { place_id: place_id, activity_id: activity.value.id }).then(response => {
-        if (response == undefined) return;
-        props.refresh();
+        card.value.refresh();
     });
 };
 
@@ -111,12 +105,14 @@ function save() {
     });
 };
 
-function filter() {
+function filterItems(): Place[] {
     const id: number[] = link.value.map(link => link.place_id);
+    return place.value.filter(place => id.includes(place.id));
+};
 
-    if (link.value.length != 0)
-        return place.value.filter(place => id.includes(place.id));
-    else return place.value;
+function filterDropdown(): Place[] {
+    const id: number[] = link.value.map(link => link.place_id);
+    return place.value.filter(place => !id.includes(place.id));
 };
 </script>
 
@@ -131,12 +127,12 @@ function filter() {
             <DropdownField label="Место:" :readonly="readonly" :create="() => { card.id = -1; card.mask = true; }">
 
                 <List>
-                    <Item v-for="item in filter()" :text="item.name" :remove="() => deleteLink(item.id)"
+                    <Item v-for="item in filterItems()" :text="item.name" :remove="() => deleteLink(item.id)"
                         :open="() => { card.id = item.id; card.mask = true; }" :readonly="readonly" />
                 </List>
 
-                <Dropdown v-if="place.length != 0" :readonly="activity.id == -1">
-                    <Item v-for="item in place" :width="'100%'" :readonly="readonly" :text="item.name"
+                <Dropdown v-if="filterDropdown().length != 0" :readonly="activity.id == -1">
+                    <Item v-for="item in filterDropdown()" :width="'100%'" :readonly="readonly" :text="item.name"
                         :open="() => createLink(item.id)" />
                 </Dropdown>
 

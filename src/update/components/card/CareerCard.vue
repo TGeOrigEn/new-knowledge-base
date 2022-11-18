@@ -34,7 +34,7 @@ const options = ref([
     "Европейская Россия",
     "Восточная сибирь"]);
 
-const career = ref<Career>(Career.instance());
+const career = ref<Career>({ ...Career.instance(), person_id: props.person_id });
 
 const beforeMount = onBeforeMount(() => {
     Command.select<Career>(Career.NAME, { id: props.id }).then(response => {

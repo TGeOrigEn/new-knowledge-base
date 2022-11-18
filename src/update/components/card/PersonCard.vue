@@ -157,10 +157,10 @@ function saveCard() {
             <Section header="Достижения" :disabled="data.person.id == 0">
 
                 <DropdownField label="Карьера:" :readonly="readonly"
-                    :create="() => { data.mask = false; show.career = true; select.career = Career.EMPTY; }">
+                    :create="() => { select.career = Career.EMPTY; data.mask = false; show.career = true; }">
                     <List>
                         <Item :readonly="readonly" v-for="item in data.career"
-                            :open="() => { data.mask = false; select.career = item; show.career = true; }"
+                            :open="() => { select.career = item; data.mask = false; show.career = true; }"
                             :text="item.post" />
                     </List>
                 </DropdownField>
@@ -169,16 +169,16 @@ function saveCard() {
                     :create="() => { select.rank = Rank.EMPTY; data.mask = false; show.rank = true; }">
                     <List>
                         <Item :readonly="readonly" v-for="item in data.rank"
-                            :open="() => { data.mask = false; select.rank = item; show.rank = true; }"
+                            :open="() => { select.rank = item; data.mask = false; show.rank = true; }"
                             :text="item.name" />
                     </List>
                 </DropdownField>
 
                 <DropdownField label="Деятельность:" :readonly="readonly"
-                    :create="() => { data.mask = false; show.activity = true; select.activity = Activity.EMPTY; }">
+                    :create="() => { select.activity = Activity.EMPTY; data.mask = false; show.activity = true; }">
                     <List>
                         <Item :readonly="readonly" v-for="item in data.activity"
-                            :open="() => { data.mask = false; select.activity = item; show.activity = true; }"
+                            :open="() => { select.activity = item; data.mask = false; show.activity = true; }"
                             :text="item.description" />
                     </List>
                 </DropdownField>
