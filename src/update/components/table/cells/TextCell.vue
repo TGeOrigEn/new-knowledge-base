@@ -17,6 +17,7 @@ p {
 }
 
 span {
+    white-space: pre;
     margin: 2px;
 }
 </style>

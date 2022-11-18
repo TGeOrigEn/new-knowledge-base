@@ -22,7 +22,7 @@ const props = defineProps({
     mask: { type: Boolean, required: true },
 });
 
-const options = ref(["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]);
+const options = ref(["Без класса", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]);
 
 const rank = ref<Rank>({ ...Rank.instance(), person_id: props.person_id });
 
@@ -65,7 +65,7 @@ function save() {
             <TextField label="Название:" :readonly="readonly" v-model:value="rank.name" />
             <TextField label="Дата начала:" :readonly="readonly" :type="'date'" v-model:value="rank.start_date" />
             <TextField label="Дата окончания:" :readonly="readonly" :type="'date'" v-model:value="rank.end_date" />
-            <SelectField label="Степень:" :disabled="readonly" :options="options" v-model:value="rank.degree" />
+            <SelectField label="Класс:" :disabled="readonly" :options="options" v-model:value="rank.degree" />
         </Body>
 
         <Footer v-if="!readonly">

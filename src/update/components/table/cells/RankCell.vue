@@ -21,6 +21,7 @@ const props = defineProps({ value: { type: Array<Rank>, required: true } });
 <style scoped>
 p {
     margin: 2px;
+    margin-bottom: 10px;
 }
 
 span {

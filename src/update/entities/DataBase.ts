@@ -102,7 +102,8 @@ class Person {
             awards: "",
             salary: "",
             marital_status: "",
-            other: ""
+            other: "",
+            source: ""
         });
     }
 
@@ -121,6 +122,7 @@ class Person {
     public salary: string;
     public marital_status: string;
     public other: string;
+    public source: string;
 
     public constructor(source: Person) {
         this.id = source.id;
@@ -138,6 +140,7 @@ class Person {
         this.salary = source.salary;
         this.marital_status = source.marital_status;
         this.other = source.other;
+        this.source = source.source;
     }
 }
 

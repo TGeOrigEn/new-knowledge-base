@@ -176,6 +176,11 @@ function save() {
                 </DropdownField>
             </Section>
 
+            <Section header="Источники">
+                <TextAreaField label="Источники:" v-model:value="person.source" :required="false"
+                    :readonly="readonly" />
+            </Section>
+
         </Body>
 
         <Footer v-if="!readonly">
