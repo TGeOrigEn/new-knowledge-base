@@ -1,48 +1,64 @@
 <script setup lang="ts">
-import type Activity from '@/update/entities/tables/Activity';
-import type Career from '@/update/entities/tables/Career';
-import type Person from '@/update/entities/tables/Person';
-import type Rank from '@/update/entities/tables/Rank';
-import { onBeforeMount, onMounted, ref } from 'vue';
+import { onMounted, onBeforeMount, ref } from 'vue';
 
-import ActivityCell from './cells/ActivityCell.vue';
+import { Command, Activity, Career, Person, Rank } from '@/update/entities/DataBase';
+
 import BiographyCell from './cells/BiographyCell.vue';
-import CareerCell from './cells/CareerCell.vue';
 import EducationCell from './cells/EducationCell.vue';
+import ActivityCell from './cells/ActivityCell.vue';
+import PersonCard from '../card/PersonCard.vue';
+import CareerCell from './cells/CareerCell.vue';
 import RankCell from './cells/RankCell.vue';
 import TextCell from './cells/TextCell.vue';
-
+import handle from '../../entities/hadnler';
 import Header from './Header.vue';
 
-import handle from '../../entities/hadnler';
-import PersonCard from '../card/PersonCard.vue';
-import * as DataBase from '@/update/entities/DataBase';
+const activity = ref<Activity[]>([]);
 
-const props = defineProps({
-    refresh: { type: Function, required: true },
-    activity: { type: Array<Activity>, required: true },
-    person: { type: Array<Person>, required: true },
-    career: { type: Array<Career>, required: true },
-    rank: { type: Array<Rank>, required: true }
-});
+const person = ref<Person[]>([]);
 
-const mounted = onMounted(() => handle(document.getElementById('person-table')!, { handler: "column-resize-handler", headline: "headline" }))
+const career = ref<Career[]>([]);
+
+const rank = ref<Rank[]>([]);
 
 const card = ref({
-    id: 0,
-    show: false,
+    disabled: false,
+    id: - 1
 });
 
-const value = ref<DataBase.Person>();
+const beforeMount = onBeforeMount(() => {
+    Command.select<Activity>(Activity.NAME).then(response => {
+        if (response == undefined) return;
+        activity.value = response;
+    });
 
-DataBase.Command.select<DataBase.Person>(DataBase.Person.NAME).then(link => { value.value = link[0]; console.log(link[0]); });
+    Command.select<Career>(Career.NAME).then(response => {
+        if (response == undefined) return;
+        career.value = response;
+    });
+
+    Command.select<Person>(Person.NAME).then(response => {
+        if (response == undefined) return;
+        person.value = response;
+    });
+
+    Command.select<Rank>(Rank.NAME).then(response => {
+        if (response == undefined) return;
+        rank.value = response;
+    });
+})
+
+const mounted = onMounted(() => {
+    handle(document.getElementById('person-table')!, { handler: "column-resize-handler", headline: "headline" });
+});
 </script>
 
 <template>
-
-    <PersonCard v-if="card.show" :refresh="refresh" :mask="true" :close="() => { card.show = false; }" :id="card.id">
+    <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
-    <button style="margin: 20px;" :onClick="() => { card.id = 0; card.show = true; }">СОЗДАТЬ ЛИЧНОСТЬ</button>
+
+    <button style="margin: 20px;" :onClick="() => { card.id = -1; card.disabled = true; }">СОЗДАТЬ ЛИЧНОСТЬ</button>
+
     <table id="person-table">
         <thead>
             <tr class="headline">
@@ -58,9 +74,8 @@ DataBase.Command.select<DataBase.Person>(DataBase.Person.NAME).then(link => { va
             </tr>
         </thead>
         <tbody>
-            <tr :ondblclick="() => { card.id = item.id; card.show = true; }" v-for="(item, index) in person"
-                :key="index">
-                <BiographyCell :value="item" />
+            <tr v-for="item in person" :ondblclick="() => { card.id = item.id; card.disabled = true; }">
+                <BiographyCell :person="item" />
                 <EducationCell :value="item" />
                 <TextCell :value="item.awards" />
                 <TextCell :value="item.salary" />

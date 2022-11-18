@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Person from '@/update/entities/tables/Person';
+import { Person } from '@/update/entities/DataBase';
 
 const props = defineProps({ value: { type: Person, required: true } });
 </script>

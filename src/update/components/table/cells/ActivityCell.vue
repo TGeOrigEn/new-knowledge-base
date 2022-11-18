@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Activity from '@/update/entities/tables/Activity';;
+import type { Activity } from '@/update/entities/DataBase';
 
 const props = defineProps({ value: { type: Array<Activity>, required: true } });
 </script>

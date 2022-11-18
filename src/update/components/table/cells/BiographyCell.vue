@@ -1,27 +1,29 @@
 <script setup lang="ts">
-import Person from '@/update/entities/tables/Person';
+import { Person } from '@/update/entities/DataBase';
 
-const props = defineProps({ value: { type: Person, required: true } });
+const props = defineProps({
+    person: { type: Person, required: true }
+});
 </script>
 
 <template>
     <td>
         <p>
-            <span>{{ value.surname }}</span>
-            <span>{{ value.name }}</span>
-            <span>{{ value.patronymic }};</span>
+            <span>{{ person.surname }}</span>
+            <span>{{ person.name }}</span>
+            <span>{{ person.patronymic }};</span>
         </p>
         <p>
             <span>Год рождения:</span>
-            <span>{{ value.date_birth }}</span>
+            <span>{{ person.date_birth }};</span>
         </p>
         <p>
             <span>Вероисповедание:</span>
-            <span>{{ value.religion }};</span>
+            <span>{{ person.religion }};</span>
         </p>
         <p>
             <span>Происхождение:</span>
-            <span>{{ value.origin }}.</span>
+            <span>{{ person.origin }}.</span>
         </p>
     </td>
 </template>

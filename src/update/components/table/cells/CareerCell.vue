@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Career from '@/update/entities/tables/Career';
+import type { Career } from '@/update/entities/DataBase';
 
 const props = defineProps({ value: { type: Array<Career>, required: true } });
 </script>

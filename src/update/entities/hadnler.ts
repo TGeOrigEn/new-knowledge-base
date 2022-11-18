@@ -20,7 +20,7 @@ export default function handler(tableElement: HTMLElement, className: ClassName)
     const headers = headline ? headline.children : undefined;
     if (!headers) return;
 
-    for (var index = 1; index < headers.length - 1; index++) {
+    for (var index = 0; index < headers.length - 1; index++) {
         const handlerElement = createHandler();
         headers[index].appendChild(handlerElement);
         setListeners(handlerElement, index);

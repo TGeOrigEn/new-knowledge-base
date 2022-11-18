@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Rank from '../../entities/tables/Rank';
 
 import ButtonGroup from '../buttons/ButtonGroup.vue';
 import Window from '../windows/Window.vue';

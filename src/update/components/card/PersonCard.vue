@@ -1,202 +1,198 @@
 <script setup lang="ts">
-import Activity from '@/update/entities/tables/Activity';
-import Career from '@/update/entities/tables/Career';
-import Rank from '@/update/entities/tables/Rank';
-import Place from '@/update/entities/tables/Place';
-import type Link from '@/update/entities/tables/Link';
+import { ref, onBeforeMount } from 'vue';
 
-import Person from '@/update/entities/tables/Person';
+import { Command, Rank, Career, Activity, Person } from '@/update/entities/DataBase';
 
-import ButtonGroup from '../buttons/ButtonGroup.vue';
-import Window from '../windows/Window.vue';
-import Body from '../windows/Body.vue';
-import Footer from '../windows/Footer.vue';
-import Button from '../buttons/Button.vue';
-import Section from '../Section.vue';
-
+import DropdownField from '../fields/dropdown/DropdownField.vue';
 import TextAreaField from '../fields/TextAreaField.vue';
+import ButtonGroup from '../buttons/ButtonGroup.vue';
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
-import { ref, onUpdated, onBeforeUnmount, onBeforeMount } from 'vue';
-import DropdownField from '../fields/dropdown/DropdownField.vue';
-import List from '../fields/list/List.vue';
-import env from '../../entities/settings'
-
 import ActivityCard from './ActivityCard.vue';
-import CareerCard from './CareerCard.vue';
-import RankCard from './RankCard.vue';
+import Window from '../windows/Window.vue';
+import Footer from '../windows/Footer.vue';
+import List from '../fields/list/List.vue';
 import Item from '../fields/list/Item.vue';
-import AlertCard from './AlertCard.vue';
-import axios from 'axios';
+import Button from '../buttons/Button.vue';
+import CareerCard from './CareerCard.vue';
+import Body from '../windows/Body.vue';
+import RankCard from './RankCard.vue';
+import Section from '../Section.vue';
 
 const props = defineProps({
-    id: Number,
-    refresh: { type: Function, required: true },
+    id: { type: Number, required: true },
     close: { type: Function, required: true },
-
-    readonly: Boolean,
-    mask: Boolean,
+    readonly: { type: Boolean, required: true },
 });
 
 const educationOptions = ref(["Нет образования", "Начальное образование", "Домашнее образование", "Среднее образование", "Среднее военное образование", "Высшее образование", "Высшее военное образование"]);
 const religionOptions = ref(["Православное", "Римско-католическое", "Евангельско-лютеранское", "Иное"]);
 const locationOptions = ref(["Неизвестно", "Европейская часть", "Сибирь"]);
 
-const beforeMount = onBeforeMount(() => {
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person`, { params: { id: props.id } })
-        .then(response => { const value = response.data[0]; if (value == undefined) data.value.person = new Person(Person.EMPTY); else data.value.person = response.data[0]; });
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity`, { params: { person_id: props.id } })
-        .then(response => data.value.activity = response.data);
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, { params: { person_id: props.id } })
-        .then(response => data.value.career = response.data);
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank`, { params: { person_id: props.id } })
-        .then(response => data.value.rank = response.data);
-    console.log(data.value);
-})
+const mask = ref(true);
 
-const data = ref({
-    activity: [Activity.EMPTY],
-    person: Person.EMPTY,
-    career: [Career.EMPTY],
-    rank: [Rank.EMPTY],
-    mask: true
-});
-
-const select = ref({
-    activity: Activity.EMPTY,
-    career: Career.EMPTY,
-    rank: Rank.EMPTY
-});
-
-const show = ref({
+const displayed = ref({
     activity: false,
     career: false,
     rank: false,
-    alert: false
 });
 
+const selected = ref({
+    activity_id: -1,
+    career_id: -1,
+    rank_id: -1
+});
 
-function cardRefresh() {
-    props.refresh();
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/activity`, { params: { person_id: data.value.person.id } })
-        .then(response => data.value.activity = response.data);
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, { params: { person_id: data.value.person.id } })
-        .then(response => data.value.career = response.data);
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/rank`, { params: { person_id: data.value.person.id } })
-        .then(response => data.value.rank = response.data);
+const person = ref<Person>(Person.instance());
+
+const activity = ref<Activity[]>([]);
+
+const career = ref<Career[]>([]);
+
+const rank = ref<Rank[]>([]);
+
+const beforeMount = onBeforeMount(() => {
+    Command.select<Activity>(Activity.NAME, { person_id: props.id }).then(response => {
+        if (response == undefined) return;
+        activity.value = response;
+    });
+
+    Command.select<Career>(Career.NAME, { person_id: props.id }).then(response => {
+        if (response == undefined) return;
+        career.value = response;
+    });
+
+    Command.select<Person>(Person.NAME, { id: props.id }).then(response => {
+        if (response == undefined) return;
+        if (response.length == 0) return;
+        person.value = response[0];
+    });
+
+    Command.select<Rank>(Rank.NAME, { person_id: props.id }).then(response => {
+        if (response == undefined) return;
+        rank.value = response;
+    });
+})
+
+function update() {
+    Command.select<Activity>(Activity.NAME, { person_id: props.id }).then(response => {
+        if (response == undefined) return;
+        activity.value = response;
+    });
+
+    Command.select<Career>(Career.NAME, { person_id: props.id }).then(response => {
+        if (response == undefined) return;
+        career.value = response;
+    });
+
+    Command.select<Rank>(Rank.NAME, { person_id: props.id }).then(response => {
+        if (response == undefined) return;
+        rank.value = response;
+    });
 }
+
+function create() {
+    Command.insert<Person>(Person.NAME, person.value).then(response => {
+        if (response == undefined) return;
+        person.value = response;
+    });
+};
 
 function remove() {
-    axios.delete(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person/${data.value.person.id}`).then(() => props.refresh());
-}
+    Command.delete<Person>(Person.NAME, person.value.id).then(() => {
+        props.close();
+    });
+};
 
-function saveCard() {
-    if (data.value.person.id != 0)
-        axios.put(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person/${data.value.person.id}`, data.value.person)
-            .then(response => { const value = response.data; if (value == undefined) data.value.person = new Person(Person.EMPTY); else { props.refresh(); data.value.person = response.data; } });
-    else axios.post(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/person`, {
-        surname: data.value.person.surname,
-        name: data.value.person.name,
-        patronymic: data.value.person.patronymic,
-        date_birth: data.value.person.date_birth,
-        religion: data.value.person.religion,
-        origin: data.value.person.origin,
-        level_education: data.value.person.level_education,
-        educational_institution: data.value.person.educational_institution,
-        location_educational_institution: data.value.person.location_educational_institution,
-        property: data.value.person.property,
-        awards: data.value.person.awards,
-        salary: data.value.person.salary,
-        marital_status: data.value.person.marital_status,
-        other: data.value.person.other
-    })
-        .then(response => { const value = response.data; if (value == undefined) data.value.person = new Person(Person.EMPTY); else { props.refresh(); data.value.person = response.data; } });
-}
+function save() {
+    Command.update<Person>(Person.NAME, person.value.id, person.value).then(response => {
+        if (response == undefined) return;
+        person.value = response;
+    });
+};
 </script>
 
 <template>
-    <AlertCard v-if="show.alert" :close="() => { show.alert = false; data.mask = true; }" :mask="show.alert"
-        :save="() => { }" :accept="() => { }" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
-    </AlertCard>
-    <ActivityCard :refresh="cardRefresh" :readonly="readonly" v-if="show.activity" :mask="true"
-        :close="() => { show.activity = false; data.mask = true; }" :id="select.activity.id"
-        :person_id="data.person.id" />
-    <CareerCard :refresh="cardRefresh" :readonly="readonly" v-if="show.career" :mask="true"
-        :close="() => { show.career = false; data.mask = true; }" :id="select.career.id" :person_id="data.person.id" />
-    <RankCard :refresh="cardRefresh" :readonly="readonly" v-if="show.rank" :mask="true"
-        :close="() => { show.rank = false; data.mask = true; }" type :id="select.rank.id" :person_id="data.person.id" />
-    <Window :width="'700px'" :mask="data.mask" :close="() => { refresh(); close(); }" header="Карточка личности">
+    <ActivityCard :refresh="update" :readonly="readonly" v-if="displayed.activity" :mask="true"
+        :close="() => { displayed.activity = false; mask = true; }" :id="selected.activity_id" :person_id="person.id" />
+    <CareerCard :refresh="update" :readonly="readonly" v-if="displayed.career" :mask="true"
+        :close="() => { displayed.career = false; mask = true; }" :id="selected.career_id" :person_id="person.id" />
+    <RankCard :refresh="update" :readonly="readonly" v-if="displayed.rank" :mask="true"
+        :close="() => { displayed.rank = false; mask = true; }" type :id="selected.rank_id" :person_id="person.id" />
+    <Window :width="'700px'" :mask="mask" :close="props.close" header="Карточка личности">
 
         <Body>
+
             <Section header="Биография">
-                <TextField label="Имя:" v-model:value="data.person.name" :readonly="readonly" />
-                <TextField label="Фамилия:" v-model:value="data.person.surname" :readonly="readonly" />
-                <TextField label="Отчество:" v-model:value="data.person.patronymic" :readonly="readonly" />
-                <TextField label="Дата рождения:" v-model:value="data.person.date_birth" :readonly="readonly" />
-                <SelectField label="Вероисповедание:" v-model:value="data.person.religion" :disabled="readonly"
+                <TextField label="Имя:" v-model:value="person.name" :readonly="readonly" />
+                <TextField label="Фамилия:" v-model:value="person.surname" :readonly="readonly" />
+                <TextField label="Отчество:" v-model:value="person.patronymic" :readonly="readonly" />
+                <TextField label="Дата рождения:" v-model:value="person.date_birth" :readonly="readonly" />
+                <SelectField label="Вероисповедание:" v-model:value="person.religion" :disabled="readonly"
                     :options="religionOptions" />
-                <TextField label="Происхождение:" v-model:value="data.person.origin" :readonly="readonly" />
+                <TextField label="Происхождение:" v-model:value="person.origin" :readonly="readonly" />
             </Section>
+
             <Section header="Образование">
-                <SelectField label="Уровень образования:" v-model:value="data.person.level_education"
-                    :disabled="readonly" :options="educationOptions" />
-                <TextField label="Учебное учреждение:" v-model:value="data.person.educational_institution"
+                <SelectField label="Уровень образования:" v-model:value="person.level_education" :disabled="readonly"
+                    :options="educationOptions" />
+                <TextField label="Учебное учреждение:" v-model:value="person.educational_institution"
                     :readonly="readonly" />
-                <SelectField label="Место учёбы:" v-model:value="data.person.location_educational_institution"
+                <SelectField label="Место учёбы:" v-model:value="person.location_educational_institution"
                     :disabled="readonly" :options="locationOptions" />
             </Section>
-            <Section header="Личная информация">
-                <TextAreaField label="Имущество:" v-model:value="data.person.property" :readonly="readonly" />
-                <TextAreaField label="Награды:" v-model:value="data.person.awards" :readonly="readonly" />
-                <TextAreaField label="Жалование:" v-model:value="data.person.salary" :readonly="readonly" />
-                <TextAreaField label="Семейное положение:" v-model:value="data.person.marital_status"
-                    :readonly="readonly" />
-                <TextAreaField label="Другое:" v-model:value="data.person.other" :required="false"
-                    :readonly="readonly" />
-            </Section>
-            <Section header="Достижения" :disabled="data.person.id == 0">
 
+            <Section header="Личная информация">
+                <TextAreaField label="Имущество:" v-model:value="person.property" :readonly="readonly" />
+                <TextAreaField label="Награды:" v-model:value="person.awards" :readonly="readonly" />
+                <TextAreaField label="Жалование:" v-model:value="person.salary" :readonly="readonly" />
+                <TextAreaField label="Семейное положение:" v-model:value="person.marital_status" :readonly="readonly" />
+                <TextAreaField label="Другое:" v-model:value="person.other" :required="false" :readonly="readonly" />
+            </Section>
+
+            <Section header="Достижения" :disabled="person.id == -1">
                 <DropdownField label="Карьера:" :readonly="readonly"
-                    :create="() => { select.career = Career.EMPTY; data.mask = false; show.career = true; }">
+                    :create="() => { selected.career_id = -1; mask = false; displayed.career = true; }">
                     <List>
-                        <Item :readonly="readonly" v-for="item in data.career"
-                            :open="() => { select.career = item; data.mask = false; show.career = true; }"
-                            :text="item.post" />
+                        <Item :readonly="readonly" v-for="item in career" :text="item.post"
+                            :open="() => { selected.career_id = item.id; mask = false; displayed.career = true; }" />
                     </List>
                 </DropdownField>
 
                 <DropdownField label="Чин:" :readonly="readonly"
-                    :create="() => { select.rank = Rank.EMPTY; data.mask = false; show.rank = true; }">
+                    :create="() => { selected.rank_id = -1; mask = false; displayed.rank = true; }">
                     <List>
-                        <Item :readonly="readonly" v-for="item in data.rank"
-                            :open="() => { select.rank = item; data.mask = false; show.rank = true; }"
-                            :text="item.name" />
+                        <Item :readonly="readonly" v-for="item in rank" :text="item.name"
+                            :open="() => { selected.rank_id = item.id; mask = false; displayed.rank = true; }" />
                     </List>
                 </DropdownField>
 
                 <DropdownField label="Деятельность:" :readonly="readonly"
-                    :create="() => { select.activity = Activity.EMPTY; data.mask = false; show.activity = true; }">
+                    :create="() => { selected.activity_id = -1; mask = false; displayed.activity = true; }">
                     <List>
-                        <Item :readonly="readonly" v-for="item in data.activity"
-                            :open="() => { select.activity = item; data.mask = false; show.activity = true; }"
-                            :text="item.description" />
+                        <Item :readonly="readonly" v-for="item in activity" :text="item.description"
+                            :open="() => { selected.activity_id = item.id; mask = false; displayed.activity = true; }" />
                     </List>
                 </DropdownField>
-
             </Section>
+
         </Body>
-        <Footer v-if="!readonly" style="height: 42px;">
+
+        <Footer v-if="!readonly">
             <ButtonGroup :right="true">
-                <Button v-if="data.person.id != 0" :onClick="() => { remove(); close(); }" text="Удалить"
-                    style="height: 32px;" />
+                <Button v-if="person.id != -1" class="x-button" text="Удалить" :onClick="remove"></Button>
             </ButtonGroup>
-            <ButtonGroup :right="false">
-                <Button :onClick="() => { saveCard(); }" text="Сохранить" style="height: 32px;" />
+            <ButtonGroup :left="true">
+                <Button v-if="person.id != -1" class="x-button" text="Сохранить" :onClick="save"></Button>
+                <Button v-if="person.id == -1" class="x-button" text="Создать" :onClick="create"></Button>
             </ButtonGroup>
         </Footer>
+
     </Window>
 </template>
 
-<style>
-
+<style scoped>
+.x-button {
+    height: 32px;
+}
 </style>

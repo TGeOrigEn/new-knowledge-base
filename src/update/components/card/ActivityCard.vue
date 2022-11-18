@@ -18,7 +18,7 @@ import Body from '../windows/Body.vue';
 
 const props = defineProps({
     person_id: { type: Number, required: true },
-    id: { type: Number, default: -1 },
+    id: { type: Number, required: true },
 
     refresh: { type: Function, required: true },
     close: { type: Function, required: true },

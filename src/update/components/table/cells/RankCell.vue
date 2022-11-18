@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type Rank from '@/update/entities/tables/Rank';
+import type { Rank } from '@/update/entities/DataBase';
 
 const props = defineProps({ value: { type: Array<Rank>, required: true } });
 </script>
