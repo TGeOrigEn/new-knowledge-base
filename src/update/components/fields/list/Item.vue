@@ -12,7 +12,7 @@ const props = defineProps({
     width: String
 });
 
-const style = computed(() => `width: ${props.width}; max-width: unset;`)
+const style = computed(() => props.width != undefined ? `width: ${props.width}; max-width: unset;` : "")
 
 function click(event: MouseEvent) {
     if (props.remove !== undefined)
