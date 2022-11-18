@@ -26,8 +26,6 @@ const options = ref(["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"
 
 const rank = ref<Rank>({ ...Rank.instance(), person_id: props.person_id });
 
-const mask = ref<Boolean>(props.mask);
-
 const beforeMount = onBeforeMount(() => {
     Command.select<Rank>(Rank.NAME, { id: props.id }).then(response => {
         if (response == undefined) return;
@@ -35,6 +33,14 @@ const beforeMount = onBeforeMount(() => {
         rank.value = response[0];
     });
 });
+
+function create() {
+    Command.insert<Rank>(Rank.NAME, rank.value).then(response => {
+        if (response == undefined) return;
+        rank.value = response;
+        props.refresh();
+    });
+};
 
 function remove() {
     Command.delete<Rank>(Rank.NAME, rank.value.id).then(() => {
@@ -50,29 +56,21 @@ function save() {
         props.refresh();
     });
 };
-
-function create() {
-    Command.insert<Rank>(Rank.NAME, rank.value).then(response => {
-        if (response == undefined) return;
-        rank.value = response;
-        props.refresh();
-    });
-};
 </script>
 
 <template>
     <Window :index="2" :mask="mask" :close="props.close" header="Карточка чина">
 
         <Body class="x-dody">
-            <TextField label="Название:" v-model:value="rank.name" :readonly="readonly" />
-            <TextField label="Дата начала:" v-model:value="rank.start_date" :readonly="readonly" :type="'date'" />
-            <TextField label="Дата окончания:" v-model:value="rank.end_date" :readonly="readonly" :type="'date'" />
-            <SelectField label="Степень:" v-model:value="rank.degree" :disabled="readonly" :options="options" />
+            <TextField label="Название:" :readonly="readonly" v-model:value="rank.name" />
+            <TextField label="Дата начала:" :readonly="readonly" :type="'date'" v-model:value="rank.start_date" />
+            <TextField label="Дата окончания:" :readonly="readonly" :type="'date'" v-model:value="rank.end_date" />
+            <SelectField label="Степень:" :disabled="readonly" :options="options" v-model:value="rank.degree" />
         </Body>
 
         <Footer v-if="!readonly">
             <ButtonGroup :right="true">
-                <Button v-if="rank.id != -1" class="x-button" text="Удалить" :onClick="remove" />
+                <Button v-if="rank.id != -1" class="x-button" text="Удалить" :onClick="remove"></Button>
             </ButtonGroup>
             <ButtonGroup :left="true">
                 <Button v-if="rank.id != -1" class="x-button" text="Сохранить" :onClick="save"></Button>
@@ -89,7 +87,6 @@ function create() {
 }
 
 .x-dody {
-    width: 100%;
     display: table;
 }
 </style>

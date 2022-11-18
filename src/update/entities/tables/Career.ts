@@ -1,8 +1,8 @@
 export default class Career {
 
     public static EMPTY: Career = new Career({
-        id: 0,
-        person_id: 0,
+        id: -1,
+        person_id: -1,
         start_date: "",
         end_date: "",
         post: "",

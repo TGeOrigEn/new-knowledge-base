@@ -3,16 +3,23 @@ import { computed } from '@vue/reactivity';
 import Button from '../../buttons/Button.vue';
 
 const props = defineProps({
-    remove: { type: Function, required: true },
+    remove: { type: Function, default: undefined },
     open: { type: Function, required: true },
+
+    readonly: { type: Boolean, required: true },
     text: { type: String, required: true },
-    removable: { type: Boolean, default: true },
-    readonly: Boolean,
+
     width: String
 });
 
 const style = computed(() => `width: ${props.width}; max-width: unset;`)
 
+function click(event: MouseEvent) {
+    if (props.remove !== undefined)
+        props.remove();
+
+    event.stopImmediatePropagation();
+}
 </script>
 
 <template>
@@ -20,8 +27,8 @@ const style = computed(() => `width: ${props.width}; max-width: unset;`)
         <Button class="x-item" :onClick="open" :style="style">
             <div class="x-item-container" :style="style">
                 <span class="x-item-text" :style="style">{{ text }}</span>
-                <Button src="/close.svg" v-if="!readonly && removable" class="x-item-button-remove"
-                    :onClick="(event: MouseEvent) => { remove(); event.stopImmediatePropagation(); }" />
+                <Button src="/close.svg" v-if="!readonly && remove !== undefined" class="x-item-button-remove"
+                    @click="click" />
             </div>
         </Button>
     </li>

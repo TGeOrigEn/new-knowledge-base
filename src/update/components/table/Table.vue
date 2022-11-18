@@ -40,8 +40,7 @@ DataBase.Command.select<DataBase.Person>(DataBase.Person.NAME).then(link => { va
 
 <template>
 
-    <PersonCard :width="'700px'" v-if="card.show" :refresh="refresh" :mask="true" :close="() => { card.show = false; }"
-        :id="card.id">
+    <PersonCard v-if="card.show" :refresh="refresh" :mask="true" :close="() => { card.show = false; }" :id="card.id">
     </PersonCard>
     <button style="margin: 20px;" :onClick="() => { card.id = 0; card.show = true; }">СОЗДАТЬ ЛИЧНОСТЬ</button>
     <table id="person-table">

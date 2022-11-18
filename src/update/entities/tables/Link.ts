@@ -1,9 +1,9 @@
 export default class Link {
 
     public static EMPTY: Link = new Link({
-        id: 0,
-        activity_id: 0,
-        place_id: 0,
+        id: -1,
+        activity_id: -1,
+        place_id: -1,
     });
 
     public id: number;

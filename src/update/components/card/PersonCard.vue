@@ -36,7 +36,6 @@ const props = defineProps({
 
     readonly: Boolean,
     mask: Boolean,
-    width: String
 });
 
 const educationOptions = ref(["Нет образования", "Начальное образование", "Домашнее образование", "Среднее образование", "Среднее военное образование", "Высшее образование", "Высшее военное образование"]);
@@ -119,14 +118,14 @@ function saveCard() {
     <AlertCard v-if="show.alert" :close="() => { show.alert = false; data.mask = true; }" :mask="show.alert"
         :save="() => { }" :accept="() => { }" :message="'Вы не сохранили карточку.\n Закрыть карточку?'">
     </AlertCard>
-    <ActivityCard :refresh="cardRefresh" :readonly="readonly" :width="'450px'" v-if="show.activity" :mask="true"
+    <ActivityCard :refresh="cardRefresh" :readonly="readonly" v-if="show.activity" :mask="true"
         :close="() => { show.activity = false; data.mask = true; }" :id="select.activity.id"
         :person_id="data.person.id" />
     <CareerCard :refresh="cardRefresh" :readonly="readonly" v-if="show.career" :mask="true"
         :close="() => { show.career = false; data.mask = true; }" :id="select.career.id" :person_id="data.person.id" />
     <RankCard :refresh="cardRefresh" :readonly="readonly" v-if="show.rank" :mask="true"
         :close="() => { show.rank = false; data.mask = true; }" type :id="select.rank.id" :person_id="data.person.id" />
-    <Window :width="width" :mask="data.mask" :close="() => { refresh(); close(); }" header="Карточка личности">
+    <Window :width="'700px'" :mask="data.mask" :close="() => { refresh(); close(); }" header="Карточка личности">
 
         <Body>
             <Section header="Биография">
@@ -162,7 +161,7 @@ function saveCard() {
                     <List>
                         <Item :readonly="readonly" v-for="item in data.career"
                             :open="() => { data.mask = false; select.career = item; show.career = true; }"
-                            :remove="remove" :text="item.post" :removable="false" />
+                            :text="item.post" />
                     </List>
                 </DropdownField>
 
@@ -171,7 +170,7 @@ function saveCard() {
                     <List>
                         <Item :readonly="readonly" v-for="item in data.rank"
                             :open="() => { data.mask = false; select.rank = item; show.rank = true; }"
-                            :remove="() => { }" :text="item.name" :removable="false" />
+                            :text="item.name" />
                     </List>
                 </DropdownField>
 
@@ -180,7 +179,7 @@ function saveCard() {
                     <List>
                         <Item :readonly="readonly" v-for="item in data.activity"
                             :open="() => { data.mask = false; select.activity = item; show.activity = true; }"
-                            :remove="() => { }" :text="item.description" :removable="false" />
+                            :text="item.description" />
                     </List>
                 </DropdownField>
 

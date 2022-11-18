@@ -1,7 +1,7 @@
 export default class Place {
 
     public static EMPTY: Place = new Place({
-        id: 0,
+        id: -1,
         name: "",
         description: "",
         longitude: 0,

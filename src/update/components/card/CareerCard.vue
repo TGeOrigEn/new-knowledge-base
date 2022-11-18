@@ -1,28 +1,25 @@
 <script setup lang="ts">
-import Career from '../../entities/tables/Career';
+import { ref, onBeforeMount } from 'vue';
+
+import { Command, Career } from '../../entities/DataBase';
 
 import ButtonGroup from '../buttons/ButtonGroup.vue';
-import Window from '../windows/Window.vue';
-import Body from '../windows/Body.vue';
-import Footer from '../windows/Footer.vue';
-import Button from '../buttons/Button.vue';
-import Section from '../Section.vue';
-
 import SelectField from '../fields/SelectField.vue';
 import TextField from '../fields/TextField.vue';
-import { ref, onBeforeMount } from 'vue';
-import env from '../../entities/settings';
-import axios from 'axios';
+import Window from '../windows/Window.vue';
+import Footer from '../windows/Footer.vue';
+import Button from '../buttons/Button.vue';
+import Body from '../windows/Body.vue';
 
 const props = defineProps({
-    id: Number,
-    person_id: Number,
+    person_id: { type: Number, required: true },
+    id: { type: Number, default: -1 },
+
     refresh: { type: Function, required: true },
     close: { type: Function, required: true },
-    index: { type: Number, default: 2 },
-    readonly: Boolean,
-    width: String,
-    mask: Boolean
+
+    readonly: { type: Boolean, required: true },
+    mask: { type: Boolean, required: true },
 });
 
 const options = ref([
@@ -37,59 +34,69 @@ const options = ref([
     "Европейская Россия",
     "Восточная сибирь"]);
 
+const career = ref<Career>(Career.instance());
+
 const beforeMount = onBeforeMount(() => {
-    axios.get(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, { params: { id: props.id } })
-        .then(response => { const value = response.data[0]; if (value == undefined) data.value.career = new Career(Career.EMPTY); else data.value.career = response.data[0] });
+    Command.select<Career>(Career.NAME, { id: props.id }).then(response => {
+        if (response == undefined) return;
+        if (response.length == 0) return;
+        career.value = response[0];
+    });
 })
 
-const data = ref({
-    career: Career.EMPTY
-});
-
-function saveCard() {
-    if (data.value.career.id != 0)
-        axios.put(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career/${data.value.career.id}`, data.value.career)
-            .then(response => { const value = response.data; if (value == undefined) data.value.career = new Career(Career.EMPTY); else { props.refresh(); data.value.career = response.data; } });
-    else axios.post(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career`, {
-        person_id: props.person_id,
-        start_date: data.value.career.start_date,
-        end_date: data.value.career.end_date,
-        post: data.value.career.post,
-        place: data.value.career.place
-    })
-        .then(response => { const value = response.data; if (value == undefined) data.value.career = new Career(Career.EMPTY); else { props.refresh(); data.value.career = response.data; } });
-}
+function create() {
+    Command.insert<Career>(Career.NAME, career.value).then(response => {
+        if (response == undefined) return;
+        career.value = response;
+        props.refresh();
+    });
+};
 
 function remove() {
-    axios.delete(`http://${env.SERVER_HOST}:${env.SERVER_PORT}/api/career/${data.value.career.id}`)
-        .then(response => { const value = response.data; if (value == undefined) data.value.career = new Career(Career.EMPTY); else { props.refresh(); data.value.career = response.data; } });
-}
+    Command.delete<Career>(Career.NAME, career.value.id).then(() => {
+        props.refresh();
+        props.close();
+    });
+};
+
+function save() {
+    Command.update<Career>(Career.NAME, career.value.id, career.value).then(response => {
+        if (response == undefined) return;
+        career.value = response;
+        props.refresh();
+    });
+};
 </script>
 
 <template>
-    <Window :index="index" :width="width" :mask="mask" :close="() => { props.refresh(); props.close(); }"
-        header="Карточка карьеры">
+    <Window :index="2" :mask="mask" :close="props.close" header="Карточка карьеры">
 
-        <Body style="display: table;">
-            <TextField label="Должность:" v-model:value="data.career.post" :readonly="readonly" />
-            <TextField label="Дата начала:" v-model:value="data.career.start_date" :readonly="readonly"
-                :type="'date'" />
-            <TextField label="Дата окончания:" v-model:value="data.career.end_date" :readonly="readonly"
-                :type="'date'" />
-            <SelectField label="Место:" v-model:value="data.career.place" :disabled="readonly" :options="options" />
+        <Body class="x-body">
+            <TextField label="Должность:" :readonly="readonly" v-model:value="career.post" />
+            <TextField label="Дата начала:" :readonly="readonly" :type="'date'" v-model:value="career.start_date" />
+            <TextField label="Дата окончания:" :readonly="readonly" :type="'date'" v-model:value="career.end_date" />
+            <SelectField label="Место:" :disabled="readonly" :options="options" v-model:value="career.place" />
         </Body>
-        <Footer v-if="!readonly" style="height: 42px;">
+
+        <Footer v-if="!readonly">
             <ButtonGroup :right="true">
-                <Button v-if="data.career.id != 0" :onClick="() => { remove(); props.close(); }" text="Удалить"
-                    style="height: 32px;" />
+                <Button v-if="career.id != -1" class="x-button" text="Удалить" :onClick="remove"></Button>
             </ButtonGroup>
-            <ButtonGroup :right="false">
-                <Button :onClick="() => { saveCard(); props.refresh(); }" text="Сохранить" style="height: 32px;" />
+            <ButtonGroup :left="true">
+                <Button v-if="career.id != -1" class="x-button" text="Сохранить" :onClick="save"></Button>
+                <Button v-if="career.id == -1" class="x-button" text="Создать" :onClick="create"></Button>
             </ButtonGroup>
         </Footer>
+
     </Window>
 </template>
 
-<style>
+<style scoped>
+.x-button {
+    height: 32px;
+}
 
+.x-body {
+    display: table;
+}
 </style>

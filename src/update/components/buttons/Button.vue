@@ -12,7 +12,7 @@ const props = defineProps({
             
 <template>
     <button :disabled="disabled" class="x-button" :style="style">
-        <label class="x-button-text" v-if="text != undefined">{{ text }}</label>
+        <span class="x-button-text" v-if="text != undefined">{{ text }}</span>
         <slot></slot>
     </button>
 </template>

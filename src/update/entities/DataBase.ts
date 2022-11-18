@@ -7,19 +7,21 @@ class Command {
 
     public static async select<T>(table: string, condition?: any): Promise<T[] | undefined> {
         return condition == undefined
-            ? await [(await axios.get<T>(`${Command.CONNECTION_STRING}/${table}/all`)).data]
+            ? await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}/all`)).data
             : await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
     }
 
-    public static async delete<T>(table: string, id: number): Promise<T | undefined> {
-        return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}/${id}`)).data;
+    public static async delete<T>(table: string, condition: number | any): Promise<T | undefined> {
+        if (typeof condition === "number")
+            return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}/${condition}`)).data;
+        return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
     }
 
     public static async update<T>(table: string, id: number, source: T): Promise<T | undefined> {
         return await (await axios.put<T>(`${Command.CONNECTION_STRING}/${table}/${id}`, source)).data;
     }
 
-    public static async insert<T>(table: string, person: T): Promise<T | undefined> {
+    public static async insert<T>(table: string, person: T | any): Promise<T | undefined> {
         return await (await axios.post<T>(`${Command.CONNECTION_STRING}/${table}`, person)).data;
     }
 }
@@ -30,8 +32,8 @@ class Activity {
 
     public static instance(): Activity {
         return new Activity({
-            id: 0,
-            person_id: 0,
+            id: -1,
+            person_id: -1,
             description: ""
         });
     }
@@ -53,8 +55,8 @@ class Career {
 
     public static instance(): Career {
         return new Career({
-            id: 0,
-            person_id: 0,
+            id: -1,
+            person_id: -1,
             start_date: "",
             end_date: "",
             post: "",
@@ -86,7 +88,7 @@ class Person {
 
     public static instance(): Person {
         return new Person({
-            id: 0,
+            id: -1,
             surname: "",
             name: "",
             patronymic: "",
@@ -145,7 +147,7 @@ class Place {
 
     public static instance(): Place {
         return new Place({
-            id: 0,
+            id: -1,
             name: "",
             description: "",
             longitude: 0,
@@ -174,9 +176,9 @@ class Link {
 
     public static instance(): Link {
         return new Link({
-            id: 0,
-            activity_id: 0,
-            place_id: 0,
+            id: -1,
+            activity_id: -1,
+            place_id: -1,
         });
     }
 
@@ -198,7 +200,7 @@ class Rank {
     public static instance(): Rank {
         return new Rank({
             id: -1,
-            person_id: 0,
+            person_id: -1,
             start_date: "",
             end_date: "",
             degree: "",
