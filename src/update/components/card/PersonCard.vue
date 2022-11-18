@@ -176,7 +176,7 @@ function save() {
                 </DropdownField>
             </Section>
 
-            <Section header="Источники">
+            <Section header="Источники" :disabled="person.id == -1">
                 <TextAreaField label="Источники:" v-model:value="person.source" :required="false"
                     :readonly="readonly" />
             </Section>
