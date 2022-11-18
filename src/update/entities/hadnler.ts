@@ -105,3 +105,6 @@ export default function handler(tableElement: HTMLElement, className: ClassName)
         return window.getComputedStyle(element, null).getPropertyValue(propertyName);
     };
 };
+
+
+

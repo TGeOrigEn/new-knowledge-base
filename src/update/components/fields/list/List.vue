@@ -11,6 +11,7 @@
 .x-field-items-list {
     flex-flow: row wrap;
     list-style-type: none;
+    min-width: 100px;
     display: flex;
     align-items: center;
 }

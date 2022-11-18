@@ -26,7 +26,6 @@ const data = ref({
 .lol {
     position: absolute;
     top: 100%;
-    width: 100%;
     margin-top: 2px;
     flex-direction: column;
     display: flex;
@@ -36,5 +35,6 @@ const data = ref({
     border-radius: 4px;
     touch-action: manipulation;
     white-space: pre;
+    right: 0;
 }
 </style>

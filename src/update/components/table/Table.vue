@@ -12,6 +12,7 @@ import RankCell from './cells/RankCell.vue';
 import TextCell from './cells/TextCell.vue';
 import handle from '../../entities/hadnler';
 import Header from './Header.vue';
+import { size } from '../../entities/table'
 
 const activity = ref<Activity[]>([]);
 
@@ -62,8 +63,10 @@ const beforeMount = onBeforeMount(() => {
     });
 })
 
+
 const mounted = onMounted(() => {
     handle(document.getElementById('person-table')!, { handler: "column-resize-handler", headline: "headline" });
+    //size();
 });
 </script>
 
@@ -107,15 +110,6 @@ const mounted = onMounted(() => {
 </template>
 
 <style scoped>
-table {
-    display: block;
-    border-collapse: separate;
-    border-spacing: 0;
-    max-height: 80vh !important;
-    overflow-y: auto;
-    text-align: center;
-}
-
 table>thead>tr>th {
     position: sticky;
     padding: 0;
