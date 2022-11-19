@@ -36,5 +36,6 @@ const data = ref({
     touch-action: manipulation;
     white-space: pre;
     right: 0;
+    z-index: 1;
 }
 </style>

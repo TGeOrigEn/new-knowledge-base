@@ -15,7 +15,6 @@ const props = defineProps({
 
                 </div>
             </div>
-            <Button :disabled="readonly" :onClick="create" src="/close.svg" class="x-field-button-add"></Button>
         </div>
     </div>
 </template>

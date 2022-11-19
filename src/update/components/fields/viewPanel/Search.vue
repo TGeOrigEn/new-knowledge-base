@@ -23,7 +23,7 @@ const props = defineProps({
     margin: 5px;
     touch-action: manipulation;
     white-space: pre;
-    max-height: 28px;
+    max-height: 34px;
 }
 
 .x-search-field:focus {

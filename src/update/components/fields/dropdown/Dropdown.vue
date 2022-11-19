@@ -29,12 +29,6 @@ const data = ref({
     width: 100%;
     margin-top: 2px;
     flex-direction: column;
-    display: flex;
-    align-items: center;
-    background-color: #f8f9fa;
-    border: 1px solid #85858560;
-    border-radius: 4px;
-    touch-action: manipulation;
-    white-space: pre;
+
 }
 </style>

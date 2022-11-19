@@ -119,7 +119,7 @@ function save() {
         :close="() => { displayed.career = false; mask = true; }" :id="selected.career_id" :person_id="person.id" />
     <RankCard :refresh="update" :readonly="readonly" v-if="displayed.rank" :mask="true"
         :close="() => { displayed.rank = false; mask = true; }" type :id="selected.rank_id" :person_id="person.id" />
-    <Window :width="'700px'" :mask="mask" :close="props.close" header="Карточка личности">
+    <Window :index="2" :width="'700px'" :mask="mask" :close="props.close" header="Карточка личности">
 
         <Body>
 

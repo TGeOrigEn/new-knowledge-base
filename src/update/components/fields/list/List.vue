@@ -15,4 +15,8 @@
     display: flex;
     align-items: center;
 }
+
+ul>:first-child {
+    margin-left: 3px;
+}
 </style>

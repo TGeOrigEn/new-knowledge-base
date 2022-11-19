@@ -42,6 +42,7 @@ const props = defineProps({
     display: table;
     height: 100%;
     width: 100%;
+    z-index: 2;
 }
 
 .x-window-wrapper {

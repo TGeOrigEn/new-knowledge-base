@@ -49,32 +49,6 @@ export const size = () => {
 
         document.addEventListener('mousemove', function (e) {
 
-
-            if (Number(getComputedPropertyValue(currentColumn, 'width').slice(0, -2)) <= 100) {
-                var value = Number(getComputedPropertyValue(nextColumn, 'width'));
-
-                nextColumn.style.width = value - 1 + 'px';
-                nextColumns.forEach(column => column.style.width = value - 1 + 'px');
-
-                currentColumn.style.width = 101 + 'px';
-                currentColumns.forEach(column => column.style.width = 101 + 'px');
-
-                document.dispatchEvent(new Event('mouseup'));
-            }
-
-            if (nextColumn)
-                if (Number(getComputedPropertyValue(nextColumn, 'width').slice(0, -2)) <= 100) {
-                    var value = Number(getComputedPropertyValue(currentColumn, 'width'));
-
-                    currentColumn.style.width = value - 1 + 'px';
-                    currentColumns.forEach(column => column.style.width = value - 1 + 'px');
-
-                    nextColumn.style.width = 101 + 'px';
-                    nextColumns.forEach(column => column.style.width = 101 + 'px');
-
-                    document.dispatchEvent(new Event('mouseup'));
-                }
-
             var diffX = e.pageX - pageX!;
 
             if (nextColumns.length != 0)
@@ -89,6 +63,18 @@ export const size = () => {
 
         document.addEventListener('mouseup', function (e) {
             pageX = undefined;
+        });
+
+        handler.addEventListener('dblclick', function (e) {
+            if (nextColumn)
+                nextColumn.style.width = '';
+            currentColumn.style.width = '';
+            if (nextColumn)
+                nextColumns.forEach(column => column.style.width = getComputedPropertyValue(nextColumn, 'width'));
+            currentColumns.forEach(column => column.style.width = getComputedPropertyValue(currentColumn, 'width'));
+            if (nextColumn)
+                nextColumn.style.width = getComputedPropertyValue(nextColumn, 'width');
+            currentColumn.style.width = getComputedPropertyValue(currentColumn, 'width');
         });
 
         console.log(getComputedPropertyValue(currentColumn, 'width'));

@@ -30,10 +30,20 @@ const props = defineProps({
 
 <style scoped>
 p {
-    margin: 2px;
+    min-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: inherit;
+    display: block;
 }
 
 span {
-    margin: 2px;
+    min-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: inherit;
+    display: block;
 }
 </style>
