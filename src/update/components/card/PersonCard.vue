@@ -75,17 +75,17 @@ const beforeMount = onBeforeMount(() => {
 })
 
 function update() {
-    Command.select<Activity>(Activity.NAME, { person_id: props.id }).then(response => {
+    Command.select<Activity>(Activity.NAME, { person_id: person.value.id }).then(response => {
         if (response == undefined) return;
         activity.value = response;
     });
 
-    Command.select<Career>(Career.NAME, { person_id: props.id }).then(response => {
+    Command.select<Career>(Career.NAME, { person_id: person.value.id }).then(response => {
         if (response == undefined) return;
         career.value = response;
     });
 
-    Command.select<Rank>(Rank.NAME, { person_id: props.id }).then(response => {
+    Command.select<Rank>(Rank.NAME, { person_id: person.value.id }).then(response => {
         if (response == undefined) return;
         rank.value = response;
     });

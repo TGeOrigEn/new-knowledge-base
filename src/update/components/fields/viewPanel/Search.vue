@@ -2,13 +2,14 @@
 
 const props = defineProps({
     type: { type: String, default: "text" },
+    placeholder: String,
     value: [String, Number],
 });
 </script>
 
 <template>
     <input @input="(event) => $emit('update:value', (event.target as HTMLInputElement).value)" :value="value"
-        :placeholder="'Поиск в таблице...'" class="x-search-field" :type="type" />
+        :placeholder="placeholder" class="x-search-field" :type="type" />
 </template>
 
 <style scoped>

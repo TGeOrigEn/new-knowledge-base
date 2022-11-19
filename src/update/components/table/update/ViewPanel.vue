@@ -7,7 +7,7 @@ import List from '../../fields/list/List.vue';
 import Dropdown from '../../fields/viewPanel/Dropdown.vue';
 import Header from '../Header.vue';
 import { size } from '@/update/entities/table';
-import { onMounted, onBeforeMount, ref, onUpdated } from 'vue';
+import { onBeforeMount, ref, onUpdated } from 'vue';
 
 import { Command, Activity, Career, Person, Rank, Place, Link } from '@/update/entities/DataBase';
 
@@ -18,8 +18,8 @@ import PersonCard from '../../card/PersonCard.vue';
 import CareerCell from '../cells/CareerCell.vue';
 import RankCell from '../cells/RankCell.vue';
 import TextCell from '../cells/TextCell.vue';
-import handle from '../../../entities/hadnler';
 
+import { TextFilter, CareerFilter, PlaceFilter, RankFilter, EducationFilter, BiographyFilter } from '@/update/entities/Filter'
 
 const activity = ref<Activity[]>([]);
 
@@ -76,18 +76,40 @@ function refresh() {
 
 const mounted = onUpdated(() => size());
 
+const filter = ref({
+    activity: new TextFilter(),
+    biography: new BiographyFilter(),
+    career: new CareerFilter(),
+    education: new EducationFilter(),
+    rank: new RankFilter(),
+    marital_status: new TextFilter(),
+    salary: new TextFilter(),
+    awards: new TextFilter(),
+    property: new TextFilter(),
+    place: new PlaceFilter(),
+});
+
 </script>
 
 <template>
     <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
-    <div style="height: 100vh; background-color: #f5f5f5;">
 
-        <div style="padding-top: 25px;">
-            <div style="width: 90vw; margin-left: auto; margin-right: auto; display: flex; align-items: center;">
-                <Button class="x-button" :src="'/plus.svg'"
+    <div style="padding: 5px;">
+        <div class="nav">
+            <Button class="x-button-nav" :text="'Описание'"></Button>
+            <Button class="x-button-nav" :text="'Инструкция'"></Button>
+            <Button :disabled="true" class="x-button-nav" :text="'База знаний'"></Button>
+            <Button class="x-button-nav" :text="'Карта'"></Button>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <div style="width: 97vw; margin-left: auto; margin-right: auto; display: flex; align-items: center;">
+                <Button class="x-button-def " :src="'/plus.svg'"
                     :onClick="() => { card.id = -1; card.disabled = true; }"></Button>
-                <Button :src="'/refresh.svg'" class="x-button" :onClick="refresh"></Button>
+                <Button :src="'/refresh.svg'" class="x-button-def" :onClick="refresh"></Button>
                 <Filter style="margin-left: 5px; margin-right: 10px;">
                     <List>
                         <Item
@@ -98,10 +120,11 @@ const mounted = onUpdated(() => size());
                         <Item v-for="item in ['Деятельность', 'Чин', 'Карьера']" :text="item" :width="'100%'" />
                     </Dropdown>
                 </Filter>
-                <Search style="flex: 1; height: 20px; margin-left: auto;"></Search>
+                <Search :placeholder="'Поиск по тексту в таблице...'" style="flex: 1; height: 20px; margin-left: auto;">
+                </Search>
             </div>
             <div
-                style="margin-top: 5px; border: 1px solid #85858560; width: 90vw; overflow: auto; margin-left: auto; margin-right: auto;">
+                style="margin-top: 5px; border: 1px solid #85858560; width: 97vw; overflow: auto; margin-left: auto; margin-right: auto;">
                 <table id="table-head" style="width: 100%; border: 0px solid black;">
                     <thead>
                         <tr>
@@ -118,7 +141,7 @@ const mounted = onUpdated(() => size());
                     </thead>
                 </table>
                 <table id="table-body" style="width: 100%; border: 0">
-                    <tbody style="width: 100%; display: block; max-height: 80vh; overflow: auto;">
+                    <tbody style="width: 100%; display: block; max-height: 75vh; overflow: auto;">
                         <tr v-for="item in person" :ondblclick="() => { card.id = item.id; card.disabled = true; }">
                             <BiographyCell :person="item" />
                             <EducationCell :value="item" />
@@ -135,12 +158,67 @@ const mounted = onUpdated(() => size());
                     </tbody>
                 </table>
             </div>
+            <div style="display:none;">
+                <div
+                    style="background-color: #f8f9fa; align-items: center;  text-align: center;  justify-content: center;  margin-top: 15px; border: 1px solid #85858560; width: max-content; display: flex; margin-left: auto; margin-right: auto;">
+                    <div style="background-color: #f8f9fa;    display: flex; align-items: center; margin-right: auto;">
+                        <Button style="transform:rotate(180deg); padding: 7.5px;" class="x-button-def"
+                            src="/double-arrow.svg"></Button>
+                        <Button style="transform:rotate(90deg)" class="x-button-def" src="/arrow.svg"></Button>
+                        <Search style="width: 17px; text-align: center;"></Search>
+                        <div> из 20</div>
+                        <Button style="transform:rotate(270deg)" class="x-button-def" src="/arrow.svg"></Button>
+                        <Button style="transform:rotate(0deg); padding: 7.5px;" class="x-button-def"
+                            src="/double-arrow.svg"></Button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.x-button {
+.x-button-nav {
+    height: 100%;
+    border-radius: 0;
+    width: auto;
+    margin: 0;
+    padding-left: 100px;
+    padding-right: 100px;
+    border-top: 0;
+    border-bottom: 0;
+}
+
+.nav>button:first-child {
+    border-left: 0;
+}
+
+.nav>button {
+    border-right: 0;
+}
+
+.nav>button:hover {
+    border-color: #85858560;
+}
+
+
+.nav {
+    justify-content: flex-end;
+    align-items: center;
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    height: 50px;
+    width: max-content;
+    background-color: #f8f9fa;
+    border: 1px solid #85858560;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.x-button-def {
     width: 32px;
     height: 32px;
     padding: 5px;

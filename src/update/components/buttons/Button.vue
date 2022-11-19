@@ -55,6 +55,7 @@ const props = defineProps({
 .x-button:hover {
     border-color: #777777;
     box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+    background-color: #d4d4d460;
     color: #202124;
 }
 

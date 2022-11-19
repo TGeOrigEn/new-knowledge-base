@@ -63,7 +63,6 @@ const beforeMount = onBeforeMount(() => {
     });
 })
 
-
 const mounted = onMounted(() => {
     handle(document.getElementById('person-table')!, { handler: "column-resize-handler", headline: "headline" });
     //size();
