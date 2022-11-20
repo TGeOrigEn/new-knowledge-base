@@ -56,7 +56,7 @@ function click(event: MouseEvent) {
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
-    max-width: 39vw;
+    max-width: 69vw;
     margin-left: 5px;
     margin-right: 5px;
 }

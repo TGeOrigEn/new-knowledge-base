@@ -58,7 +58,7 @@ function save() {
 </script>
 
 <template>
-    <Window :index="5" :mask="mask" :close="props.close" header="Карточка места">
+    <Window :width="'70vw'" :index="5" :mask="mask" :close="props.close" header="Карточка места">
 
         <Body class="x-dody">
             <TextAreaField label="Название:" :readonly="readonly" v-model:value="place.name" />

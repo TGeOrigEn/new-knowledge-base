@@ -168,7 +168,7 @@ function filterItems(activity_id: number): string {
         :close="() => { displayed.career = false; mask = true; }" :id="selected.career_id" :person_id="person.id" />
     <RankCard :refresh="update" :readonly="readonly" v-if="displayed.rank" :mask="true"
         :close="() => { displayed.rank = false; mask = true; }" type :id="selected.rank_id" :person_id="person.id" />
-    <Window :index="3" :width="'50vw'" :mask="mask" :close="props.close" header="Карточка личности">
+    <Window :index="3" :width="'80vw'" :mask="mask" :close="props.close" header="Карточка личности">
 
         <Body>
 

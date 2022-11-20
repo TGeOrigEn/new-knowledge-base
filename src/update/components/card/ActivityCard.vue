@@ -120,7 +120,7 @@ function filterDropdown(): Place[] {
     <PlaceCard :refresh="card.refresh" v-if="card.mask" :readonly="readonly" :mask="true"
         :close="() => card.mask = false" :id="card.id" />
 
-    <Window :width="'600px'" :index="4" :mask="!card.mask" :close="props.close" header="Карточка активности">
+    <Window :width="'70vw'" :index="4" :mask="!card.mask" :close="props.close" header="Карточка активности">
 
         <Body class="x-body">
             <TextAreaField label="Описание:" :readonly="readonly" v-model:value="activity.description" />
