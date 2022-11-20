@@ -24,7 +24,10 @@ import BiographyFilterCard from '../../card/filters/BiographyFilterCard.vue';
 import { TextFilter, CareerFilter, PlaceFilter, RankFilter, EducationFilter, BiographyFilter } from '@/update/entities/Filter'
 import MapCard from '../../card/MapCard.vue';
 import TextFilterCard from '../../card/filters/TextFilterCard.vue';
-
+import EducationFilterCard from '../../card/filters/EducationFilterCard.vue';
+import CareerFilterCard from '../../card/filters/CareerFilterCard.vue';
+import RankFilterCard from '../../card/filters/RankFilterCard.vue';
+import PlaceFilterCard from '../../card/filters/PlaceFilterCard.vue';
 const fullPerson = ref<FullPerson[]>([]);
 
 const search = ref("");
@@ -102,10 +105,10 @@ async function refresh() {
 }
 
 function filterSearch() {
-    if (search.value === "") return fullPerson.value;
+    if (search.value === "") return fullPerson.value.filter(person => filter(person));
     const array: FullPerson[] = [];
 
-    fullPerson.value.forEach(person => {
+    fullPerson.value.filter(person => filter(person)).forEach(person => {
         if (person.person.surname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
             array.push(person);
             return;
@@ -200,10 +203,10 @@ function filterSearch() {
                 return;
             }
             activity.place.forEach(place => {
-                if (place.description.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                    if (!array.includes(person)) array.push(person);
-                    return;
-                }
+                // if (place.description.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                //     if (!array.includes(person)) array.push(person);
+                //     return;
+                // }
                 if (place.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
                     if (!array.includes(person)) array.push(person);
                     return;
@@ -213,6 +216,195 @@ function filterSearch() {
     })
 
     return array;
+}
+
+function filter(person: FullPerson): boolean {
+    var activity = true;
+    var biography = true;
+    var career = true;
+    var education = true;
+    var rank = true;
+    var marital_status = true;
+    var salary = true;
+    var awards = true;
+    var property = true;
+    var place = true;
+
+    if (propertyFilter.value != undefined) {
+        if (propertyFilter.value.contains.length != 0) {
+            property = person.person.property.toLocaleLowerCase().includes(propertyFilter.value.contains.toLocaleLowerCase());
+        } else if (propertyFilter.value.equals.length != 0) property = person.person.property.toLocaleLowerCase() === propertyFilter.value.equals.toLocaleLowerCase();
+    }
+
+    if (awardsFilter.value != undefined) {
+        if (awardsFilter.value.contains.length != 0) {
+            property = person.person.awards.toLocaleLowerCase().includes(awardsFilter.value.contains.toLocaleLowerCase());
+        } else if (awardsFilter.value.equals.length != 0) property = person.person.awards.toLocaleLowerCase() === awardsFilter.value.equals.toLocaleLowerCase();
+    }
+
+    if (salaryFilter.value != undefined) {
+        if (salaryFilter.value.contains.length != 0) {
+            salary = person.person.salary.toLocaleLowerCase().includes(salaryFilter.value.contains.toLocaleLowerCase());
+        } else if (salaryFilter.value.equals.length != 0) salary = person.person.salary.toLocaleLowerCase() === salaryFilter.value.equals.toLocaleLowerCase();
+    }
+
+    if (marital_statusFilter.value != undefined) {
+        if (marital_statusFilter.value.contains.length != 0) {
+            marital_status = person.person.marital_status.toLocaleLowerCase().includes(marital_statusFilter.value.contains.toLocaleLowerCase());
+        } else if (marital_statusFilter.value.equals.length != 0) marital_status = person.person.marital_status.toLocaleLowerCase() === marital_statusFilter.value.equals.toLocaleLowerCase();
+    }
+
+    if (activityFilter.value != undefined) {
+        if (activityFilter.value.contains.length != 0) {
+            activity = person.activity.filter(item => item.activity.description.toLocaleLowerCase().includes(activityFilter.value!.contains.toLocaleLowerCase())).length != 0;
+        } else if (activityFilter.value.equals.length != 0)
+            activity = person.activity.filter(item => item.activity.description.toLocaleLowerCase().includes(activityFilter.value!.equals.toLocaleLowerCase())).length != 0;
+    }
+
+    career = fCareerFilter(person.career);
+    rank = fRankFilter(person.rank);
+    biography = fBiographyFilter(person.person);
+    education = fEducationFilter(person.person);
+
+    for (var i = 0; i < person.activity.length; i++) {
+        if (!fPlaceFilter(person.activity[i].place))
+            return false;
+    }
+
+    return activity && biography && career && education && rank && marital_status && salary && awards && property;
+}
+
+function fCareerFilter(career: Career[]) {
+    if (careerFilter.value != undefined) {
+        if (careerFilter.value.contains.post.length != 0) {
+            if (career.filter(item => item.post.toLocaleLowerCase().includes(careerFilter.value!.contains.post.toLocaleLowerCase())).length == 0)
+                return false;
+        } else if (careerFilter.value.equals.post.length != 0)
+            if (career.filter(item => item.post.toLocaleLowerCase() === (careerFilter.value!.equals.post.toLocaleLowerCase())).length == 0)
+                return false;
+
+        if (careerFilter.value!.equals.end_date.length != 0)
+            if (career.filter(item => item.end_date.toLocaleLowerCase() === (careerFilter.value!.equals.end_date.toLocaleLowerCase())).length == 0)
+                return false;
+
+        if (careerFilter.value!.equals.start_date.length != 0)
+            if (career.filter(item => item.start_date.toLocaleLowerCase() === (careerFilter.value!.equals.start_date.toLocaleLowerCase())).length == 0)
+                return false;
+
+        if (careerFilter.value!.equals.place.length != 0)
+            if (career.filter(item => item.place.toLocaleLowerCase() === (careerFilter.value!.equals.place.toLocaleLowerCase())).length == 0)
+                return false;
+    }
+    return true;
+}
+
+function fRankFilter(rank: Rank[]) {
+    if (rankFilter.value != undefined) {
+        if (rankFilter.value.contains.name.length != 0) {
+            if (rank.filter(item => item.name.toLocaleLowerCase().includes(rankFilter.value!.contains.name.toLocaleLowerCase())).length == 0)
+                return false;
+        } else if (rankFilter.value.equals.name.length != 0)
+            if (rank.filter(item => item.name.toLocaleLowerCase() === (rankFilter.value!.equals.name.toLocaleLowerCase())).length == 0)
+                return false;
+
+        if (rankFilter.value!.equals.end_date.length != 0)
+            if (rank.filter(item => item.end_date.toLocaleLowerCase() === (rankFilter.value!.equals.end_date.toLocaleLowerCase())).length == 0)
+                return false;
+
+        if (rankFilter.value!.equals.start_date.length != 0)
+            if (rank.filter(item => item.start_date.toLocaleLowerCase() === (rankFilter.value!.equals.start_date.toLocaleLowerCase())).length == 0)
+                return false;
+
+        if (rankFilter.value!.equals.degree.length != 0)
+            if (rank.filter(item => item.degree.toLocaleLowerCase() === (rankFilter.value!.equals.degree.toLocaleLowerCase())).length == 0)
+                return false;
+    }
+    return true;
+}
+
+function fPlaceFilter(rank: Place[]) {
+    if (placeFilter.value != undefined) {
+        if (placeFilter.value.contains.name.length != 0) {
+            if (rank.filter(item => item.name.toLocaleLowerCase().includes(placeFilter.value!.contains.name.toLocaleLowerCase())).length == 0)
+                return false;
+        } else if (placeFilter.value.equals.name.length != 0)
+            if (rank.filter(item => item.name.toLocaleLowerCase() === (placeFilter.value!.equals.name.toLocaleLowerCase())).length == 0)
+                return false;
+
+        if (placeFilter.value.contains.description.length != 0) {
+            if (rank.filter(item => item.description.toLocaleLowerCase().includes(placeFilter.value!.contains.description.toLocaleLowerCase())).length == 0)
+                return false;
+        } else if (placeFilter.value.equals.description.length != 0)
+            if (rank.filter(item => item.description.toLocaleLowerCase() === (placeFilter.value!.equals.description.toLocaleLowerCase())).length == 0)
+                return false;
+    }
+    return true;
+}
+
+function fEducationFilter(person: Person) {
+    if (educationFilter.value != undefined) {
+        if (educationFilter.value.contains.educational_institution.length != 0) {
+            if (!person.educational_institution.toLocaleLowerCase().includes(educationFilter.value!.contains.educational_institution.toLocaleLowerCase()))
+                return false;
+        } else if (educationFilter.value.equals.educational_institution.length != 0)
+            if (person.educational_institution.toLocaleLowerCase() !== (educationFilter.value!.equals.educational_institution.toLocaleLowerCase()))
+                return false;
+
+        if (educationFilter.value!.equals.level_education.length != 0)
+            if (person.level_education.toLocaleLowerCase() !== (educationFilter.value!.equals.level_education.toLocaleLowerCase()))
+                return false;
+
+        if (educationFilter.value!.equals.location_educational_institution.length != 0)
+            if (person.location_educational_institution.toLocaleLowerCase() !== educationFilter.value!.equals.location_educational_institution.toLocaleLowerCase())
+                return false;
+    }
+
+    return true;
+}
+
+function fBiographyFilter(person: Person) {
+    if (biographyFilter.value != undefined) {
+
+        if (biographyFilter.value.contains.name.length != 0) {
+            if (!person.name.toLocaleLowerCase().includes(biographyFilter.value!.contains.name.toLocaleLowerCase()))
+                return false;
+        } else if (biographyFilter.value.equals.name.length != 0)
+            if (person.name.toLocaleLowerCase() !== (biographyFilter.value!.equals.name.toLocaleLowerCase()))
+                return false;
+
+        if (biographyFilter.value.contains.date_birth.length != 0) {
+            if (!person.date_birth.toLocaleLowerCase().includes(biographyFilter.value!.contains.date_birth.toLocaleLowerCase()))
+                return false;
+        } else if (biographyFilter.value.equals.date_birth.length != 0)
+            if (person.date_birth.toLocaleLowerCase() !== (biographyFilter.value!.equals.date_birth.toLocaleLowerCase()))
+                return false;
+
+        if (biographyFilter.value.contains.origin.length != 0) {
+            if (!person.origin.toLocaleLowerCase().includes(biographyFilter.value!.contains.origin.toLocaleLowerCase()))
+                return false;
+        } else if (biographyFilter.value.equals.origin.length != 0)
+            if (person.origin.toLocaleLowerCase() !== (biographyFilter.value!.equals.origin.toLocaleLowerCase()))
+                return false;
+
+        if (biographyFilter.value.contains.patronymic.length != 0) {
+            if (!person.patronymic.toLocaleLowerCase().includes(biographyFilter.value!.contains.patronymic.toLocaleLowerCase()))
+                return false;
+        } else if (biographyFilter.value.equals.patronymic.length != 0)
+            if (person.patronymic.toLocaleLowerCase() !== (biographyFilter.value!.equals.patronymic.toLocaleLowerCase()))
+                return false;
+
+        if (biographyFilter.value.contains.surname.length != 0) {
+            if (!person.surname.toLocaleLowerCase().includes(biographyFilter.value!.contains.surname.toLocaleLowerCase()))
+                return false;
+        } else if (biographyFilter.value.equals.surname.length != 0)
+            if (person.surname.toLocaleLowerCase() !== biographyFilter.value!.equals.surname.toLocaleLowerCase())
+                return false;
+
+        if (biographyFilter.value!.equals.religion.length != 0)
+            if (person.religion.toLocaleLowerCase() !== biographyFilter.value!.equals.religion.toLocaleLowerCase())
+                return false;
+    }
+    return true;
 }
 
 const mounted = onUpdated(() => { size() });
@@ -226,6 +418,7 @@ const marital_statusFilter = ref<TextFilter | undefined>();
 const salaryFilter = ref<TextFilter | undefined>();
 const awardsFilter = ref<TextFilter | undefined>();
 const propertyFilter = ref<TextFilter | undefined>();
+const placeFilter = ref<PlaceFilter | undefined>();
 
 const displayed = ref({
     title: "",
@@ -235,12 +428,15 @@ const displayed = ref({
     educationFilter: false,
     rankFilter: false,
     textFilterState: false,
+    placeFilter: false,
     textFilter: new TextFilter(),
     remove: () => { },
     close: () => { }
 });
 
 function dateChange(e: string): string {
+    if (e.length == 0) return "НЕИЗВЕСТНО";
+
     const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
 
     let date = new Date(e);
@@ -256,8 +452,20 @@ function dateChange(e: string): string {
         :close="displayed.close" :remove="displayed.remove">
     </TextFilterCard>
 
+    <CareerFilterCard v-if="displayed.careerFilter" :title="displayed.title" :filter="careerFilter!"
+        :close="displayed.close" :remove="displayed.remove"></CareerFilterCard>
 
-    <BiographyFilterCard></BiographyFilterCard>
+    <RankFilterCard v-if="displayed.rankFilter" :title="displayed.title" :filter="rankFilter!" :close="displayed.close"
+        :remove="displayed.remove"></RankFilterCard>
+
+    <PlaceFilterCard v-if="displayed.placeFilter" :title="displayed.title" :filter="placeFilter!"
+        :close="displayed.close" :remove="displayed.remove"></PlaceFilterCard>
+
+    <EducationFilterCard v-if="displayed.educationFilter" :title="displayed.title" :filter="educationFilter!"
+        :close="displayed.close" :remove="displayed.remove"></EducationFilterCard>
+
+    <BiographyFilterCard v-if="displayed.biographyFilter" :title="displayed.title" :filter="biographyFilter!"
+        :close="displayed.close" :remove="displayed.remove">></BiographyFilterCard>
 
     <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
@@ -272,7 +480,6 @@ function dateChange(e: string): string {
             <Button class="x-button-nav" :text="'Описание'"></Button>
             <Button class="x-button-nav" :text="'Инструкция'"></Button>
             <Button :disabled="true" class="x-button-nav" :text="'База знаний'"></Button>
-            <Button class="x-button-nav" :text="'Карта'"></Button>
         </div>
     </div>
 
@@ -287,10 +494,12 @@ function dateChange(e: string): string {
                 <Filter style="margin-left: 0px; margin-right: 5px;">
 
                     <Item v-if="biographyFilter != undefined" :readonly="false"
-                        :remove="() => biographyFilter = undefined" :text="'Биография'" />
+                        :open="() => { displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
+                        :text="'Биография'" :remove="() => biographyFilter = undefined" />
 
                     <Item v-if="educationFilter != undefined" :readonly="false"
-                        :remove="() => educationFilter = undefined" :text="'Образование'" />
+                        :open="() => { displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
+                        :text="'Образование'" :remove="() => educationFilter = undefined" />
 
                     <Item v-if="awardsFilter != undefined" :readonly="false"
                         :open="() => { displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
@@ -308,23 +517,32 @@ function dateChange(e: string): string {
                         :open="() => { displayed.textFilter = marital_statusFilter!; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
                         :text="'Семейное положение'" :remove="() => marital_statusFilter = undefined" />
 
-                    <Item v-if="careerFilter != undefined" :readonly="false" :remove="() => careerFilter = undefined"
-                        :text="'Карьера'" />
+                    <Item v-if="careerFilter != undefined" :readonly="false"
+                        :open="() => { displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
+                        :text="'Карьера'" :remove="() => careerFilter = undefined" />
 
-                    <Item v-if="rankFilter != undefined" :readonly="false" :remove="() => rankFilter = undefined"
-                        :text="'Чин'" />
+                    <Item v-if="rankFilter != undefined" :readonly="false"
+                        :open="() => { displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
+                        :text="'Чин'" :remove="() => rankFilter = undefined" />
 
-                    <Item v-if="activityFilter != undefined" :readonly="false" :open="() => displayed.activityFilter"
-                        :remove="() => activityFilter = undefined" :text="'Деятельность'" />
+                    <Item v-if="activityFilter != undefined" :readonly="false"
+                        :open="() => { displayed.textFilter = activityFilter!; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                        :text="'Деятельность'" :remove="() => activityFilter = undefined" />
 
-                    <Dropdown>
+                    <Item v-if="placeFilter != undefined" :readonly="false"
+                        :open="() => { displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
+                        :text="'Место'" :remove="() => placeFilter = undefined" />
+
+                    <Dropdown
+                        v-if="activityFilter == undefined || biographyFilter == undefined || careerFilter == undefined || educationFilter == undefined || rankFilter == undefined || marital_statusFilter == undefined || salaryFilter == undefined || awardsFilter == undefined || propertyFilter == undefined || placeFilter == undefined">
 
                         <Item v-if="biographyFilter == undefined" :readonly="false"
-                            :open="() => biographyFilter = new BiographyFilter()" :text="'Биография'" :width="'100%'" />
+                            :open="() => { biographyFilter = new BiographyFilter(); displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
+                            :text="'Биография'" :width="'100%'" />
 
                         <Item v-if="educationFilter == undefined" :readonly="false"
-                            :open="() => educationFilter = new EducationFilter()" :text="'Образование'"
-                            :width="'100%'" />
+                            :open="() => { educationFilter = new EducationFilter(); displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
+                            :text="'Образование'" :width="'100%'" />
 
                         <Item v-if="awardsFilter == undefined" :readonly="false"
                             :open="() => { awardsFilter = new TextFilter(); displayed.textFilter = awardsFilter; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
@@ -343,13 +561,20 @@ function dateChange(e: string): string {
                             :text="'Семейное положение'" :width="'100%'" />
 
                         <Item v-if="careerFilter == undefined" :readonly="false"
-                            :open="() => careerFilter = new CareerFilter()" :text="'Карьера'" :width="'100%'" />
+                            :open="() => { careerFilter = new CareerFilter(); displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
+                            :text="'Карьера'" :width="'100%'" />
 
                         <Item v-if="rankFilter == undefined" :readonly="false"
-                            :open="() => rankFilter = new RankFilter()" :text="'Чин'" :width="'100%'" />
+                            :open="() => { rankFilter = new RankFilter(); displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
+                            :text="'Чин'" :width="'100%'" />
 
                         <Item v-if="activityFilter == undefined" :readonly="false"
-                            :open="() => activityFilter = new TextFilter()" :text="'Деятельность'" :width="'100%'" />
+                            :open="() => { activityFilter = new TextFilter(); displayed.textFilter = activityFilter; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Деятельность'" :width="'100%'" />
+
+                        <Item v-if="placeFilter == undefined" :readonly="false"
+                            :open="() => { placeFilter = new PlaceFilter(); displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
+                            :text="'Место'" :width="'100%'" />
 
                     </Dropdown>
                 </Filter>

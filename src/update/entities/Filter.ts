@@ -24,10 +24,8 @@ class CareerFilter {
         post: string
     } = { start_date: "", end_date: "", place: "", post: "" }
     contains: {
-        start_date: string,
-        end_date: string,
         post: string
-    } = { start_date: "", end_date: "", post: "" }
+    } = { post: "" }
 }
 
 class EducationFilter {
@@ -49,10 +47,8 @@ class RankFilter {
         name: string
     } = { start_date: "", end_date: "", degree: "", name: "" }
     contains: {
-        start_date: string,
-        end_date: string,
         name: string
-    } = { start_date: "", end_date: "", name: "" }
+    } = { name: "" }
 }
 
 class PlaceFilter {

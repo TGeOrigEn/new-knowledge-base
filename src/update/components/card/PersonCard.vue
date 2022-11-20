@@ -144,6 +144,7 @@ function save() {
 };
 
 function dateChange(e: string): string {
+    if (e.length == 0) return "НЕИЗВЕСТНО";
     const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
 
     let date = new Date(e);
