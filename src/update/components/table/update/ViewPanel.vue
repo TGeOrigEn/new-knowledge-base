@@ -19,9 +19,11 @@ import CareerCell from '../cells/CareerCell.vue';
 import RankCell from '../cells/RankCell.vue';
 import TextCell from '../cells/TextCell.vue';
 import TestMap from './TestMap.vue';
+import BiographyFilterCard from '../../card/filters/BiographyFilterCard.vue';
 
 import { TextFilter, CareerFilter, PlaceFilter, RankFilter, EducationFilter, BiographyFilter } from '@/update/entities/Filter'
 import MapCard from '../../card/MapCard.vue';
+import TextFilterCard from '../../card/filters/TextFilterCard.vue';
 
 const fullPerson = ref<FullPerson[]>([]);
 
@@ -75,6 +77,19 @@ async function refresh() {
     place.value = aPlace == undefined ? [] : aPlace;
     rank.value = aRank == undefined ? [] : aRank;
     link.value = aLink == undefined ? [] : aLink;
+
+    rank.value.forEach(item => {
+        console.log(item.end_date);
+        item.end_date = dateChange(item.end_date);
+        item.start_date = dateChange(item.start_date);
+    });
+
+    career.value.forEach(item => {
+        console.log(item.end_date);
+        item.end_date = dateChange(item.end_date);
+        item.start_date = dateChange(item.start_date);
+        console.log(item.end_date)
+    });
 
     fullPerson.value = [];
     person.value.forEach(person => {
@@ -202,21 +217,48 @@ function filterSearch() {
 
 const mounted = onUpdated(() => { size() });
 
-const filter = ref({
-    activity: new TextFilter(),
-    biography: new BiographyFilter(),
-    career: new CareerFilter(),
-    education: new EducationFilter(),
-    rank: new RankFilter(),
-    marital_status: new TextFilter(),
-    salary: new TextFilter(),
-    awards: new TextFilter(),
-    property: new TextFilter(),
-    place: new PlaceFilter(),
+const activityFilter = ref<TextFilter | undefined>();
+const biographyFilter = ref<BiographyFilter | undefined>();
+const careerFilter = ref<CareerFilter | undefined>();
+const educationFilter = ref<EducationFilter | undefined>();
+const rankFilter = ref<RankFilter | undefined>();
+const marital_statusFilter = ref<TextFilter | undefined>();
+const salaryFilter = ref<TextFilter | undefined>();
+const awardsFilter = ref<TextFilter | undefined>();
+const propertyFilter = ref<TextFilter | undefined>();
+
+const displayed = ref({
+    title: "",
+    activityFilter: false,
+    biographyFilter: false,
+    careerFilter: false,
+    educationFilter: false,
+    rankFilter: false,
+    textFilterState: false,
+    textFilter: new TextFilter(),
+    remove: () => { },
+    close: () => { }
 });
+
+function dateChange(e: string): string {
+    const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
+
+    let date = new Date(e);
+    let month = date.getMonth();
+    let day = date.getDate();
+    let year = date.getFullYear();
+    return zeroPad(day, 2) + '.' + zeroPad(month + 1, 2) + '.' + zeroPad(year, 4);
+}
 </script>
 
 <template>
+    <TextFilterCard v-if="displayed.textFilterState" :title="displayed.title" :filter="displayed.textFilter"
+        :close="displayed.close" :remove="displayed.remove">
+    </TextFilterCard>
+
+
+    <BiographyFilterCard></BiographyFilterCard>
+
     <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
 
@@ -225,7 +267,7 @@ const filter = ref({
     <!-- <TestMap :readonly="true" :person="filterSearch()"></TestMap> -->
 
     <div v-if="forceUpdate"></div>
-    <div style="padding: 5px;">
+    <div style="padding: 5px; z-index: -1000;">
         <div class="nav">
             <Button class="x-button-nav" :text="'Описание'"></Button>
             <Button class="x-button-nav" :text="'Инструкция'"></Button>
@@ -242,16 +284,75 @@ const filter = ref({
                 <Button :src="'/refresh.svg'" class="x-button-def" :onClick="refresh"></Button>
                 <Button :src="'/map.svg'" class="x-button-def" style="padding: 5px"
                     :onClick="() => map = true"></Button>
-                <!-- <Filter style="margin-left: 5px; margin-right: 10px;">
-                    <List>
-                        <Item
-                            v-for="item in ['Биография', 'Образование', 'Награды', 'Жалование', 'Имущество', 'Семейное положение']"
-                            :text="item" :remove="() => { }" />
-                    </List>
+                <Filter style="margin-left: 0px; margin-right: 5px;">
+
+                    <Item v-if="biographyFilter != undefined" :readonly="false"
+                        :remove="() => biographyFilter = undefined" :text="'Биография'" />
+
+                    <Item v-if="educationFilter != undefined" :readonly="false"
+                        :remove="() => educationFilter = undefined" :text="'Образование'" />
+
+                    <Item v-if="awardsFilter != undefined" :readonly="false"
+                        :open="() => { displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                        :text="'Награды'" :remove="() => awardsFilter = undefined" />
+
+                    <Item v-if="salaryFilter != undefined" :readonly="false"
+                        :open="() => { displayed.textFilter = salaryFilter!; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                        :text="'Жалование'" :remove="() => salaryFilter = undefined" />
+
+                    <Item v-if="propertyFilter != undefined" :readonly="false"
+                        :open="() => { displayed.textFilter = propertyFilter!; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                        :text="'Имущество'" :remove="() => propertyFilter = undefined" />
+
+                    <Item v-if="marital_statusFilter != undefined" :readonly="false"
+                        :open="() => { displayed.textFilter = marital_statusFilter!; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                        :text="'Семейное положение'" :remove="() => marital_statusFilter = undefined" />
+
+                    <Item v-if="careerFilter != undefined" :readonly="false" :remove="() => careerFilter = undefined"
+                        :text="'Карьера'" />
+
+                    <Item v-if="rankFilter != undefined" :readonly="false" :remove="() => rankFilter = undefined"
+                        :text="'Чин'" />
+
+                    <Item v-if="activityFilter != undefined" :readonly="false" :open="() => displayed.activityFilter"
+                        :remove="() => activityFilter = undefined" :text="'Деятельность'" />
+
                     <Dropdown>
-                        <Item v-for="item in ['Деятельность', 'Чин', 'Карьера']" :text="item" :width="'100%'" />
+
+                        <Item v-if="biographyFilter == undefined" :readonly="false"
+                            :open="() => biographyFilter = new BiographyFilter()" :text="'Биография'" :width="'100%'" />
+
+                        <Item v-if="educationFilter == undefined" :readonly="false"
+                            :open="() => educationFilter = new EducationFilter()" :text="'Образование'"
+                            :width="'100%'" />
+
+                        <Item v-if="awardsFilter == undefined" :readonly="false"
+                            :open="() => { awardsFilter = new TextFilter(); displayed.textFilter = awardsFilter; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Награды'" :width="'100%'" />
+
+                        <Item v-if="salaryFilter == undefined" :readonly="false"
+                            :open="() => { salaryFilter = new TextFilter(); displayed.textFilter = salaryFilter; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Жалование'" :width="'100%'" />
+
+                        <Item v-if="propertyFilter == undefined" :readonly="false"
+                            :open="() => { propertyFilter = new TextFilter(); displayed.textFilter = propertyFilter; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Имущество'" :width="'100%'" />
+
+                        <Item v-if="marital_statusFilter == undefined" :readonly="false"
+                            :open="() => { marital_statusFilter = new TextFilter(); displayed.textFilter = marital_statusFilter; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Семейное положение'" :width="'100%'" />
+
+                        <Item v-if="careerFilter == undefined" :readonly="false"
+                            :open="() => careerFilter = new CareerFilter()" :text="'Карьера'" :width="'100%'" />
+
+                        <Item v-if="rankFilter == undefined" :readonly="false"
+                            :open="() => rankFilter = new RankFilter()" :text="'Чин'" :width="'100%'" />
+
+                        <Item v-if="activityFilter == undefined" :readonly="false"
+                            :open="() => activityFilter = new TextFilter()" :text="'Деятельность'" :width="'100%'" />
+
                     </Dropdown>
-                </Filter> -->
+                </Filter>
                 <Search v-model:value="search" :placeholder="'Поиск по тексту в таблице...'"
                     style="flex: 1; height: 20px; margin-left: auto;">
                 </Search>
@@ -286,7 +387,7 @@ const filter = ref({
                             <td></td>
                             <td></td>
                         </tr> -->
-                        <tr v-for="item in filterSearch()"
+                        <tr v-for="item in     filterSearch()"
                             :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
                             <BiographyCell :person="item.person" />
                             <EducationCell :value="item.person" />
