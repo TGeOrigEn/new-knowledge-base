@@ -7,7 +7,6 @@
     "src/**/*.vue"
   ],
   "compilerOptions": {
-    "target": "ES5",
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
