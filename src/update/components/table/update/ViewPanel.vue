@@ -421,16 +421,16 @@ function fBiographyFilter(person: Person) {
 
 const mounted = onUpdated(() => { size() });
 
-const activityFilter = ref<TextFilter | undefined>(undefined);
-const biographyFilter = ref<BiographyFilter | undefined>(undefined);
-const careerFilter = ref<CareerFilter | undefined>(undefined);
-const educationFilter = ref<EducationFilter | undefined>(undefined);
-const rankFilter = ref<RankFilter | undefined>(undefined);
-const marital_statusFilter = ref<TextFilter | undefined>(undefined);
-const salaryFilter = ref<TextFilter | undefined>(undefined);
-const awardsFilter = ref<TextFilter | undefined>(undefined);
-const propertyFilter = ref<TextFilter | undefined>(undefined);
-const placeFilter = ref<PlaceFilter | undefined>(undefined);
+const activityFilter = ref<TextFilter | undefined>();
+const biographyFilter = ref<BiographyFilter | undefined>();
+const careerFilter = ref<CareerFilter | undefined>();
+const educationFilter = ref<EducationFilter | undefined>();
+const rankFilter = ref<RankFilter | undefined>();
+const marital_statusFilter = ref<TextFilter | undefined>();
+const salaryFilter = ref<TextFilter | undefined>();
+const awardsFilter = ref<TextFilter | undefined>();
+const propertyFilter = ref<TextFilter | undefined>();
+const placeFilter = ref<PlaceFilter | undefined>();
 
 const displayed = ref({
     title: "",
@@ -549,19 +549,19 @@ function dateChange(e: string): string {
                         v-if="activityFilter == undefined || biographyFilter == undefined || careerFilter == undefined || educationFilter == undefined || rankFilter == undefined || marital_statusFilter == undefined || salaryFilter == undefined || awardsFilter == undefined || propertyFilter == undefined || placeFilter == undefined">
 
                         <Item v-if="biographyFilter == undefined" :readonly="false"
-                            :open="() => { displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
+                            :open="() => { biographyFilter = new BiographyFilter(); displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
                             :text="'Биография'" :width="'100%'" />
 
                         <Item v-if="educationFilter == undefined" :readonly="false"
-                            :open="() => { displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
+                            :open="() => { educationFilter = new EducationFilter(); displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
                             :text="'Образование'" :width="'100%'" />
 
                         <Item v-if="awardsFilter == undefined" :readonly="false"
-                            :open="() => { displayed.textFilter = awardsFilter; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :open="() => { awardsFilter = new TextFilter(); displayed.textFilter = awardsFilter; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
                             :text="'Награды'" :width="'100%'" />
 
                         <Item v-if="salaryFilter == undefined" :readonly="false"
-                            :open="() => { displayed.textFilter = salaryFilter; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :open="() => { salaryFilter = new TextFilter(); displayed.textFilter = salaryFilter; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
                             :text="'Жалование'" :width="'100%'" />
 
                         <Item v-if="propertyFilter == undefined" :readonly="false"
@@ -569,23 +569,23 @@ function dateChange(e: string): string {
                             :text="'Имущество'" :width="'100%'" />
 
                         <Item v-if="marital_statusFilter == undefined" :readonly="false"
-                            :open="() => { displayed.textFilter = marital_statusFilter; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :open="() => { marital_statusFilter = new TextFilter(); displayed.textFilter = marital_statusFilter; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
                             :text="'Семейное положение'" :width="'100%'" />
 
                         <Item v-if="careerFilter == undefined" :readonly="false"
-                            :open="() => { displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
+                            :open="() => { careerFilter = new CareerFilter(); displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
                             :text="'Карьера'" :width="'100%'" />
 
                         <Item v-if="rankFilter == undefined" :readonly="false"
-                            :open="() => { displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
+                            :open="() => { rankFilter = new RankFilter(); displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
                             :text="'Чин'" :width="'100%'" />
 
                         <Item v-if="activityFilter == undefined" :readonly="false"
-                            :open="() => { displayed.textFilter = activityFilter; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :open="() => { activityFilter = new TextFilter(); displayed.textFilter = activityFilter; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
                             :text="'Деятельность'" :width="'100%'" />
 
                         <Item v-if="placeFilter == undefined" :readonly="false"
-                            :open="() => { displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
+                            :open="() => { placeFilter = new PlaceFilter(); displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
                             :text="'Место'" :width="'100%'" />
 
                     </Dropdown>

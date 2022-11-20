@@ -65,6 +65,10 @@ class PlaceFilter {
 class TextFilter {
     contains: string = "";
     equals: string = "";
+    public constructor() {
+        this.contains = "";
+        this.equals = "";
+    }
 }
 
 export { TextFilter, PlaceFilter, RankFilter, EducationFilter, CareerFilter, BiographyFilter }
