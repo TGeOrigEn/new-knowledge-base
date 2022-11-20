@@ -255,6 +255,8 @@ function filter(person: FullPerson): boolean {
     }
 
     if (activityFilter.value != undefined) {
+        if (person.activity.length == 0) return false;
+
         if (activityFilter.value.contains.length != 0) {
             activity = person.activity.filter(item => item.activity.description.toLocaleLowerCase().includes(activityFilter.value!.contains.toLocaleLowerCase())).length != 0;
         } else if (activityFilter.value.equals.length != 0)
