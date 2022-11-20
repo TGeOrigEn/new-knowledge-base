@@ -14,6 +14,9 @@ class BiographyFilter {
         name: string;
         date_birth: string;
     } = { patronymic: "", surname: "", origin: "", name: "", religion: "", date_birth: "" }
+    public constructor() {
+
+    }
 }
 
 class CareerFilter {
@@ -26,6 +29,9 @@ class CareerFilter {
     contains: {
         post: string
     } = { post: "" }
+    public constructor() {
+
+    }
 }
 
 class EducationFilter {
@@ -37,6 +43,9 @@ class EducationFilter {
     contains: {
         educational_institution: string,
     } = { educational_institution: "" }
+    public constructor() {
+
+    }
 }
 
 class RankFilter {
@@ -49,6 +58,9 @@ class RankFilter {
     contains: {
         name: string
     } = { name: "" }
+    public constructor() {
+
+    }
 }
 
 class PlaceFilter {
