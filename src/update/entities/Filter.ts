@@ -60,6 +60,9 @@ class PlaceFilter {
         name: string,
         description: string
     } = { name: "", description: "" };
+    public constructor() {
+
+    }
 }
 
 class TextFilter {
