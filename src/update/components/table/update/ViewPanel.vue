@@ -263,6 +263,9 @@ function filter(person: FullPerson): boolean {
 
     career = fCareerFilter(person.career);
     rank = fRankFilter(person.rank);
+
+
+
     biography = fBiographyFilter(person.person);
     education = fEducationFilter(person.person);
 
@@ -279,6 +282,9 @@ function filter(person: FullPerson): boolean {
 
 function fCareerFilter(career: Career[]) {
     if (careerFilter.value != undefined) {
+
+        if (career.length == 0) return false;
+
         if (careerFilter.value.contains.post.length != 0) {
             if (career.filter(item => item.post.toLocaleLowerCase().includes(careerFilter.value!.contains.post.toLocaleLowerCase())).length == 0)
                 return false;
@@ -303,6 +309,9 @@ function fCareerFilter(career: Career[]) {
 
 function fRankFilter(rank: Rank[]) {
     if (rankFilter.value != undefined) {
+
+        if (rank.length == 0) return false;
+
         if (rankFilter.value.contains.name.length != 0) {
             if (rank.filter(item => item.name.toLocaleLowerCase().includes(rankFilter.value!.contains.name.toLocaleLowerCase())).length == 0)
                 return false;
