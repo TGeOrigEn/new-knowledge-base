@@ -46,7 +46,7 @@ function click(event: MouseEvent) {
 }
 
 .x-item-text {
-    text-align: left;
+    /* text-align: left; */
     word-break: break-word;
     white-space: pre-line;
     overflow-wrap: break-word;

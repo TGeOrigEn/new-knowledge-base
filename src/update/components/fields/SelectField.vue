@@ -12,7 +12,7 @@ const props = defineProps({
 
 <template>
     <div class="x-field">
-        <label class="x-field-label">{{ label }}<span v-if="required && !disabled" class="x-field-required">*</span></label>
+        <label class="x-field-label">{{ label }}</label>
         <select @input="(event) => $emit('update:value', (event.target as HTMLInputElement).value)" :value="value"
             :name="name" :disabled="disabled" class="x-field-select">
             <option v-for="option in options">

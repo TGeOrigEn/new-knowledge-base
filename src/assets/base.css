@@ -92,6 +92,10 @@
   color: black;
 }
 
+.x-field .x-field-input:disabled {
+  background-color: rgb(226, 226, 226);
+}
+
 .x-field .x-field-input:read-only {
   color: black;
 }

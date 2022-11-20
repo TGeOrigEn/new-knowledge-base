@@ -18,13 +18,14 @@ const data = ref({
     <div v-if="data.show" class="lol">
         <slot></slot>
     </div>
-    <Button :disabled="readonly" :onClick="() => data.show = !data.show" src="/arrow.svg"
+    <Button :disabled="readonly" :onClick="() => data.show = !data.show" src="/filter.svg"
         class="x-dropdown-button"></Button>
 </template>
 
 <style scoped>
 .lol {
     position: absolute;
+    min-width: 110px;
     top: 100%;
     margin-top: 2px;
     flex-direction: column;

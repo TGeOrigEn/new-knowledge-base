@@ -4,14 +4,16 @@ class BiographyFilter {
         surname: string;
         origin: string;
         name: string;
-    } = { patronymic: "", surname: "", origin: "", name: "" }
+        date_birth: string;
+    } = { patronymic: "", surname: "", origin: "", name: "", date_birth: "" }
     equals: {
         patronymic: string;
         religion: string;
         surname: string;
         origin: string;
         name: string;
-    } = { patronymic: "", surname: "", origin: "", name: "", religion: "" }
+        date_birth: string;
+    } = { patronymic: "", surname: "", origin: "", name: "", religion: "", date_birth: "" }
 }
 
 class CareerFilter {
