@@ -190,7 +190,7 @@ function filterItems(activity_id: number): string {
                     :disabled="readonly" :options="locationOptions" />
             </Section>
 
-            <Section header="Личная информация">
+            <Section :isOpen="true" header="Личная информация">
                 <TextAreaField label="Имущество:" v-model:value="person.property" :readonly="readonly" />
                 <TextAreaField label="Награды:" v-model:value="person.awards" :readonly="readonly" />
                 <TextAreaField label="Жалование:" v-model:value="person.salary" :readonly="readonly" />
@@ -198,7 +198,7 @@ function filterItems(activity_id: number): string {
                 <TextAreaField label="Другое:" v-model:value="person.other" :required="false" :readonly="readonly" />
             </Section>
 
-            <Section :isOpen="true" header="Достижения" :disabled="person.id == -1">
+            <Section :isOpen="person.id != -1 || props.id != -1" header="Достижения" :disabled="person.id == -1">
                 <DropdownField label="Карьера:" :readonly="readonly"
                     :create="() => { selected.career_id = -1; mask = false; displayed.career = true; }">
                     <List>
@@ -227,7 +227,7 @@ function filterItems(activity_id: number): string {
                 </DropdownField>
             </Section>
 
-            <Section header="Источники" :disabled="person.id == -1">
+            <Section :isOpen="person.id != -1 || props.id != -1" header="Источники" :disabled="person.id == -1">
                 <TextAreaField label="Источники:" v-model:value="person.source" :required="false"
                     :readonly="readonly" />
             </Section>

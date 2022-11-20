@@ -67,7 +67,7 @@ function save() {
     <PersonCard v-if="!mask" :readonly="readonly" :id="card.id" :close="() => mask = true">
     </PersonCard>
 
-    <Window :index="2" :mask="mask" :close="props.close" header="Карточка места">
+    <Window :width="'50vw'" :index="2" :mask="mask" :close="props.close" header="Карточка места">
 
         <Body>
 
