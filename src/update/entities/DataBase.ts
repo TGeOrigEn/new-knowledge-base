@@ -114,65 +114,77 @@ class FullPerson {
     public career: Array<Career> = [];
     public rank: Array<Rank> = [];
 
-    public constructor(id: number) {
-        Command.select<Person>(Person.NAME, { id: id }).then(response => {
-            if (response == undefined) {
-                this.person = Person.instance();
-                this.activity = [];
-                this.career = [];
-                this.rank = [];
-                return;
-            }
-
-            this.person = response[0];
-
-            Command.select<Career>(Career.NAME, { person_id: id }).then(response => this.career = response == undefined ? [] : response);
-            Command.select<Rank>(Rank.NAME, { person_id: id }).then(response => this.rank = response == undefined ? [] : response);
-
-            Command.select<Activity>(Activity.NAME, { person_id: id }).then(response => {
-                if (response == undefined) {
-                    this.activity = [];
-                    return;
-                }
-                response.forEach(activity => this.activity.push(new FullActivity(activity.id)))
-            });
-        });
+    public constructor(person: Person, activity: FullActivity[], career: Career[], rank: Rank[]) {
+        this.person = person;
+        this.activity = activity;
+        this.career = career;
+        this.rank = rank;
     }
+
+    // public constructor(id: number) {
+    //     Command.select<Person>(Person.NAME, { id: id }).then(response => {
+    //         if (response == undefined) {
+    //             this.person = Person.instance();
+    //             this.activity = [];
+    //             this.career = [];
+    //             this.rank = [];
+    //             return;
+    //         }
+
+    //         this.person = response[0];
+
+    //         Command.select<Career>(Career.NAME, { person_id: id }).then(response => this.career = response == undefined ? [] : response);
+    //         Command.select<Rank>(Rank.NAME, { person_id: id }).then(response => this.rank = response == undefined ? [] : response);
+
+    //         Command.select<Activity>(Activity.NAME, { person_id: id }).then(response => {
+    //             if (response == undefined) {
+    //                 this.activity = [];
+    //                 return;
+    //             }
+    //             response.forEach(activity => this.activity.push(new FullActivity(activity.id)))
+    //         });
+    //     });
+    // }
 }
 
 class FullActivity {
     public activity: Activity = Activity.instance();
     public place: Array<Place> = [];
 
-    public constructor(id: number) {
-        Command.select<Activity>(Activity.NAME, { id: id }).then(response => {
-            if (response == undefined) {
-                this.activity = Activity.instance();
-                this.place = [];
-                return;
-            }
-            this.activity = response[0];
-
-            Command.select<Link>(Link.NAME, { activity_id: id }).then(response => {
-                if (response == undefined) {
-                    this.place = [];
-                    return;
-                }
-
-                response.forEach(link => {
-                    if (response == undefined) {
-                        this.place = [];
-                        return;
-                    }
-                    Command.select<Place>(Place.NAME, { id: link.place_id }).then(response => {
-                        if (response == undefined) return;
-                        this.place.push(response![0]);
-                    });
-                });
-            });
-        });
-
+    public constructor(activity: Activity, place: Place[]) {
+        this.activity = activity;
+        this.place = place;
     }
+
+    // public constructor(id: number) {
+    //     Command.select<Activity>(Activity.NAME, { id: id }).then(response => {
+    //         if (response == undefined) {
+    //             this.activity = Activity.instance();
+    //             this.place = [];
+    //             return;
+    //         }
+    //         this.activity = response[0];
+
+    //         Command.select<Link>(Link.NAME, { activity_id: id }).then(response => {
+    //             if (response == undefined) {
+    //                 this.place = [];
+    //                 return;
+    //             }
+
+    //             response.forEach(link => {
+    //                 if (response == undefined) {
+    //                     this.place = [];
+    //                     return;
+    //                 }
+    //                 Command.select<Place>(Place.NAME, { id: link.place_id }).then(response => {
+    //                     if (response == undefined) return;
+    //                     this.place.push(response![0]);
+    //                 });
+    //             });
+    //         });
+    //     });
+
+    // }
 }
 
 class Activity {

@@ -9,7 +9,7 @@ import Header from '../Header.vue';
 import { size } from '@/update/entities/table';
 import { onBeforeMount, ref, onUpdated, nextTick, onMounted } from 'vue';
 
-import { Command, Activity, Career, Person, Rank, Place, Link, FullPerson } from '@/update/entities/DataBase';
+import { Command, Activity, Career, Person, Rank, Place, Link, FullPerson, FullActivity } from '@/update/entities/DataBase';
 
 import BiographyCell from '../cells/BiographyCell.vue';
 import EducationCell from '../cells/EducationCell.vue';
@@ -57,49 +57,29 @@ const beforeMount = onBeforeMount(() => {
 //         person.value.push(await FullPerson.get(response[i].id));
 // };
 
-function refresh() {
-    Command.select<Activity>(Activity.NAME).then(response => {
-        if (response == undefined) return;
-        activity.value = response;
-    });
+async function refresh() {
+    const aActivity = await Command.select<Activity>(Activity.NAME);
+    const aCareer = await Command.select<Career>(Career.NAME);
+    const aPerson = await Command.select<Person>(Person.NAME);
+    const aPlace = await Command.select<Place>(Place.NAME);
+    const aRank = await Command.select<Rank>(Rank.NAME);
+    const aLink = await Command.select<Link>(Link.NAME);
 
-    Command.select<Career>(Career.NAME).then(response => {
-        if (response == undefined) return;
-        career.value = response;
-    });
+    activity.value = aActivity == undefined ? [] : aActivity;
+    career.value = aCareer == undefined ? [] : aCareer;
+    person.value = aPerson == undefined ? [] : aPerson;
+    place.value = aPlace == undefined ? [] : aPlace;
+    rank.value = aRank == undefined ? [] : aRank;
+    link.value = aLink == undefined ? [] : aLink;
 
-    Command.select<Person>(Person.NAME).then(response => {
-        if (response == undefined) return;
-        person.value = response;
+    fullPerson.value = [];
+    person.value.forEach(person => {
+        const bActivity = activity.value.filter(activity => activity.person_id == person.id);
+        const bCareer = career.value.filter(career => career.person_id == person.id);
+        const bRank = rank.value.filter(rank => rank.person_id == person.id);
+        const fullActivity = bActivity.map(activity => new FullActivity(activity, place.value.filter(item => link.value.filter(link => link.activity_id == activity.id).map(link => link.place_id).includes(item.id))));
+        fullPerson.value.push(new FullPerson(person, fullActivity, bCareer, bRank));
     });
-
-    Command.select<Rank>(Rank.NAME).then(response => {
-        if (response == undefined) return;
-        rank.value = response;
-    });
-
-    Command.select<Place>(Place.NAME).then(response => {
-        if (response == undefined) return;
-        place.value = response;
-    });
-
-    Command.select<Link>(Link.NAME).then(response => {
-        if (response == undefined) return;
-        link.value = response;
-    });
-
-    Command.select<Person>(Person.NAME).then(response => {
-        person.value = [];
-        if (response == undefined) return;
-        response.forEach(element => {
-            fullPerson.value.push(new FullPerson(element.id))
-            setTimeout(async () => {
-                forceUpdate.value = true;
-                await nextTick();
-                forceUpdate.value = false;
-            }, 300);
-        });
-    })
 }
 
 function filterSearch() {
