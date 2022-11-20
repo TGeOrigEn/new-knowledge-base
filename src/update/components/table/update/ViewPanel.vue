@@ -421,16 +421,16 @@ function fBiographyFilter(person: Person) {
 
 const mounted = onUpdated(() => { size() });
 
-const activityFilter = ref<TextFilter | undefined>();
-const biographyFilter = ref<BiographyFilter | undefined>();
-const careerFilter = ref<CareerFilter | undefined>();
-const educationFilter = ref<EducationFilter | undefined>();
-const rankFilter = ref<RankFilter | undefined>();
-const marital_statusFilter = ref<TextFilter | undefined>();
-const salaryFilter = ref<TextFilter | undefined>();
-const awardsFilter = ref<TextFilter | undefined>();
-const propertyFilter = ref<TextFilter | undefined>();
-const placeFilter = ref<PlaceFilter | undefined>();
+const activityFilter = ref<TextFilter | undefined>(new TextFilter());
+const biographyFilter = ref<BiographyFilter | undefined>(new BiographyFilter());
+const careerFilter = ref<CareerFilter | undefined>(new CareerFilter());
+const educationFilter = ref<EducationFilter | undefined>(new EducationFilter());
+const rankFilter = ref<RankFilter | undefined>(new RankFilter());
+const marital_statusFilter = ref<TextFilter | undefined>(new TextFilter());
+const salaryFilter = ref<TextFilter | undefined>(new TextFilter());
+const awardsFilter = ref<TextFilter | undefined>(new TextFilter());
+const propertyFilter = ref<TextFilter | undefined>(new TextFilter());
+const placeFilter = ref<PlaceFilter | undefined>(new PlaceFilter());
 
 const displayed = ref({
     title: "",
