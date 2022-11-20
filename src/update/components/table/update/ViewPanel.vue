@@ -243,7 +243,7 @@ const filter = ref({
                 <Button :src="'/refresh.svg'" class="x-button-def" :onClick="refresh"></Button>
                 <Button :src="'/map.svg'" class="x-button-def" style="padding: 5px"
                     :onClick="() => map = true"></Button>
-                <Filter style="margin-left: 5px; margin-right: 10px;">
+                <!-- <Filter style="margin-left: 5px; margin-right: 10px;">
                     <List>
                         <Item
                             v-for="item in ['Биография', 'Образование', 'Награды', 'Жалование', 'Имущество', 'Семейное положение']"
@@ -252,7 +252,7 @@ const filter = ref({
                     <Dropdown>
                         <Item v-for="item in ['Деятельность', 'Чин', 'Карьера']" :text="item" :width="'100%'" />
                     </Dropdown>
-                </Filter>
+                </Filter> -->
                 <Search v-model:value="search" :placeholder="'Поиск по тексту в таблице...'"
                     style="flex: 1; height: 20px; margin-left: auto;">
                 </Search>
