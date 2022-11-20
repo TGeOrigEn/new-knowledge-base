@@ -593,11 +593,11 @@ function dateChange(e: string): string {
                             :text="'Биография'" :width="'100%'" />
 
                         <Item v-if="educationFilter == undefined" :readonly="false"
-                            :open="() => { init_educationFilter; displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
+                            :open="() => { init_educationFilter(); displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
                             :text="'Образование'" :width="'100%'" />
 
                         <Item v-if="awardsFilter == undefined" :readonly="false"
-                            :open="() => { init_awardsFilter; displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :open="() => { init_awardsFilter(); displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
                             :text="'Награды'" :width="'100%'" />
 
                         <Item v-if="salaryFilter == undefined" :readonly="false"
