@@ -7,9 +7,9 @@ import List from '../../fields/list/List.vue';
 import Dropdown from '../../fields/viewPanel/Dropdown.vue';
 import Header from '../Header.vue';
 import { size } from '@/update/entities/table';
-import { onBeforeMount, ref, onUpdated } from 'vue';
+import { onBeforeMount, ref, onUpdated, nextTick, onMounted } from 'vue';
 
-import { Command, Activity, Career, Person, Rank, Place, Link } from '@/update/entities/DataBase';
+import { Command, Activity, Career, Person, Rank, Place, Link, FullPerson } from '@/update/entities/DataBase';
 
 import BiographyCell from '../cells/BiographyCell.vue';
 import EducationCell from '../cells/EducationCell.vue';
@@ -20,6 +20,12 @@ import RankCell from '../cells/RankCell.vue';
 import TextCell from '../cells/TextCell.vue';
 
 import { TextFilter, CareerFilter, PlaceFilter, RankFilter, EducationFilter, BiographyFilter } from '@/update/entities/Filter'
+
+const fullPerson = ref<FullPerson[]>([]);
+
+const search = ref("");
+
+const forceUpdate = ref<Boolean>(false);
 
 const activity = ref<Activity[]>([]);
 
@@ -41,6 +47,15 @@ const card = ref({
 const beforeMount = onBeforeMount(() => {
     refresh();
 })
+
+// async function refresh() {
+//     person.value = [];
+//     const response = await Command.select<Person>(Person.NAME);
+//     if (response == undefined) return
+
+//     for (var i = 0; i < response.length; i++)
+//         person.value.push(await FullPerson.get(response[i].id));
+// };
 
 function refresh() {
     Command.select<Activity>(Activity.NAME).then(response => {
@@ -72,9 +87,87 @@ function refresh() {
         if (response == undefined) return;
         link.value = response;
     });
+
+    Command.select<Person>(Person.NAME).then(response => {
+        person.value = [];
+        if (response == undefined) return;
+        response.forEach(element => {
+            fullPerson.value.push(new FullPerson(element.id))
+            setTimeout(async () => {
+                forceUpdate.value = true;
+                await nextTick();
+                forceUpdate.value = false;
+            }, 300);
+        });
+    })
 }
 
-const mounted = onUpdated(() => size());
+function filterSearch() {
+    if (search.value === "") return fullPerson.value;
+    const array: FullPerson[] = [];
+
+    fullPerson.value.forEach(person => {
+        if (person.person.surname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.patronymic.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.date_birth.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.religion.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.origin.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.level_education.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.educational_institution.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.location_educational_institution.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.property.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.awards.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.salary.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        if (person.person.marital_status.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            array.push(person);
+            return;
+        }
+        person.rank.forEach(rank => {
+
+        })
+    })
+
+    return array;
+}
+
+const mounted = onMounted(() => { setTimeout(size, 1000); });
 
 const filter = ref({
     activity: new TextFilter(),
@@ -94,7 +187,7 @@ const filter = ref({
 <template>
     <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
-
+    <div v-if="forceUpdate"></div>
     <div style="padding: 5px;">
         <div class="nav">
             <Button class="x-button-nav" :text="'Описание'"></Button>
@@ -120,7 +213,8 @@ const filter = ref({
                         <Item v-for="item in ['Деятельность', 'Чин', 'Карьера']" :text="item" :width="'100%'" />
                     </Dropdown>
                 </Filter>
-                <Search :placeholder="'Поиск по тексту в таблице...'" style="flex: 1; height: 20px; margin-left: auto;">
+                <Search v-model:value="search" :placeholder="'Поиск по тексту в таблице...'"
+                    style="flex: 1; height: 20px; margin-left: auto;">
                 </Search>
             </div>
             <div
@@ -142,18 +236,28 @@ const filter = ref({
                 </table>
                 <table id="table-body" style="width: 100%; border: 0">
                     <tbody style="width: 100%; display: block; max-height: 75vh; overflow: auto;">
-                        <tr v-for="item in person" :ondblclick="() => { card.id = item.id; card.disabled = true; }">
-                            <BiographyCell :person="item" />
-                            <EducationCell :value="item" />
-                            <TextCell :value="item.awards" />
-                            <TextCell :value="item.salary" />
-                            <TextCell :value="item.property" />
-                            <TextCell :value="item.marital_status" />
-                            <CareerCell :value="career?.filter(element => element.person_id === item.id)" />
-                            <RankCell :value="rank?.filter(element => element.person_id === item.id)" />
-                            <ActivityCell
-                                :place="place.filter(element => link.filter(element => activity?.filter(element => element.person_id === item.id).map(element => element.id).includes(element.activity_id)).map(element => element.place_id).includes(element.id))"
-                                :value="activity?.filter(element => element.person_id === item.id)" />
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr v-for="item in filterSearch()"
+                            :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
+                            <BiographyCell :person="item.person" />
+                            <EducationCell :value="item.person" />
+                            <TextCell :value="item.person.awards" />
+                            <TextCell :value="item.person.salary" />
+                            <TextCell :value="item.person.property" />
+                            <TextCell :value="item.person.marital_status" />
+                            <CareerCell :value="item.career" />
+                            <RankCell :value="item.rank" />
+                            <ActivityCell :place="item.activity" :value="item.activity" />
                         </tr>
                     </tbody>
                 </table>

@@ -92,3 +92,11 @@ create TABLE activity_place(
     FOREIGN KEY (activity_id) REFERENCES activity (id),
     FOREIGN KEY (place_id) REFERENCES place (id)
 );
+
+activity.person_id, person.id, career.person_id, rank.person_id, activity_place.activity_id, place.id 
+
+SELECT * FROM activity, person, career, rank, activity_place, place
+WHERE activity.person_id = '59'
+AND person.id = '59'
+AND career.person_id = '59'
+AND rank.person_id = '59';

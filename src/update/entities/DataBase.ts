@@ -1,6 +1,88 @@
 import axios from "axios";
 
 
+// class FullPerson {
+//     public person: Person = Person.instance();
+//     public activity: Array<FullActivity> = [];
+//     public career: Array<Career> = [];
+//     public rank: Array<Rank> = [];
+
+//     public static async get(id: number): Promise<FullPerson> {
+//         const person = await Command.select<Person>(Person.NAME, { id: id });
+//         if (person == undefined)
+//             return new FullPerson(Person.instance(), [], [], []);
+
+//         var a = person[0];
+//         var b: FullActivity[] = [];
+//         var c: Career[] = [];
+//         var d: Rank[] = [];
+
+//         const career = await Command.select<Career>(Career.NAME, { person_id: id });
+//         if (career != undefined) {
+//             c = career;
+//         }
+
+
+//         const rank = await Command.select<Rank>(Rank.NAME, { person_id: id });
+//         if (rank != undefined) {
+//             d = rank;
+//         }
+
+//         const activity = await Command.select<Activity>(Activity.NAME, { person_id: id });
+//         if (activity != undefined) {
+//             for (var i = 0; i < activity.length; i++)
+//                 b.push(await FullActivity.get(activity[i].id));
+//         }
+
+//         return new FullPerson(a, b, c, d);
+//     }
+
+//     public constructor(person: Person, activity: FullActivity[], career: Career[], rank: Rank[]) {
+//         this.person = person;
+//         this.activity = activity;
+//         this.career = career;
+//         this.rank = rank;
+//     }
+// }
+
+// class FullActivity {
+//     public activity: Activity = Activity.instance();
+//     public place: Array<Place> = [];
+
+//     public static async get(id: number): Promise<FullActivity> {
+//         var a = Activity.instance();
+//         var b = new Array<Place>();
+
+//         const activity = await Command.select<Activity>(Activity.NAME, { id: id });
+
+//         if (activity == undefined) {
+//             a = Activity.instance();
+//             b = [];
+//             return new FullActivity(a, b);
+//         }
+
+//         const link = await Command.select<Link>(Link.NAME, { activity_id: id });
+
+//         if (link == undefined) {
+//             b = [];
+//             return new FullActivity(a, b);
+//         }
+
+//         for (var i = 0; i < link.length; i++) {
+//             const place = await Command.select<Place>(Place.NAME, { id: link[i].place_id });
+//             if (place != undefined) b.push(place[0]);
+//         }
+
+//         return new FullActivity(a, b);
+//     }
+
+//     public constructor(activity: Activity, place: Place[]) {
+//         this.activity = activity;
+//         this.place = place;
+//     }
+// }
+
+
 class Command {
 
     private static readonly CONNECTION_STRING: string = "http://194.87.232.70:5050/api";
@@ -23,6 +105,73 @@ class Command {
 
     public static async insert<T>(table: string, person: T | any): Promise<T | undefined> {
         return await (await axios.post<T>(`${Command.CONNECTION_STRING}/${table}`, person)).data;
+    }
+}
+
+class FullPerson {
+    public person: Person = Person.instance();
+    public activity: Array<FullActivity> = [];
+    public career: Array<Career> = [];
+    public rank: Array<Rank> = [];
+
+    public constructor(id: number) {
+        Command.select<Person>(Person.NAME, { id: id }).then(response => {
+            if (response == undefined) {
+                this.person = Person.instance();
+                this.activity = [];
+                this.career = [];
+                this.rank = [];
+                return;
+            }
+
+            this.person = response[0];
+
+            Command.select<Career>(Career.NAME, { person_id: id }).then(response => this.career = response == undefined ? [] : response);
+            Command.select<Rank>(Rank.NAME, { person_id: id }).then(response => this.rank = response == undefined ? [] : response);
+
+            Command.select<Activity>(Activity.NAME, { person_id: id }).then(response => {
+                if (response == undefined) {
+                    this.activity = [];
+                    return;
+                }
+                response.forEach(activity => this.activity.push(new FullActivity(activity.id)))
+            });
+        });
+    }
+}
+
+class FullActivity {
+    public activity: Activity = Activity.instance();
+    public place: Array<Place> = [];
+
+    public constructor(id: number) {
+        Command.select<Activity>(Activity.NAME, { id: id }).then(response => {
+            if (response == undefined) {
+                this.activity = Activity.instance();
+                this.place = [];
+                return;
+            }
+            this.activity = response[0];
+
+            Command.select<Link>(Link.NAME, { activity_id: id }).then(response => {
+                if (response == undefined) {
+                    this.place = [];
+                    return;
+                }
+
+                response.forEach(link => {
+                    if (response == undefined) {
+                        this.place = [];
+                        return;
+                    }
+                    Command.select<Place>(Place.NAME, { id: link.place_id }).then(response => {
+                        if (response == undefined) return;
+                        this.place.push(response![0]);
+                    });
+                });
+            });
+        });
+
     }
 }
 
@@ -228,4 +377,4 @@ class Rank {
     }
 }
 
-export { Command, Activity, Person, Career, Place, Link, Rank }
+export { Command, Activity, Person, Career, Place, Link, Rank, FullPerson, FullActivity }

@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import type { Activity, Place } from '@/update/entities/DataBase';
+import type { FullActivity } from '@/update/entities/DataBase';
 
 const props = defineProps({
-    value: { type: Array<Activity>, required: true },
-    place: { type: Array<Place>, required: true }
+    value: { type: Array<FullActivity>, required: true },
 });
 </script>
 
 <template>
     <td>
         <p v-for="activity in value">
-            <span>{{ activity.description }};</span>
-        <p v-if="place.length != 0">Места:</p>
-        <p v-for="item in place">{{ item.name }};</p>
+            <span>{{ activity.activity.description }};</span>
+        <p v-if="activity.place.length != 0">Места:</p>
+        <p v-for="item in activity.place">{{ item.name }};</p>
         </p>
     </td>
 </template>
