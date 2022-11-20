@@ -421,16 +421,16 @@ function fBiographyFilter(person: Person) {
 
 const mounted = onUpdated(() => { size() });
 
-const activityFilter = ref<TextFilter | undefined>(new TextFilter());
-const biographyFilter = ref<BiographyFilter | undefined>(new BiographyFilter());
-const careerFilter = ref<CareerFilter | undefined>(new CareerFilter());
-const educationFilter = ref<EducationFilter | undefined>(new EducationFilter());
-const rankFilter = ref<RankFilter | undefined>(new RankFilter());
-const marital_statusFilter = ref<TextFilter | undefined>(new TextFilter());
-const salaryFilter = ref<TextFilter | undefined>(new TextFilter());
-const awardsFilter = ref<TextFilter | undefined>(new TextFilter());
-const propertyFilter = ref<TextFilter | undefined>(new TextFilter());
-const placeFilter = ref<PlaceFilter | undefined>(new PlaceFilter());
+const activityFilter = ref<TextFilter | undefined>(undefined);
+const biographyFilter = ref<BiographyFilter | undefined>(undefined);
+const careerFilter = ref<CareerFilter | undefined>(undefined);
+const educationFilter = ref<EducationFilter | undefined>(undefined);
+const rankFilter = ref<RankFilter | undefined>(undefined);
+const marital_statusFilter = ref<TextFilter | undefined>(undefined);
+const salaryFilter = ref<TextFilter | undefined>(undefined);
+const awardsFilter = ref<TextFilter | undefined>(undefined);
+const propertyFilter = ref<TextFilter | undefined>(undefined);
+const placeFilter = ref<PlaceFilter | undefined>(undefined);
 
 const displayed = ref({
     title: "",
@@ -565,7 +565,7 @@ function dateChange(e: string): string {
                             :text="'Жалование'" :width="'100%'" />
 
                         <Item v-if="propertyFilter == undefined" :readonly="false"
-                            :open="() => { displayed.textFilter = propertyFilter; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :open="() => { propertyFilter = new TextFilter(); displayed.textFilter = propertyFilter; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
                             :text="'Имущество'" :width="'100%'" />
 
                         <Item v-if="marital_statusFilter == undefined" :readonly="false"
