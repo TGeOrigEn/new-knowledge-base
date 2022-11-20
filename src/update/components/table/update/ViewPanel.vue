@@ -228,6 +228,7 @@ function filter(person: FullPerson): boolean {
     var salary = true;
     var awards = true;
     var property = true;
+    var place = false;
 
     if (propertyFilter.value != undefined) {
         if (propertyFilter.value.contains.length != 0) {
@@ -265,12 +266,15 @@ function filter(person: FullPerson): boolean {
     biography = fBiographyFilter(person.person);
     education = fEducationFilter(person.person);
 
-    for (var i = 0; i < person.activity.length; i++) {
-        if (!fPlaceFilter(person.activity[i].place))
-            return false;
-    }
+    if (placeFilter.value != undefined) {
+        if (person.activity.length == 0) return false;
+        for (var i = 0; i < person.activity.length; i++) {
+            if (fPlaceFilter(person.activity[i].place))
+                place = true;
+        }
+    } else place = true;
 
-    return activity && biography && career && education && rank && marital_status && salary && awards && property;
+    return activity && biography && place && career && education && rank && marital_status && salary && awards && property;
 }
 
 function fCareerFilter(career: Career[]) {

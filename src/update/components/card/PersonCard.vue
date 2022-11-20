@@ -157,6 +157,7 @@ function dateChange(e: string): string {
 function filterItems(activity_id: number): string {
     const id: number[] = link.value.filter(link => link.activity_id === activity_id).map(link => link.place_id);
     const s = place.value.filter(place => id.includes(place.id)).map(place => place.name).join(", ");
+    if (s.toLocaleLowerCase() === "".toLocaleLowerCase()) return "";
     return "\nМеста:" + s;
 };
 </script>
