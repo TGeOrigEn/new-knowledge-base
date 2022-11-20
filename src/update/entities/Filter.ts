@@ -5,7 +5,7 @@ class BiographyFilter {
         origin: string;
         name: string;
         date_birth: string;
-    } = { patronymic: "", surname: "", origin: "", name: "", date_birth: "" }
+    }
     equals: {
         patronymic: string;
         religion: string;
@@ -13,9 +13,10 @@ class BiographyFilter {
         origin: string;
         name: string;
         date_birth: string;
-    } = { patronymic: "", surname: "", origin: "", name: "", religion: "", date_birth: "" }
+    }
     public constructor() {
-
+        this.equals = { patronymic: "", surname: "", origin: "", name: "", religion: "", date_birth: "" };
+        this.contains = { patronymic: "", surname: "", origin: "", name: "", date_birth: "" }
     }
 }
 
@@ -25,12 +26,13 @@ class CareerFilter {
         end_date: string,
         place: string,
         post: string
-    } = { start_date: "", end_date: "", place: "", post: "" }
+    }
     contains: {
         post: string
-    } = { post: "" }
+    }
     public constructor() {
-
+        this.equals = { start_date: "", end_date: "", place: "", post: "" };
+        this.contains = { post: "" }
     }
 }
 
@@ -39,12 +41,13 @@ class EducationFilter {
         level_education: string,
         educational_institution: string,
         location_educational_institution: string,
-    } = { level_education: "", educational_institution: "", location_educational_institution: "" }
+    }
     contains: {
         educational_institution: string,
-    } = { educational_institution: "" }
+    }
     public constructor() {
-
+        this.contains = { educational_institution: "" }
+        this.equals = { level_education: "", educational_institution: "", location_educational_institution: "" };
     }
 }
 
@@ -54,12 +57,13 @@ class RankFilter {
         end_date: string,
         degree: string,
         name: string
-    } = { start_date: "", end_date: "", degree: "", name: "" }
+    }
     contains: {
         name: string
-    } = { name: "" }
+    }
     public constructor() {
-
+        this.equals = { start_date: "", end_date: "", degree: "", name: "" };
+        this.contains = { name: "" }
     }
 }
 
@@ -67,19 +71,20 @@ class PlaceFilter {
     equals: {
         name: string,
         description: string
-    } = { name: "", description: "" };
+    };
     contains: {
         name: string,
         description: string
-    } = { name: "", description: "" };
+    }
     public constructor() {
-
+        this.contains = { name: "", description: "" };
+        this.equals = { name: "", description: "" };
     }
 }
 
 class TextFilter {
-    contains: string = "";
-    equals: string = "";
+    contains: string;
+    equals: string;
     public constructor() {
         this.contains = "";
         this.equals = "";
