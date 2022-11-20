@@ -12,11 +12,8 @@
     flex-flow: row wrap;
     list-style-type: none;
     min-width: 100px;
+    flex-direction: column;
     display: flex;
-    align-items: center;
 }
 
-ul>:first-child {
-    margin-left: 3px;
-}
 </style>

@@ -214,7 +214,6 @@ const filter = ref({
     property: new TextFilter(),
     place: new PlaceFilter(),
 });
-
 </script>
 
 <template>

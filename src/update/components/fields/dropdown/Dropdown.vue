@@ -30,7 +30,7 @@ const data = ref({
     margin-top: 2px;
     flex-direction: column;
 
-
+    align-items: center;
     display: flex;
     align-items: center;
     background-color: #f8f9fa;

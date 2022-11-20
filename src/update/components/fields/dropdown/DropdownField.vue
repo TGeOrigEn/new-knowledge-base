@@ -65,13 +65,6 @@ const props = defineProps({
     white-space: pre;
 }
 
-.x-field-items-list {
-    flex-flow: row wrap;
-    list-style-type: none;
-    display: flex;
-    align-items: center;
-}
-
 .x-field-button-add {
     background-size: 14px;
     flex: 0 0 24px;

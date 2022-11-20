@@ -37,5 +37,6 @@ const data = ref({
     white-space: pre;
     right: 0;
     z-index: 1;
+    align-items: center;
 }
 </style>

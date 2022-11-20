@@ -26,7 +26,7 @@ function click(event: MouseEvent) {
     <li class="x-item-wrapper" :title="text" :style="style">
         <Button class="x-item" :onClick="open" :style="style">
             <div class="x-item-container" :style="style">
-                <span class="x-item-text" :style="style">{{ text }}</span>
+                <div class="x-item-text" :style="style">{{ text }}</div>
                 <Button src="/close.svg" v-if="!readonly && remove !== undefined" class="x-item-button-remove"
                     @click="click" />
             </div>
@@ -46,12 +46,19 @@ function click(event: MouseEvent) {
 }
 
 .x-item-text {
-    max-width: 100px;
+    text-align: left;
+    word-break: break-word;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+    -ms-word-break: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    max-width: 39vw;
     margin-left: 5px;
     margin-right: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .x-item-button-remove {

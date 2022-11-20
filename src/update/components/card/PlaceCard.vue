@@ -12,7 +12,7 @@ import Button from '../buttons/Button.vue';
 import Body from '../windows/Body.vue';
 
 const props = defineProps({
-    id: { type: Number, required: true},
+    id: { type: Number, required: true },
 
     refresh: { type: Function, required: true },
     close: { type: Function, required: true },

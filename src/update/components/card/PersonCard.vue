@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue';
 
-import { Command, Rank, Career, Activity, Person } from '@/update/entities/DataBase';
+import { Command, Rank, Career, Activity, Person, Place, Link } from '@/update/entities/DataBase';
 
 import DropdownField from '../fields/dropdown/DropdownField.vue';
 import TextAreaField from '../fields/TextAreaField.vue';
@@ -49,6 +49,10 @@ const activity = ref<Activity[]>([]);
 
 const career = ref<Career[]>([]);
 
+const place = ref<Place[]>([]);
+
+const link = ref<Link[]>([]);
+
 const rank = ref<Rank[]>([]);
 
 const beforeMount = onBeforeMount(() => {
@@ -59,6 +63,8 @@ const beforeMount = onBeforeMount(() => {
 
     Command.select<Career>(Career.NAME, { person_id: props.id }).then(response => {
         if (response == undefined) return;
+        response.forEach(item => item.start_date = dateChange(item.start_date))
+        response.forEach(item => item.end_date = dateChange(item.end_date))
         career.value = response;
     });
 
@@ -70,7 +76,19 @@ const beforeMount = onBeforeMount(() => {
 
     Command.select<Rank>(Rank.NAME, { person_id: props.id }).then(response => {
         if (response == undefined) return;
+        response.forEach(item => item.start_date = dateChange(item.start_date))
+        response.forEach(item => item.end_date = dateChange(item.end_date))
         rank.value = response;
+    });
+
+    Command.select<Link>(Link.NAME).then(response => {
+        if (response == undefined) return;
+        link.value = response;
+    });
+
+    Command.select<Place>(Place.NAME).then(response => {
+        if (response == undefined) return;
+        place.value = response;
     });
 })
 
@@ -82,12 +100,26 @@ function update() {
 
     Command.select<Career>(Career.NAME, { person_id: person.value.id }).then(response => {
         if (response == undefined) return;
+        response.forEach(item => item.start_date = dateChange(item.start_date))
+        response.forEach(item => item.end_date = dateChange(item.end_date))
         career.value = response;
     });
 
     Command.select<Rank>(Rank.NAME, { person_id: person.value.id }).then(response => {
         if (response == undefined) return;
+        response.forEach(item => item.start_date = dateChange(item.start_date))
+        response.forEach(item => item.end_date = dateChange(item.end_date))
         rank.value = response;
+    });
+
+    Command.select<Link>(Link.NAME).then(response => {
+        if (response == undefined) return;
+        link.value = response;
+    });
+
+    Command.select<Place>(Place.NAME).then(response => {
+        if (response == undefined) return;
+        place.value = response;
     });
 }
 
@@ -110,6 +142,22 @@ function save() {
         person.value = response;
     });
 };
+
+function dateChange(e: string): string {
+    const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
+
+    let date = new Date(e);
+    let month = date.getMonth();
+    let day = date.getDate();
+    let year = date.getFullYear();
+    return zeroPad(day, 2) + '.' + zeroPad(month + 1, 2) + '.' + zeroPad(year, 4);
+}
+
+function filterItems(activity_id: number): string {
+    const id: number[] = link.value.filter(link => link.activity_id === activity_id).map(link => link.place_id);
+    const s = place.value.filter(place => id.includes(place.id)).map(place => place.name).join(", ");
+    return "\nМеста:" + s;
+};
 </script>
 
 <template>
@@ -119,11 +167,11 @@ function save() {
         :close="() => { displayed.career = false; mask = true; }" :id="selected.career_id" :person_id="person.id" />
     <RankCard :refresh="update" :readonly="readonly" v-if="displayed.rank" :mask="true"
         :close="() => { displayed.rank = false; mask = true; }" type :id="selected.rank_id" :person_id="person.id" />
-    <Window :index="3" :width="'700px'" :mask="mask" :close="props.close" header="Карточка личности">
+    <Window :index="3" :width="'50vw'" :mask="mask" :close="props.close" header="Карточка личности">
 
         <Body>
 
-            <Section header="Биография">
+            <Section :isOpen="true" header="Биография">
                 <TextField label="Имя:" v-model:value="person.name" :readonly="readonly" />
                 <TextField label="Фамилия:" v-model:value="person.surname" :readonly="readonly" />
                 <TextField label="Отчество:" v-model:value="person.patronymic" :readonly="readonly" />
@@ -133,7 +181,7 @@ function save() {
                 <TextField label="Происхождение:" v-model:value="person.origin" :readonly="readonly" />
             </Section>
 
-            <Section header="Образование">
+            <Section :isOpen="true" header="Образование">
                 <SelectField label="Уровень образования:" v-model:value="person.level_education" :disabled="readonly"
                     :options="educationOptions" />
                 <TextField label="Учебное учреждение:" v-model:value="person.educational_institution"
@@ -150,11 +198,12 @@ function save() {
                 <TextAreaField label="Другое:" v-model:value="person.other" :required="false" :readonly="readonly" />
             </Section>
 
-            <Section header="Достижения" :disabled="person.id == -1">
+            <Section :isOpen="true" header="Достижения" :disabled="person.id == -1">
                 <DropdownField label="Карьера:" :readonly="readonly"
                     :create="() => { selected.career_id = -1; mask = false; displayed.career = true; }">
                     <List>
-                        <Item :readonly="readonly" v-for="item in career" :text="item.post"
+                        <Item :readonly="readonly" v-for="item in career"
+                            :text="`${item.start_date} - ${item.end_date} : ${item.post}, ${item.place}`"
                             :open="() => { selected.career_id = item.id; mask = false; displayed.career = true; }" />
                     </List>
                 </DropdownField>
@@ -162,7 +211,8 @@ function save() {
                 <DropdownField label="Чин:" :readonly="readonly"
                     :create="() => { selected.rank_id = -1; mask = false; displayed.rank = true; }">
                     <List>
-                        <Item :readonly="readonly" v-for="item in rank" :text="item.name"
+                        <Item :readonly="readonly" v-for="item in rank"
+                            :text="`${item.start_date} - ${item.end_date} : ${item.degree}, ${item.name}`"
                             :open="() => { selected.rank_id = item.id; mask = false; displayed.rank = true; }" />
                     </List>
                 </DropdownField>
@@ -170,7 +220,8 @@ function save() {
                 <DropdownField label="Деятельность:" :readonly="readonly"
                     :create="() => { selected.activity_id = -1; mask = false; displayed.activity = true; }">
                     <List>
-                        <Item :readonly="readonly" v-for="item in activity" :text="item.description"
+                        <Item :readonly="readonly" v-for="item in activity"
+                            :text="`${item.description}${filterItems(item.id)}`"
                             :open="() => { selected.activity_id = item.id; mask = false; displayed.activity = true; }" />
                     </List>
                 </DropdownField>

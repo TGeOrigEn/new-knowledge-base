@@ -120,20 +120,21 @@ function filterDropdown(): Place[] {
     <PlaceCard :refresh="card.refresh" v-if="card.mask" :readonly="readonly" :mask="true"
         :close="() => card.mask = false" :id="card.id" />
 
-    <Window :width="'450px'" :index="4" :mask="!card.mask" :close="props.close" header="Карточка активности">
+    <Window :width="'600px'" :index="4" :mask="!card.mask" :close="props.close" header="Карточка активности">
 
         <Body class="x-body">
             <TextAreaField label="Описание:" :readonly="readonly" v-model:value="activity.description" />
             <DropdownField label="Место:" :readonly="readonly" :create="() => { card.id = -1; card.mask = true; }">
 
                 <List>
-                    <Item v-for="item in filterItems()" :text="item.name" :remove="() => deleteLink(item.id)"
+                    <Item v-for="item in filterItems()" :text="item.name"
+                        :remove="() => { deleteLink(item.id); props.refresh(); }"
                         :open="() => { card.id = item.id; card.mask = true; }" :readonly="readonly" />
                 </List>
 
                 <Dropdown v-if="filterDropdown().length != 0" :readonly="activity.id == -1">
                     <Item v-for="item in filterDropdown()" :width="'100%'" :readonly="readonly" :text="item.name"
-                        :open="() => createLink(item.id)" />
+                        :open="() => { createLink(item.id); props.refresh(); }" />
                 </Dropdown>
 
             </DropdownField>
