@@ -2,11 +2,25 @@ export const size = () => {
     var tableHead = document.getElementById('table-head');
     var tableBody = document.getElementById('table-body');
 
-    var headCells = tableHead!.getElementsByTagName('th');
-    var bodyCells = tableBody!.getElementsByTagName('tr')[0].getElementsByTagName('td');
+    if (tableHead == undefined) return;
+    if (tableBody == undefined) return;
+
+    var headCells = tableHead.getElementsByTagName('th');
+    var firstTD = tableBody.getElementsByTagName('tr')[0];
+
+    if (firstTD == undefined) return
+
+    var bodyCells = firstTD.getElementsByTagName('td');
+
+    if (headCells == undefined) return;
+    if (bodyCells == undefined) return;
 
     for (var index = 0; index < bodyCells.length; index++) {
         var headHandler = createHandler();
+
+        const a = headCells[index].getElementsByClassName("handler")
+        for (var i = 0; i < a.length; i++)
+            headCells[index].removeChild(a[i]);
 
         headCells[index].appendChild(headHandler);
 
@@ -97,6 +111,7 @@ export const size = () => {
         divElement.style.height = '100%'
         divElement.style.right = "0";
         divElement.style.top = "0";
+        divElement.className = "handler";
         return divElement;
     }
 

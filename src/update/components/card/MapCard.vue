@@ -16,41 +16,16 @@ import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 
 const props = defineProps({
     person: { type: Array<FullPerson>, required: true },
+    place: { type: Array<Place>, required: true },
     readonly: { type: Boolean, required: true },
     close: { type: Function, required: true },
 });
 
 const mask = ref(true);
 
-const place = ref<Array<Place>>([]);
-
 const card = ref({
     displayed: false,
     id: -1
-});
-
-const beforeMount = onBeforeMount(() => {
-    place.value = [];
-    props.person.forEach(person => {
-        person.activity.forEach(activity => {
-            activity.place.forEach(item => {
-                if (!place.value.map(place => place.id).includes(item.id))
-                    place.value.push(item);
-            });
-        });
-    });
-});
-
-const update = onUpdated(() => {
-    place.value = [];
-    props.person.forEach(person => {
-        person.activity.forEach(activity => {
-            activity.place.forEach(item => {
-                if (!place.value.map(place => place.id).includes(item.id))
-                    place.value.push(item);
-            });
-        });
-    });
 });
 </script>
 

@@ -200,7 +200,7 @@ function filterSearch() {
     return array;
 }
 
-const mounted = onMounted(() => { setTimeout(size, 1000); });
+const mounted = onUpdated(() => { size() });
 
 const filter = ref({
     activity: new TextFilter(),
@@ -221,7 +221,7 @@ const filter = ref({
     <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
 
-    <MapCard v-if="map" :readonly="false" :person="filterSearch()" :close="() => map = false"></MapCard>
+    <MapCard v-if="map" :place="place" :readonly="false" :person="filterSearch()" :close="() => map = false"></MapCard>
 
     <!-- <TestMap :readonly="true" :person="filterSearch()"></TestMap> -->
 
@@ -276,7 +276,7 @@ const filter = ref({
                 </table>
                 <table id="table-body" style="width: 100%; border: 0">
                     <tbody style="width: 100%; display: block; max-height: 75vh; overflow: auto;">
-                        <tr>
+                        <!-- <tr>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -286,7 +286,7 @@ const filter = ref({
                             <td></td>
                             <td></td>
                             <td></td>
-                        </tr>
+                        </tr> -->
                         <tr v-for="item in filterSearch()"
                             :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
                             <BiographyCell :person="item.person" />
