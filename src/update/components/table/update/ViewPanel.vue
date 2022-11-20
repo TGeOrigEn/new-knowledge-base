@@ -18,8 +18,10 @@ import PersonCard from '../../card/PersonCard.vue';
 import CareerCell from '../cells/CareerCell.vue';
 import RankCell from '../cells/RankCell.vue';
 import TextCell from '../cells/TextCell.vue';
+import TestMap from './TestMap.vue';
 
 import { TextFilter, CareerFilter, PlaceFilter, RankFilter, EducationFilter, BiographyFilter } from '@/update/entities/Filter'
+import MapCard from '../../card/MapCard.vue';
 
 const fullPerson = ref<FullPerson[]>([]);
 
@@ -43,6 +45,8 @@ const card = ref({
     disabled: false,
     id: - 1
 });
+
+const map = ref(false);
 
 const beforeMount = onBeforeMount(() => {
     refresh();
@@ -140,7 +144,56 @@ function filterSearch() {
             return;
         }
         person.rank.forEach(rank => {
-
+            if (rank.degree.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+            if (rank.end_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+            if (rank.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+            if (rank.start_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+        })
+        person.career.forEach(career => {
+            if (career.post.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+            if (career.end_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+            if (career.place.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+            if (career.start_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+        })
+        person.activity.forEach(activity => {
+            if (activity.activity.description.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (!array.includes(person)) array.push(person);
+                return;
+            }
+            activity.place.forEach(place => {
+                if (place.description.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                    if (!array.includes(person)) array.push(person);
+                    return;
+                }
+                if (place.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                    if (!array.includes(person)) array.push(person);
+                    return;
+                }
+            })
         })
     })
 
@@ -167,6 +220,11 @@ const filter = ref({
 <template>
     <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
+
+    <MapCard v-if="map" :readonly="false" :person="filterSearch()" :close="() => map = false"></MapCard>
+
+    <!-- <TestMap :readonly="true" :person="filterSearch()"></TestMap> -->
+
     <div v-if="forceUpdate"></div>
     <div style="padding: 5px;">
         <div class="nav">
@@ -183,6 +241,8 @@ const filter = ref({
                 <Button class="x-button-def " :src="'/plus.svg'"
                     :onClick="() => { card.id = -1; card.disabled = true; }"></Button>
                 <Button :src="'/refresh.svg'" class="x-button-def" :onClick="refresh"></Button>
+                <Button :src="'/map.svg'" class="x-button-def" style="padding: 5px"
+                    :onClick="() => map = true"></Button>
                 <Filter style="margin-left: 5px; margin-right: 10px;">
                     <List>
                         <Item
@@ -284,7 +344,6 @@ const filter = ref({
 .nav>button:hover {
     border-color: #85858560;
 }
-
 
 .nav {
     justify-content: flex-end;

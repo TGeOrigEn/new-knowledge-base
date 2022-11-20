@@ -3,7 +3,7 @@
 import Button from '../../buttons/Button.vue';
 
 const props = defineProps({
-    create: { type: Function, required: true },
+    create: { type: Function, required: true, default: undefined },
     label: { type: String, required: true },
     readonly: Boolean
 });
@@ -16,10 +16,11 @@ const props = defineProps({
             <div class="x-field-items-container">
                 <div class="x-dropdown-container">
                     <slot></slot>
-                    
+
                 </div>
             </div>
-            <Button :disabled="readonly" :onClick="create" src="/plus.svg" class="x-field-button-add"></Button>
+            <Button v-if="create != undefined" :disabled="readonly" :onClick="create" src="/plus.svg"
+                class="x-field-button-add"></Button>
         </div>
     </div>
 </template>

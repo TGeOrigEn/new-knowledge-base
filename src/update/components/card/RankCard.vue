@@ -59,7 +59,7 @@ function save() {
 </script>
 
 <template>
-    <Window :index="3" :mask="mask" :close="props.close" header="Карточка чина">
+    <Window :index="4" :mask="mask" :close="props.close" header="Карточка чина">
 
         <Body class="x-dody">
             <TextField label="Название:" :readonly="readonly" v-model:value="rank.name" />
