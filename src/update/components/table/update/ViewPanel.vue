@@ -228,7 +228,6 @@ function filter(person: FullPerson): boolean {
     var salary = true;
     var awards = true;
     var property = true;
-    var place = true;
 
     if (propertyFilter.value != undefined) {
         if (propertyFilter.value.contains.length != 0) {
