@@ -29,6 +29,7 @@ import CareerFilterCard from '../../card/filters/CareerFilterCard.vue';
 import RankFilterCard from '../../card/filters/RankFilterCard.vue';
 import PlaceFilterCard from '../../card/filters/PlaceFilterCard.vue';
 import AuthorizationCard from '../../card/AuthorizationCard.vue';
+import AlertCard from '../../card/AlertCard.vue';
 const fullPerson = ref<FullPerson[]>([]);
 
 const search = ref("");
@@ -484,6 +485,7 @@ const displayed = ref({
     textFilterState: false,
     placeFilter: false,
     authorizationCard: false,
+    alertCard: false,
     textFilter: new TextFilter(),
     remove: () => { },
     close: () => { }
@@ -500,9 +502,24 @@ function dateChange(e: string): string {
     let year = date.getFullYear();
     return zeroPad(day, 2) + '.' + zeroPad(month + 1, 2) + '.' + zeroPad(year, 4);
 }
+
+function exitFromAccount() {
+    localStorage.setItem('token', '');
+    displayed.value.alertCard = false;
+}
+
+async function openAccountWindow() {
+    if (await Command.verified())
+        displayed.value.alertCard = true;
+    else displayed.value.authorizationCard = true;
+}
 </script>
 
 <template>
+
+    <AlertCard v-if="displayed.alertCard" :message="'Вы действительнно хотите выйти из аккаунта?'" :mask="true"
+        :close="() => displayed.alertCard = false" :exit="exitFromAccount">
+    </AlertCard>
 
     <AuthorizationCard v-if="displayed.authorizationCard" :close="() => displayed.authorizationCard = false">
     </AuthorizationCard>
@@ -543,7 +560,7 @@ function dateChange(e: string): string {
 
     <div style="position: absolute; top: 0; right: 0; padding: 10px; padding-right: 30px;">
         <Button :src="'/user.svg'" class="x-button-def" style="width: 48px; height: 48px;"
-            :onClick="() => displayed.authorizationCard = true"></Button>
+            :onClick="openAccountWindow"></Button>
     </div>
 
     <div>
