@@ -93,18 +93,16 @@ class Command {
             : await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
     }
 
-    public static async delete<T>(table: string, token: string, condition: number | any): Promise<T | undefined> {
-        if (typeof condition === "number")
-            return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}/${condition}`)).data;
-        return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
+    public static async delete<T>(table: string, token: string, condition: any): Promise<T | undefined> {
+        return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition, token: token } })).data;
     }
 
     public static async update<T>(table: string, token: string, id: number, source: T): Promise<T | undefined> {
-        return await (await axios.put<T>(`${Command.CONNECTION_STRING}/${table}/${id}`, source)).data;
+        return await (await axios.put<T>(`${Command.CONNECTION_STRING}/${table}/${id}`, { ...source, token: token })).data;
     }
 
     public static async insert<T>(table: string, token: string, person: T | any): Promise<T | undefined> {
-        return await (await axios.post<T>(`${Command.CONNECTION_STRING}/${table}`, person)).data;
+        return await (await axios.post<T>(`${Command.CONNECTION_STRING}/${table}`, { ...person, token: token })).data;
     }
 }
 
