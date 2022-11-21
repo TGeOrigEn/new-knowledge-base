@@ -87,6 +87,14 @@ class Command {
 
     private static readonly CONNECTION_STRING: string = "http://194.87.232.70:5050/api";
 
+    public static async verified() {
+        return (await axios.get<boolean>(`${Command.CONNECTION_STRING}/token`, { params: { token: localStorage.getItem("token") } })).data;
+    }
+
+    public static async login(login: string, password: string): Promise<string> {
+        return await (await axios.get(`${Command.CONNECTION_STRING}/`, { params: { login: login, password: password } })).data;
+    }
+
     public static async select<T>(table: string, condition?: any): Promise<T[] | undefined> {
         return condition == undefined
             ? await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}/all`)).data

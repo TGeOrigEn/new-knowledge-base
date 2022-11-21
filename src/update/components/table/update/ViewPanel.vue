@@ -28,6 +28,7 @@ import EducationFilterCard from '../../card/filters/EducationFilterCard.vue';
 import CareerFilterCard from '../../card/filters/CareerFilterCard.vue';
 import RankFilterCard from '../../card/filters/RankFilterCard.vue';
 import PlaceFilterCard from '../../card/filters/PlaceFilterCard.vue';
+import AuthorizationCard from '../../card/AuthorizationCard.vue';
 const fullPerson = ref<FullPerson[]>([]);
 
 const search = ref("");
@@ -421,7 +422,9 @@ function fBiographyFilter(person: Person) {
     return true;
 }
 
-const mounted = onUpdated(() => { size() });
+const verified = ref(false);
+
+const mounted = onUpdated(async () => { size(); verified.value = await Command.verified(); });
 
 const activityFilter = ref<TextFilter | undefined>();
 const biographyFilter = ref<BiographyFilter | undefined>();
@@ -483,6 +486,7 @@ const displayed = ref({
     rankFilter: false,
     textFilterState: false,
     placeFilter: false,
+    authorizationCard: false,
     textFilter: new TextFilter(),
     remove: () => { },
     close: () => { }
@@ -502,6 +506,9 @@ function dateChange(e: string): string {
 </script>
 
 <template>
+
+    <AuthorizationCard v-if="displayed.authorizationCard" :close="() => displayed.authorizationCard = false"></AuthorizationCard>
+
     <TextFilterCard v-if="displayed.textFilterState" :title="displayed.title" :filter="displayed.textFilter"
         :close="displayed.close" :remove="displayed.remove">
     </TextFilterCard>
@@ -521,12 +528,11 @@ function dateChange(e: string): string {
     <BiographyFilterCard v-if="displayed.biographyFilter" :title="displayed.title" :filter="biographyFilter!"
         :close="displayed.close" :remove="displayed.remove">></BiographyFilterCard>
 
-    <PersonCard v-if="card.disabled" :readonly="false" :id="card.id" :close="() => card.disabled = false">
+    <PersonCard v-if="card.disabled" :readonly="!verified" :id="card.id" :close="() => card.disabled = false">
     </PersonCard>
 
-    <MapCard v-if="map" :place="place" :readonly="false" :person="filterSearch()" :close="() => map = false"></MapCard>
-
-    <!-- <TestMap :readonly="true" :person="filterSearch()"></TestMap> -->
+    <MapCard v-if="map" :place="place" :readonly="!verified" :person="filterSearch()" :close="() => map = false">
+    </MapCard>
 
     <div v-if="forceUpdate"></div>
     <div style="padding: 5px; z-index: -1000;">
@@ -537,10 +543,14 @@ function dateChange(e: string): string {
         </div>
     </div>
 
+    <div style="position: absolute; top: 0; right: 0; padding: 10px; padding-right: 30px;">
+        <Button :src="'/user.svg'" class="x-button-def" style="width: 48px; height: 48px;" :onClick="() => displayed.authorizationCard = true"></Button>
+    </div>
+
     <div>
         <div>
             <div style="width: 97vw; margin-left: auto; margin-right: auto; display: flex; align-items: center;">
-                <Button class="x-button-def " :src="'/plus.svg'"
+                <Button :disabled="!verified" class="x-button-def " :src="'/plus.svg'"
                     :onClick="() => { card.id = -1; card.disabled = true; }"></Button>
                 <Button :src="'/refresh.svg'" class="x-button-def" :onClick="refresh"></Button>
                 <Button :src="'/map.svg'" class="x-button-def" style="padding: 5px"
