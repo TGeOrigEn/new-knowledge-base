@@ -35,7 +35,7 @@ const beforeMount = onBeforeMount(() => {
 });
 
 function create() {
-    Command.insert<Rank>(Rank.NAME, rank.value).then(response => {
+    Command.insert<Rank>(Rank.NAME, localStorage.getItem('token')!, rank.value).then(response => {
         if (response == undefined) return;
         rank.value = response;
         props.refresh();
@@ -43,14 +43,14 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Rank>(Rank.NAME, rank.value.id).then(() => {
+    Command.delete<Rank>(Rank.NAME, localStorage.getItem('token')!, rank.value.id).then(() => {
         props.refresh();
         props.close();
     });
 };
 
 function save() {
-    Command.update<Rank>(Rank.NAME, rank.value.id, rank.value).then(response => {
+    Command.update<Rank>(Rank.NAME, localStorage.getItem('token')!, rank.value.id, rank.value).then(response => {
         if (response == undefined) return;
         rank.value = response;
         props.refresh();

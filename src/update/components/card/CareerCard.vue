@@ -45,7 +45,7 @@ const beforeMount = onBeforeMount(() => {
 })
 
 function create() {
-    Command.insert<Career>(Career.NAME, career.value).then(response => {
+    Command.insert<Career>(Career.NAME, localStorage.getItem('token')!, career.value).then(response => {
         if (response == undefined) return;
         career.value = response;
         props.refresh();
@@ -53,14 +53,14 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Career>(Career.NAME, career.value.id).then(() => {
+    Command.delete<Career>(Career.NAME, localStorage.getItem('token')!, career.value.id).then(() => {
         props.refresh();
         props.close();
     });
 };
 
 function save() {
-    Command.update<Career>(Career.NAME, career.value.id, career.value).then(response => {
+    Command.update<Career>(Career.NAME, localStorage.getItem('token')!, career.value.id, career.value).then(response => {
         if (response == undefined) return;
         career.value = response;
         props.refresh();

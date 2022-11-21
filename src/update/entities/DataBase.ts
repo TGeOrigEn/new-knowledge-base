@@ -8,7 +8,7 @@ import axios from "axios";
 //     public rank: Array<Rank> = [];
 
 //     public static async get(id: number): Promise<FullPerson> {
-//         const person = await Command.select<Person>(Person.NAME, { id: id });
+//         const person = await Command.select<Person>(Person.NAME, localStorage.getItem('token')!, { id: id });
 //         if (person == undefined)
 //             return new FullPerson(Person.instance(), [], [], []);
 
@@ -17,18 +17,18 @@ import axios from "axios";
 //         var c: Career[] = [];
 //         var d: Rank[] = [];
 
-//         const career = await Command.select<Career>(Career.NAME, { person_id: id });
+//         const career = await Command.select<Career>(Career.NAME, localStorage.getItem('token')!, { person_id: id });
 //         if (career != undefined) {
 //             c = career;
 //         }
 
 
-//         const rank = await Command.select<Rank>(Rank.NAME, { person_id: id });
+//         const rank = await Command.select<Rank>(Rank.NAME, localStorage.getItem('token')!, { person_id: id });
 //         if (rank != undefined) {
 //             d = rank;
 //         }
 
-//         const activity = await Command.select<Activity>(Activity.NAME, { person_id: id });
+//         const activity = await Command.select<Activity>(Activity.NAME, localStorage.getItem('token')!, { person_id: id });
 //         if (activity != undefined) {
 //             for (var i = 0; i < activity.length; i++)
 //                 b.push(await FullActivity.get(activity[i].id));
@@ -53,7 +53,7 @@ import axios from "axios";
 //         var a = Activity.instance();
 //         var b = new Array<Place>();
 
-//         const activity = await Command.select<Activity>(Activity.NAME, { id: id });
+//         const activity = await Command.select<Activity>(Activity.NAME, localStorage.getItem('token')!, { id: id });
 
 //         if (activity == undefined) {
 //             a = Activity.instance();
@@ -61,7 +61,7 @@ import axios from "axios";
 //             return new FullActivity(a, b);
 //         }
 
-//         const link = await Command.select<Link>(Link.NAME, { activity_id: id });
+//         const link = await Command.select<Link>(Link.NAME, localStorage.getItem('token')!, { activity_id: id });
 
 //         if (link == undefined) {
 //             b = [];
@@ -69,7 +69,7 @@ import axios from "axios";
 //         }
 
 //         for (var i = 0; i < link.length; i++) {
-//             const place = await Command.select<Place>(Place.NAME, { id: link[i].place_id });
+//             const place = await Command.select<Place>(Place.NAME, localStorage.getItem('token')!, { id: link[i].place_id });
 //             if (place != undefined) b.push(place[0]);
 //         }
 
@@ -93,17 +93,17 @@ class Command {
             : await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
     }
 
-    public static async delete<T>(table: string, condition: number | any): Promise<T | undefined> {
+    public static async delete<T>(table: string, token: string, condition: number | any): Promise<T | undefined> {
         if (typeof condition === "number")
             return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}/${condition}`)).data;
         return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
     }
 
-    public static async update<T>(table: string, id: number, source: T): Promise<T | undefined> {
+    public static async update<T>(table: string, token: string, id: number, source: T): Promise<T | undefined> {
         return await (await axios.put<T>(`${Command.CONNECTION_STRING}/${table}/${id}`, source)).data;
     }
 
-    public static async insert<T>(table: string, person: T | any): Promise<T | undefined> {
+    public static async insert<T>(table: string, token: string, person: T | any): Promise<T | undefined> {
         return await (await axios.post<T>(`${Command.CONNECTION_STRING}/${table}`, person)).data;
     }
 }
@@ -122,7 +122,7 @@ class FullPerson {
     }
 
     // public constructor(id: number) {
-    //     Command.select<Person>(Person.NAME, { id: id }).then(response => {
+    //     Command.select<Person>(Person.NAME, localStorage.getItem('token')!, { id: id }).then(response => {
     //         if (response == undefined) {
     //             this.person = Person.instance();
     //             this.activity = [];
@@ -133,10 +133,10 @@ class FullPerson {
 
     //         this.person = response[0];
 
-    //         Command.select<Career>(Career.NAME, { person_id: id }).then(response => this.career = response == undefined ? [] : response);
-    //         Command.select<Rank>(Rank.NAME, { person_id: id }).then(response => this.rank = response == undefined ? [] : response);
+    //         Command.select<Career>(Career.NAME, localStorage.getItem('token')!, { person_id: id }).then(response => this.career = response == undefined ? [] : response);
+    //         Command.select<Rank>(Rank.NAME, localStorage.getItem('token')!, { person_id: id }).then(response => this.rank = response == undefined ? [] : response);
 
-    //         Command.select<Activity>(Activity.NAME, { person_id: id }).then(response => {
+    //         Command.select<Activity>(Activity.NAME, localStorage.getItem('token')!, { person_id: id }).then(response => {
     //             if (response == undefined) {
     //                 this.activity = [];
     //                 return;
@@ -157,7 +157,7 @@ class FullActivity {
     }
 
     // public constructor(id: number) {
-    //     Command.select<Activity>(Activity.NAME, { id: id }).then(response => {
+    //     Command.select<Activity>(Activity.NAME, localStorage.getItem('token')!, { id: id }).then(response => {
     //         if (response == undefined) {
     //             this.activity = Activity.instance();
     //             this.place = [];
@@ -165,7 +165,7 @@ class FullActivity {
     //         }
     //         this.activity = response[0];
 
-    //         Command.select<Link>(Link.NAME, { activity_id: id }).then(response => {
+    //         Command.select<Link>(Link.NAME, localStorage.getItem('token')!, { activity_id: id }).then(response => {
     //             if (response == undefined) {
     //                 this.place = [];
     //                 return;
@@ -176,7 +176,7 @@ class FullActivity {
     //                     this.place = [];
     //                     return;
     //                 }
-    //                 Command.select<Place>(Place.NAME, { id: link.place_id }).then(response => {
+    //                 Command.select<Place>(Place.NAME, localStorage.getItem('token')!, { id: link.place_id }).then(response => {
     //                     if (response == undefined) return;
     //                     this.place.push(response![0]);
     //                 });

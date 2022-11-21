@@ -48,15 +48,15 @@ const beforeMount = onBeforeMount(() => {
 });
 
 function remove() {
-    Command.delete<Link>(Link.NAME, { place_id: place.value.id }).then(() => {
-        Command.delete<Place>(Place.NAME, place.value.id).then(() => {
+    Command.delete<Link>(Link.NAME, localStorage.getItem('token')!, { place_id: place.value.id }).then(() => {
+        Command.delete<Place>(Place.NAME, localStorage.getItem('token')!, place.value.id).then(() => {
             props.close();
         })
     });
 };
 
 function save() {
-    Command.update<Place>(Place.NAME, place.value.id, place.value).then(response => {
+    Command.update<Place>(Place.NAME, localStorage.getItem('token')!, place.value.id, place.value).then(response => {
         if (response == undefined) return;
         place.value = response;
     });

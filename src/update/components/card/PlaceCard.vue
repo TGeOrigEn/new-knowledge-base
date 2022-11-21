@@ -32,7 +32,7 @@ const beforeMount = onBeforeMount(() => {
 })
 
 function create() {
-    Command.insert<Place>(Place.NAME, place.value).then(response => {
+    Command.insert<Place>(Place.NAME, localStorage.getItem('token')!, place.value).then(response => {
         if (response == undefined) return;
         place.value = response;
         props.refresh();
@@ -40,8 +40,8 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Link>(Link.NAME, { place_id: place.value.id }).then(() => {
-        Command.delete<Place>(Place.NAME, place.value.id).then(() => {
+    Command.delete<Link>(Link.NAME, localStorage.getItem('token')!, { place_id: place.value.id }).then(() => {
+        Command.delete<Place>(Place.NAME, localStorage.getItem('token')!, place.value.id).then(() => {
             props.refresh();
             props.close();
         })
@@ -49,7 +49,7 @@ function remove() {
 };
 
 function save() {
-    Command.update<Place>(Place.NAME, place.value.id, place.value).then(response => {
+    Command.update<Place>(Place.NAME, localStorage.getItem('token')!, place.value.id, place.value).then(response => {
         if (response == undefined) return;
         place.value = response;
         props.refresh();

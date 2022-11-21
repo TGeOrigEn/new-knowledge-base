@@ -69,19 +69,19 @@ const beforeMount = onBeforeMount(() => {
 });
 
 function deleteLink(place_id: number) {
-    Command.delete<Link>(Link.NAME, { place_id: place_id, activity_id: activity.value.id }).then(response => {
+    Command.delete<Link>(Link.NAME, localStorage.getItem('token')!, { place_id: place_id, activity_id: activity.value.id }).then(response => {
         card.value.refresh();
     });
 };
 
 function createLink(place_id: number) {
-    Command.insert<Link>(Link.NAME, { place_id: place_id, activity_id: activity.value.id }).then(response => {
+    Command.insert<Link>(Link.NAME, localStorage.getItem('token')!, { place_id: place_id, activity_id: activity.value.id }).then(response => {
         card.value.refresh();
     });
 };
 
 function create() {
-    Command.insert<Activity>(Activity.NAME, activity.value).then(response => {
+    Command.insert<Activity>(Activity.NAME, localStorage.getItem('token')!, activity.value).then(response => {
         if (response == undefined) return;
         activity.value = response;
         props.refresh();
@@ -89,8 +89,8 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Link>(Link.NAME, { activity_id: activity.value.id }).then(() => {
-        Command.delete<Activity>(Activity.NAME, activity.value.id).then(() => {
+    Command.delete<Link>(Link.NAME, localStorage.getItem('token')!, { activity_id: activity.value.id }).then(() => {
+        Command.delete<Activity>(Activity.NAME, localStorage.getItem('token')!, activity.value.id).then(() => {
             props.refresh();
             props.close();
         });
@@ -98,7 +98,7 @@ function remove() {
 };
 
 function save() {
-    Command.update<Activity>(Activity.NAME, activity.value.id, activity.value).then(response => {
+    Command.update<Activity>(Activity.NAME, localStorage.getItem('token')!, activity.value.id, activity.value).then(response => {
         if (response == undefined) return;
         activity.value = response;
         props.refresh();

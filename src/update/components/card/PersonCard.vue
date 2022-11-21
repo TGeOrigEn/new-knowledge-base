@@ -68,7 +68,7 @@ const beforeMount = onBeforeMount(() => {
         career.value = response;
     });
 
-    Command.select<Person>(Person.NAME, { id: props.id }).then(response => {
+    Command.select<Person>(Person.NAME, localStorage.getItem('token')!, { id: props.id }).then(response => {
         if (response == undefined) return;
         if (response.length == 0) return;
         person.value = response[0];
@@ -124,20 +124,20 @@ function update() {
 }
 
 function create() {
-    Command.insert<Person>(Person.NAME, person.value).then(response => {
+    Command.insert<Person>(Person.NAME, localStorage.getItem('token')!, person.value).then(response => {
         if (response == undefined) return;
         person.value = response;
     });
 };
 
 function remove() {
-    Command.delete<Person>(Person.NAME, person.value.id).then(() => {
+    Command.delete<Person>(Person.NAME, localStorage.getItem('token')!, person.value.id).then(() => {
         props.close();
     });
 };
 
 function save() {
-    Command.update<Person>(Person.NAME, person.value.id, person.value).then(response => {
+    Command.update<Person>(Person.NAME, localStorage.getItem('token')!, person.value.id, person.value).then(response => {
         if (response == undefined) return;
         person.value = response;
     });
