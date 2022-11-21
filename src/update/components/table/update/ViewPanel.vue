@@ -552,15 +552,14 @@ async function openAccountWindow() {
     <div v-if="forceUpdate"></div>
     <div style="padding: 5px; z-index: -1000;">
         <div class="nav">
-            <Button class="x-button-nav" :text="'Описание'"></Button>
-            <Button class="x-button-nav" :text="'Инструкция'"></Button>
-            <Button :disabled="true" class="x-button-nav" :text="'База знаний'"></Button>
+            <Button style="height: 48px; padding: 5px;" :text="'Перейти на главную страницу'"></Button>
+            <div style=" margin-left: auto;">
+                <Button :src="'/info.svg'" class="x-button-def"
+                    style=" padding: 10px; width: 48px; height: 48px;"></Button>
+                <Button :src="'/user.svg'" class="x-button-def" style="width: 48px; height: 48px;"
+                    :onClick="openAccountWindow"></Button>
+            </div>
         </div>
-    </div>
-
-    <div style="position: absolute; top: 0; right: 0; padding: 10px; padding-right: 30px;">
-        <Button :src="'/user.svg'" class="x-button-def" style="width: 48px; height: 48px;"
-            :onClick="openAccountWindow"></Button>
     </div>
 
     <div>
@@ -738,32 +737,12 @@ async function openAccountWindow() {
     border-bottom: 0;
 }
 
-.nav>button:first-child {
-    border-left: 0;
-}
-
-.nav>button {
-    border-right: 0;
-}
-
-.nav>button:hover {
-    border-color: #85858560;
-}
 
 .nav {
-    justify-content: flex-end;
     align-items: center;
-    width: fit-content;
     display: flex;
     flex-direction: row;
     margin: 10px;
-    height: 50px;
-    width: max-content;
-    background-color: #f8f9fa;
-    border: 1px solid #85858560;
-
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .x-button-def {
