@@ -7,6 +7,7 @@ import List from '../../fields/list/List.vue';
 import Dropdown from '../../fields/viewPanel/Dropdown.vue';
 import Header from '../Header.vue';
 import { size } from '@/update/entities/table';
+import router from '@/update/entities/router';
 import { onBeforeMount, ref, onUpdated, nextTick, onMounted } from 'vue';
 
 import { Command, Activity, Career, Person, Rank, Place, Link, FullPerson, FullActivity } from '@/update/entities/DataBase';
@@ -516,171 +517,173 @@ async function openAccountWindow() {
 </script>
 
 <template>
+    <div style="width: 100%; height: 100vh; background-color: #f0f0f0;">
+        <AlertCard v-if="displayed.alertCard" :message="'Вы действительнно хотите выйти из аккаунта?'" :mask="true"
+            :close="() => displayed.alertCard = false" :exit="exitFromAccount">
+        </AlertCard>
 
-    <AlertCard v-if="displayed.alertCard" :message="'Вы действительнно хотите выйти из аккаунта?'" :mask="true"
-        :close="() => displayed.alertCard = false" :exit="exitFromAccount">
-    </AlertCard>
+        <AuthorizationCard v-if="displayed.authorizationCard" :close="() => displayed.authorizationCard = false">
+        </AuthorizationCard>
 
-    <AuthorizationCard v-if="displayed.authorizationCard" :close="() => displayed.authorizationCard = false">
-    </AuthorizationCard>
+        <TextFilterCard v-if="displayed.textFilterState" :title="displayed.title" :filter="displayed.textFilter"
+            :close="displayed.close" :remove="displayed.remove">
+        </TextFilterCard>
 
-    <TextFilterCard v-if="displayed.textFilterState" :title="displayed.title" :filter="displayed.textFilter"
-        :close="displayed.close" :remove="displayed.remove">
-    </TextFilterCard>
+        <CareerFilterCard v-if="displayed.careerFilter" :title="displayed.title" :filter="careerFilter!"
+            :close="displayed.close" :remove="displayed.remove"></CareerFilterCard>
 
-    <CareerFilterCard v-if="displayed.careerFilter" :title="displayed.title" :filter="careerFilter!"
-        :close="displayed.close" :remove="displayed.remove"></CareerFilterCard>
+        <RankFilterCard v-if="displayed.rankFilter" :title="displayed.title" :filter="rankFilter!"
+            :close="displayed.close" :remove="displayed.remove"></RankFilterCard>
 
-    <RankFilterCard v-if="displayed.rankFilter" :title="displayed.title" :filter="rankFilter!" :close="displayed.close"
-        :remove="displayed.remove"></RankFilterCard>
+        <PlaceFilterCard v-if="displayed.placeFilter" :title="displayed.title" :filter="placeFilter!"
+            :close="displayed.close" :remove="displayed.remove"></PlaceFilterCard>
 
-    <PlaceFilterCard v-if="displayed.placeFilter" :title="displayed.title" :filter="placeFilter!"
-        :close="displayed.close" :remove="displayed.remove"></PlaceFilterCard>
+        <EducationFilterCard v-if="displayed.educationFilter" :title="displayed.title" :filter="educationFilter!"
+            :close="displayed.close" :remove="displayed.remove"></EducationFilterCard>
 
-    <EducationFilterCard v-if="displayed.educationFilter" :title="displayed.title" :filter="educationFilter!"
-        :close="displayed.close" :remove="displayed.remove"></EducationFilterCard>
+        <BiographyFilterCard v-if="displayed.biographyFilter" :title="displayed.title" :filter="biographyFilter!"
+            :close="displayed.close" :remove="displayed.remove">></BiographyFilterCard>
 
-    <BiographyFilterCard v-if="displayed.biographyFilter" :title="displayed.title" :filter="biographyFilter!"
-        :close="displayed.close" :remove="displayed.remove">></BiographyFilterCard>
+        <PersonCard v-if="card.disabled" :readonly="!verified" :id="card.id" :close="() => card.disabled = false">
+        </PersonCard>
 
-    <PersonCard v-if="card.disabled" :readonly="!verified" :id="card.id" :close="() => card.disabled = false">
-    </PersonCard>
+        <MapCard v-if="map" :place="place" :readonly="!verified" :person="filterSearch()" :close="() => map = false">
+        </MapCard>
 
-    <MapCard v-if="map" :place="place" :readonly="!verified" :person="filterSearch()" :close="() => map = false">
-    </MapCard>
-
-    <div v-if="forceUpdate"></div>
-    <div style="padding: 5px; z-index: -1000;">
-        <div class="nav">
-            <Button style="height: 48px; padding: 5px;" :text="'Перейти на главную страницу'"></Button>
-            <div style=" margin-left: auto;">
-                <Button :src="'/info.svg'" class="x-button-def"
-                    style=" padding: 10px; width: 48px; height: 48px;"></Button>
-                <Button :src="'/user.svg'" class="x-button-def" style="width: 48px; height: 48px;"
-                    :onClick="openAccountWindow"></Button>
+        <div v-if="forceUpdate"></div>
+        <div style="padding: 5px; z-index: -1000;">
+            <div class="nav">
+                <div style="padding-left: 10px; font-size: 18px; font-weight: bold">База знаний</div>
+                <div style=" margin-left: auto; display: flex;">
+                    <router-link :to="'/'"><Button :text="'Главная'"
+                            style="padding: 5px; height: 30px; text-align: center;"></Button></router-link>
+                    <Button :src="'/info.svg'" class="x-button-def"
+                        style=" padding: 5px; width: 30px; height: 30px; flex: 0, 0, 30px;"></Button>
+                    <Button :src="'/user.svg'" class="x-button-def" style="width: 30px; height: 30px; flex: 0, 0, 30px;"
+                        :onClick="openAccountWindow"></Button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div>
         <div>
-            <div style="width: 97vw; margin-left: auto; margin-right: auto; display: flex; align-items: center;">
-                <Button :disabled="!verified" class="x-button-def " :src="'/plus.svg'"
-                    :onClick="() => { card.id = -1; card.disabled = true; }"></Button>
-                <Button :src="'/refresh.svg'" class="x-button-def" :onClick="refresh"></Button>
-                <Button :src="'/map.svg'" class="x-button-def" style="padding: 5px"
-                    :onClick="() => map = true"></Button>
-                <Filter style="margin-left: 0px; margin-right: 5px;">
+            <div>
+                <div style="width: 97vw; margin-left: auto; margin-right: auto; display: flex; align-items: center;">
+                    <Button :disabled="!verified" class="x-button-def " :src="'/plus.svg'"
+                        :onClick="() => { card.id = -1; card.disabled = true; }"></Button>
+                    <Button :src="'/refresh.svg'" class="x-button-def" :onClick="refresh"></Button>
+                    <Button :src="'/map.svg'" class="x-button-def" style="padding: 5px"
+                        :onClick="() => map = true"></Button>
+                    <Filter style="margin-left: 0px; margin-right: 5px;">
 
-                    <Item v-if="biographyFilter != undefined" :readonly="false"
-                        :open="() => { displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
-                        :text="'Биография'" :remove="() => biographyFilter = undefined" />
+                        <Item v-if="biographyFilter != undefined" :readonly="false"
+                            :open="() => { displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
+                            :text="'Биография'" :remove="() => biographyFilter = undefined" />
 
-                    <Item v-if="educationFilter != undefined" :readonly="false"
-                        :open="() => { displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
-                        :text="'Образование'" :remove="() => educationFilter = undefined" />
+                        <Item v-if="educationFilter != undefined" :readonly="false"
+                            :open="() => { displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
+                            :text="'Образование'" :remove="() => educationFilter = undefined" />
 
-                    <Item v-if="awardsFilter != undefined" :readonly="false"
-                        :open="() => { displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                        :text="'Награды'" :remove="() => awardsFilter = undefined" />
+                        <Item v-if="awardsFilter != undefined" :readonly="false"
+                            :open="() => { displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Награды'" :remove="() => awardsFilter = undefined" />
 
-                    <Item v-if="salaryFilter != undefined" :readonly="false"
-                        :open="() => { displayed.textFilter = salaryFilter!; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                        :text="'Жалование'" :remove="() => salaryFilter = undefined" />
+                        <Item v-if="salaryFilter != undefined" :readonly="false"
+                            :open="() => { displayed.textFilter = salaryFilter!; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Жалование'" :remove="() => salaryFilter = undefined" />
 
-                    <Item v-if="propertyFilter != undefined" :readonly="false"
-                        :open="() => { displayed.textFilter = propertyFilter!; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                        :text="'Имущество'" :remove="() => propertyFilter = undefined" />
+                        <Item v-if="propertyFilter != undefined" :readonly="false"
+                            :open="() => { displayed.textFilter = propertyFilter!; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Имущество'" :remove="() => propertyFilter = undefined" />
 
-                    <Item v-if="marital_statusFilter != undefined" :readonly="false"
-                        :open="() => { displayed.textFilter = marital_statusFilter!; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                        :text="'Семейное положение'" :remove="() => marital_statusFilter = undefined" />
+                        <Item v-if="marital_statusFilter != undefined" :readonly="false"
+                            :open="() => { displayed.textFilter = marital_statusFilter!; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Семейное положение'" :remove="() => marital_statusFilter = undefined" />
 
-                    <Item v-if="careerFilter != undefined" :readonly="false"
-                        :open="() => { displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
-                        :text="'Карьера'" :remove="() => careerFilter = undefined" />
+                        <Item v-if="careerFilter != undefined" :readonly="false"
+                            :open="() => { displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
+                            :text="'Карьера'" :remove="() => careerFilter = undefined" />
 
-                    <Item v-if="rankFilter != undefined" :readonly="false"
-                        :open="() => { displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
-                        :text="'Чин'" :remove="() => rankFilter = undefined" />
+                        <Item v-if="rankFilter != undefined" :readonly="false"
+                            :open="() => { displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
+                            :text="'Чин'" :remove="() => rankFilter = undefined" />
 
-                    <Item v-if="activityFilter != undefined" :readonly="false"
-                        :open="() => { displayed.textFilter = activityFilter!; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                        :text="'Деятельность'" :remove="() => activityFilter = undefined" />
+                        <Item v-if="activityFilter != undefined" :readonly="false"
+                            :open="() => { displayed.textFilter = activityFilter!; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                            :text="'Деятельность'" :remove="() => activityFilter = undefined" />
 
-                    <Item v-if="placeFilter != undefined" :readonly="false"
-                        :open="() => { displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
-                        :text="'Место'" :remove="() => placeFilter = undefined" />
+                        <Item v-if="placeFilter != undefined" :readonly="false"
+                            :open="() => { displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
+                            :text="'Место'" :remove="() => placeFilter = undefined" />
 
-                    <Dropdown
-                        v-if="activityFilter == undefined || biographyFilter == undefined || careerFilter == undefined || educationFilter == undefined || rankFilter == undefined || marital_statusFilter == undefined || salaryFilter == undefined || awardsFilter == undefined || propertyFilter == undefined || placeFilter == undefined">
+                        <Dropdown
+                            v-if="activityFilter == undefined || biographyFilter == undefined || careerFilter == undefined || educationFilter == undefined || rankFilter == undefined || marital_statusFilter == undefined || salaryFilter == undefined || awardsFilter == undefined || propertyFilter == undefined || placeFilter == undefined">
 
-                        <Item v-if="biographyFilter == undefined" :readonly="false"
-                            :open="() => { init_biographyFilter(); displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
-                            :text="'Биография'" :width="'100%'" />
+                            <Item v-if="biographyFilter == undefined" :readonly="false"
+                                :open="() => { init_biographyFilter(); displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
+                                :text="'Биография'" :width="'100%'" />
 
-                        <Item v-if="educationFilter == undefined" :readonly="false"
-                            :open="() => { init_educationFilter(); displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
-                            :text="'Образование'" :width="'100%'" />
+                            <Item v-if="educationFilter == undefined" :readonly="false"
+                                :open="() => { init_educationFilter(); displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
+                                :text="'Образование'" :width="'100%'" />
 
-                        <Item v-if="awardsFilter == undefined" :readonly="false"
-                            :open="() => { init_awardsFilter(); displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Награды'" :width="'100%'" />
+                            <Item v-if="awardsFilter == undefined" :readonly="false"
+                                :open="() => { init_awardsFilter(); displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                                :text="'Награды'" :width="'100%'" />
 
-                        <Item v-if="salaryFilter == undefined" :readonly="false"
-                            :open="() => { init_salaryFilter(); displayed.textFilter = salaryFilter!; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Жалование'" :width="'100%'" />
+                            <Item v-if="salaryFilter == undefined" :readonly="false"
+                                :open="() => { init_salaryFilter(); displayed.textFilter = salaryFilter!; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                                :text="'Жалование'" :width="'100%'" />
 
-                        <Item v-if="propertyFilter == undefined" :readonly="false"
-                            :open="() => { init_propertyFilter(); displayed.textFilter = propertyFilter!; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Имущество'" :width="'100%'" />
+                            <Item v-if="propertyFilter == undefined" :readonly="false"
+                                :open="() => { init_propertyFilter(); displayed.textFilter = propertyFilter!; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                                :text="'Имущество'" :width="'100%'" />
 
-                        <Item v-if="marital_statusFilter == undefined" :readonly="false"
-                            :open="() => { init_marital_statusFilter(); displayed.textFilter = marital_statusFilter!; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Семейное положение'" :width="'100%'" />
+                            <Item v-if="marital_statusFilter == undefined" :readonly="false"
+                                :open="() => { init_marital_statusFilter(); displayed.textFilter = marital_statusFilter!; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                                :text="'Семейное положение'" :width="'100%'" />
 
-                        <Item v-if="careerFilter == undefined" :readonly="false"
-                            :open="() => { init_careerFilter(); displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
-                            :text="'Карьера'" :width="'100%'" />
+                            <Item v-if="careerFilter == undefined" :readonly="false"
+                                :open="() => { init_careerFilter(); displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
+                                :text="'Карьера'" :width="'100%'" />
 
-                        <Item v-if="rankFilter == undefined" :readonly="false"
-                            :open="() => { init_rankFilter(); displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
-                            :text="'Чин'" :width="'100%'" />
+                            <Item v-if="rankFilter == undefined" :readonly="false"
+                                :open="() => { init_rankFilter(); displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
+                                :text="'Чин'" :width="'100%'" />
 
-                        <Item v-if="activityFilter == undefined" :readonly="false"
-                            :open="() => { init_activityFilter(); displayed.textFilter = activityFilter!; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Деятельность'" :width="'100%'" />
+                            <Item v-if="activityFilter == undefined" :readonly="false"
+                                :open="() => { init_activityFilter(); displayed.textFilter = activityFilter!; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
+                                :text="'Деятельность'" :width="'100%'" />
 
-                        <Item v-if="placeFilter == undefined" :readonly="false"
-                            :open="() => { init_placeFilter(); displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
-                            :text="'Место'" :width="'100%'" />
+                            <Item v-if="placeFilter == undefined" :readonly="false"
+                                :open="() => { init_placeFilter(); displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
+                                :text="'Место'" :width="'100%'" />
 
-                    </Dropdown>
-                </Filter>
-                <Search v-model:value="search" :placeholder="'Поиск по тексту в таблице...'"
-                    style="flex: 1; height: 20px; margin-left: auto;">
-                </Search>
-            </div>
-            <div
-                style="margin-top: 5px; border: 1px solid #85858560; width: 97vw; overflow: auto; margin-left: auto; margin-right: auto;">
-                <table id="table-head" style="width: 100%; border: 0px solid black;">
-                    <thead>
-                        <tr>
-                            <Header :name="'Биография'"></Header>
-                            <Header :name="'Образование'"></Header>
-                            <Header :name="'Награды'"></Header>
-                            <Header :name="'Жалование'"></Header>
-                            <Header :name="'Имущество'"></Header>
-                            <Header :name="'Семейное положение'"></Header>
-                            <Header :name="'Карьера'"></Header>
-                            <Header :name="'Чин'"></Header>
-                            <Header :name="'Деятельность'"></Header>
-                        </tr>
-                    </thead>
-                </table>
-                <table id="table-body" style="width: 100%; border: 0">
-                    <tbody style="width: 100%; display: block; max-height: 75vh; overflow: auto;">
-                        <!-- <tr>
+                        </Dropdown>
+                    </Filter>
+                    <Search v-model:value="search" :placeholder="'Поиск по тексту в таблице...'"
+                        style="flex: 1; height: 20px; margin-left: auto;">
+                    </Search>
+                </div>
+                <div
+                    style="margin-top: 5px; border: 1px solid #85858560; width: 97vw; overflow: auto; margin-left: auto; margin-right: auto;">
+                    <table id="table-head" style="width: 100%; border: 0px solid black;">
+                        <thead>
+                            <tr>
+                                <Header :name="'Биография'"></Header>
+                                <Header :name="'Образование'"></Header>
+                                <Header :name="'Награды'"></Header>
+                                <Header :name="'Жалование'"></Header>
+                                <Header :name="'Имущество'"></Header>
+                                <Header :name="'Семейное положение'"></Header>
+                                <Header :name="'Карьера'"></Header>
+                                <Header :name="'Чин'"></Header>
+                                <Header :name="'Деятельность'"></Header>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table id="table-body" style="width: 100%; border: 0">
+                        <tbody style="width: 100%; display: block; max-height: 80vh; overflow: auto;">
+                            <!-- <tr>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -691,33 +694,35 @@ async function openAccountWindow() {
                             <td></td>
                             <td></td>
                         </tr> -->
-                        <tr v-for="item in     filterSearch()"
-                            :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
-                            <BiographyCell :person="item.person" />
-                            <EducationCell :value="item.person" />
-                            <TextCell :value="item.person.awards" />
-                            <TextCell :value="item.person.salary" />
-                            <TextCell :value="item.person.property" />
-                            <TextCell :value="item.person.marital_status" />
-                            <CareerCell :value="item.career" />
-                            <RankCell :value="item.rank" />
-                            <ActivityCell :place="item.activity" :value="item.activity" />
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div style="display:none;">
-                <div
-                    style="background-color: #f8f9fa; align-items: center;  text-align: center;  justify-content: center;  margin-top: 15px; border: 1px solid #85858560; width: max-content; display: flex; margin-left: auto; margin-right: auto;">
-                    <div style="background-color: #f8f9fa;    display: flex; align-items: center; margin-right: auto;">
-                        <Button style="transform:rotate(180deg); padding: 7.5px;" class="x-button-def"
-                            src="/double-arrow.svg"></Button>
-                        <Button style="transform:rotate(90deg)" class="x-button-def" src="/arrow.svg"></Button>
-                        <Search style="width: 17px; text-align: center;"></Search>
-                        <div> из 20</div>
-                        <Button style="transform:rotate(270deg)" class="x-button-def" src="/arrow.svg"></Button>
-                        <Button style="transform:rotate(0deg); padding: 7.5px;" class="x-button-def"
-                            src="/double-arrow.svg"></Button>
+                            <tr v-for="item in     filterSearch()"
+                                :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
+                                <BiographyCell :person="item.person" />
+                                <EducationCell :value="item.person" />
+                                <TextCell :value="item.person.awards" />
+                                <TextCell :value="item.person.salary" />
+                                <TextCell :value="item.person.property" />
+                                <TextCell :value="item.person.marital_status" />
+                                <CareerCell :value="item.career" />
+                                <RankCell :value="item.rank" />
+                                <ActivityCell :place="item.activity" :value="item.activity" />
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display:none;">
+                    <div
+                        style="background-color: #f8f9fa; align-items: center;  text-align: center;  justify-content: center;  margin-top: 15px; border: 1px solid #85858560; width: max-content; display: flex; margin-left: auto; margin-right: auto;">
+                        <div
+                            style="background-color: #f8f9fa;    display: flex; align-items: center; margin-right: auto;">
+                            <Button style="transform:rotate(180deg); padding: 7.5px;" class="x-button-def"
+                                src="/double-arrow.svg"></Button>
+                            <Button style="transform:rotate(90deg)" class="x-button-def" src="/arrow.svg"></Button>
+                            <Search style="width: 17px; text-align: center;"></Search>
+                            <div> из 20</div>
+                            <Button style="transform:rotate(270deg)" class="x-button-def" src="/arrow.svg"></Button>
+                            <Button style="transform:rotate(0deg); padding: 7.5px;" class="x-button-def"
+                                src="/double-arrow.svg"></Button>
+                        </div>
                     </div>
                 </div>
             </div>
