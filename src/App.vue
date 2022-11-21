@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ViewPanel from './update/components/table/update/ViewPanel.vue';
-console.log(localStorage.getItem('token'));
 </script>
 
 <template>

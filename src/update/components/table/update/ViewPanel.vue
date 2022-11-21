@@ -83,16 +83,13 @@ async function refresh() {
     link.value = aLink == undefined ? [] : aLink;
 
     rank.value.forEach(item => {
-        console.log(item.end_date);
         item.end_date = dateChange(item.end_date);
         item.start_date = dateChange(item.start_date);
     });
 
     career.value.forEach(item => {
-        console.log(item.end_date);
         item.end_date = dateChange(item.end_date);
         item.start_date = dateChange(item.start_date);
-        console.log(item.end_date)
     });
 
     fullPerson.value = [];

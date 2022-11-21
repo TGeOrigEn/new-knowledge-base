@@ -20,7 +20,6 @@ const password = ref("");
 
 async function logIn() {
     const token = await Command.login(login.value, password.value);
-    console.log(token);
     localStorage.setItem('token', token);
     if (token.trim() !== "") props.close();
 };

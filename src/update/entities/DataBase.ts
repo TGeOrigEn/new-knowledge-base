@@ -89,7 +89,6 @@ class Command {
 
     public static async verified() {
         const token = (await axios.get<boolean>(`${Command.CONNECTION_STRING}/token`, { params: { token: localStorage.getItem("token") } })).data;
-        console.log(`asdasdasdasdasdasdasdasdasdasdasdadasdasdasdasdasd: ${token}`)
         return token;
     }
 
@@ -104,8 +103,6 @@ class Command {
     }
 
     public static async delete<T>(table: string, token: string, condition: any): Promise<T | undefined> {
-        const s = { ...condition, token: token };
-        console.log(s);
         return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition, token: token, } })).data;
     }
 
