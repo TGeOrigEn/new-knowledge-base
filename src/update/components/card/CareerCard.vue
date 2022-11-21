@@ -53,7 +53,7 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Career>(Career.NAME, localStorage.getItem('token')!, career.value.id).then(() => {
+    Command.delete<Career>(Career.NAME, localStorage.getItem('token')!, { id: career.value.id }).then(() => {
         props.refresh();
         props.close();
     });

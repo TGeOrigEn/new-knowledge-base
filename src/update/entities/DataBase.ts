@@ -88,7 +88,9 @@ class Command {
     private static readonly CONNECTION_STRING: string = "http://194.87.232.70:5050/api";
 
     public static async verified() {
-        return (await axios.get<boolean>(`${Command.CONNECTION_STRING}/token`, { params: { token: localStorage.getItem("token") } })).data;
+        const token = (await axios.get<boolean>(`${Command.CONNECTION_STRING}/token`, { params: { token: localStorage.getItem("token") } })).data;
+        console.log(`asdasdasdasdasdasdasdasdasdasdasdadasdasdasdasdasd: ${token}`)
+        return token;
     }
 
     public static async login(login: string, password: string): Promise<string> {
@@ -102,7 +104,9 @@ class Command {
     }
 
     public static async delete<T>(table: string, token: string, condition: any): Promise<T | undefined> {
-        return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition, token: token } })).data;
+        const s = { ...condition, token: token };
+        console.log(s);
+        return await (await axios.delete<T>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition, token: token, } })).data;
     }
 
     public static async update<T>(table: string, token: string, id: number, source: T): Promise<T | undefined> {

@@ -90,7 +90,7 @@ function create() {
 
 function remove() {
     Command.delete<Link>(Link.NAME, localStorage.getItem('token')!, { activity_id: activity.value.id }).then(() => {
-        Command.delete<Activity>(Activity.NAME, localStorage.getItem('token')!, activity.value.id).then(() => {
+        Command.delete<Activity>(Activity.NAME, localStorage.getItem('token')!, { id: activity.value.id }).then(() => {
             props.refresh();
             props.close();
         });

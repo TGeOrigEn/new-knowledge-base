@@ -49,7 +49,7 @@ const beforeMount = onBeforeMount(() => {
 
 function remove() {
     Command.delete<Link>(Link.NAME, localStorage.getItem('token')!, { place_id: place.value.id }).then(() => {
-        Command.delete<Place>(Place.NAME, localStorage.getItem('token')!, place.value.id).then(() => {
+        Command.delete<Place>(Place.NAME, localStorage.getItem('token')!, { id: place.value.id }).then(() => {
             props.close();
         })
     });

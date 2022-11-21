@@ -507,7 +507,8 @@ function dateChange(e: string): string {
 
 <template>
 
-    <AuthorizationCard v-if="displayed.authorizationCard" :close="() => displayed.authorizationCard = false"></AuthorizationCard>
+    <AuthorizationCard v-if="displayed.authorizationCard" :close="() => displayed.authorizationCard = false">
+    </AuthorizationCard>
 
     <TextFilterCard v-if="displayed.textFilterState" :title="displayed.title" :filter="displayed.textFilter"
         :close="displayed.close" :remove="displayed.remove">
@@ -544,7 +545,8 @@ function dateChange(e: string): string {
     </div>
 
     <div style="position: absolute; top: 0; right: 0; padding: 10px; padding-right: 30px;">
-        <Button :src="'/user.svg'" class="x-button-def" style="width: 48px; height: 48px;" :onClick="() => displayed.authorizationCard = true"></Button>
+        <Button :src="'/user.svg'" class="x-button-def" style="width: 48px; height: 48px;"
+            :onClick="() => displayed.authorizationCard = true"></Button>
     </div>
 
     <div>

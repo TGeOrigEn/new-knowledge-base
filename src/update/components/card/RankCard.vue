@@ -43,7 +43,7 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Rank>(Rank.NAME, localStorage.getItem('token')!, rank.value.id).then(() => {
+    Command.delete<Rank>(Rank.NAME, localStorage.getItem('token')!, { id: rank.value.id }).then(() => {
         props.refresh();
         props.close();
     });

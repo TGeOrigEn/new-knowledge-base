@@ -35,7 +35,7 @@ const mounted = onBeforeMount(async () => { verified.value = await Command.verif
 
         <Body class="x-body">
             <TextField label="Логин:" v-model:value="login" />
-            <TextField label="Пароль:" v-model:value="password" />
+            <TextField label="Пароль:" type="password" v-model:value="password" />
         </Body>
 
         <Footer>

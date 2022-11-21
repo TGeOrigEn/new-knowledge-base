@@ -131,7 +131,7 @@ function create() {
 };
 
 function remove() {
-    Command.delete<Person>(Person.NAME, localStorage.getItem('token')!, person.value.id).then(() => {
+    Command.delete<Person>(Person.NAME, localStorage.getItem('token')!, { id: person.value.id }).then(() => {
         props.close();
     });
 };

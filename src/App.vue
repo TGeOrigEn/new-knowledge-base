@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import ViewPanel from './update/components/table/update/ViewPanel.vue';
-localStorage.setItem('token', '3h4XDBmkdBuVrnYhTGsBVR');
-localStorage.setItem('verified', 'false');
-console.log(localStorage.getItem('token'));
 console.log(localStorage.getItem('token'));
 </script>
 
