@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import ViewPanel from './update/components/table/update/ViewPanel.vue';
+
+localStorage.s = 1;
 </script>
 
 <template>
