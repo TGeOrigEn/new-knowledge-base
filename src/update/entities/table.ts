@@ -97,8 +97,6 @@ export const size = () => {
             currentColumn.style.width = getComputedPropertyValue(currentColumn, 'width');
         });
 
-        console.log(getComputedPropertyValue(currentColumn, 'width'));
-
         currentColumn.style.width = getComputedPropertyValue(currentColumn, 'width');
         currentColumns.forEach(column => column.style.width = getComputedPropertyValue(currentColumn, 'width'));
     }
