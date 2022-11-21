@@ -68,7 +68,7 @@ const beforeMount = onBeforeMount(() => {
         career.value = response;
     });
 
-    Command.select<Person>(Person.NAME, localStorage.getItem('token')!, { id: props.id }).then(response => {
+    Command.select<Person>(Person.NAME, { id: props.id }).then(response => {
         if (response == undefined) return;
         if (response.length == 0) return;
         person.value = response[0];
