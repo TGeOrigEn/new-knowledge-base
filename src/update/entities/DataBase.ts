@@ -85,7 +85,7 @@ import axios from "axios";
 
 class Command {
 
-    private static readonly CONNECTION_STRING: string = "https://gov-elite-bd.ru:8443/api";
+    private static readonly CONNECTION_STRING: string = "https://gov-elite-bd.ru:8443/";
 
     public static async verified() {
         const token = (await axios.get<boolean>(`${Command.CONNECTION_STRING}/token`, { params: { token: localStorage.getItem("token") } })).data;
