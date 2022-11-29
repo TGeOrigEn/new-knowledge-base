@@ -24,6 +24,18 @@ const props = defineProps({
     close: { type: Function, required: true },
     title: { type: String, required: true }
 });
+
+const options = ref([
+    "Главное управление Западной Сибири",
+    "Тобольская губерния",
+    "Томская губерния",
+    "Акмолинская область",
+    "Семипалатинская область",
+    "Семиреченская область",
+    "Степное генерал-губернаторство",
+    "Туркестанское генерал-губернаторство",
+    "Европейская Россия",
+    "Восточная сибирь"]);
 </script>
 
 <template>
@@ -36,7 +48,7 @@ const props = defineProps({
                     v-model:value="props.filter.equals.post" />
                 <TextField label="Дата начала:" :type="'date'" v-model:value="props.filter.equals.start_date" />
                 <TextField label="Дата окончания:" :type="'date'" v-model:value="props.filter.equals.end_date" />
-                <SelectField :options="[]" label="Место:" v-model:value="props.filter.equals.start_date" />
+                <SelectField :options="options" label="Место:" v-model:value="props.filter.equals.start_date" />
             </Section>
 
             <Section :isOpen="true" header="Содержится">
