@@ -303,18 +303,30 @@ function fCareerFilter(career: Career[]) {
         if (career.length == 0) return false;
 
         if (careerFilter.value.contains.post.length != 0) {
+
             if (career.filter(item => item.post.toLocaleLowerCase().includes(careerFilter.value!.contains.post.toLocaleLowerCase())).length == 0)
                 return false;
+
         } else if (careerFilter.value.equals.post.length != 0)
             if (career.filter(item => item.post.toLocaleLowerCase() === (careerFilter.value!.equals.post.toLocaleLowerCase())).length == 0)
                 return false;
 
         if (careerFilter.value!.equals.end_date.length != 0)
-            if (career.filter(item => item.end_date.toLocaleLowerCase() === (careerFilter.value!.equals.end_date.toLocaleLowerCase())).length == 0)
+            if (career.filter(item => {
+                var s = convertToDate(item.end_date);
+                var d = convertToDate(dateChange(careerFilter.value!.equals.end_date))!;
+                if (s == undefined) return false;
+                return s <= d;
+            }).length == 0)
                 return false;
 
         if (careerFilter.value!.equals.start_date.length != 0)
-            if (career.filter(item => item.start_date.toLocaleLowerCase() === (careerFilter.value!.equals.start_date.toLocaleLowerCase())).length == 0)
+        if (career.filter(item => {
+                var s = convertToDate(item.start_date);
+                var d = convertToDate(dateChange(careerFilter.value!.equals.start_date))!;
+                if (s == undefined) return false;
+                return s >= d;
+            }).length == 0)
                 return false;
 
         if (careerFilter.value!.equals.place.length != 0)
@@ -337,11 +349,21 @@ function fRankFilter(rank: Rank[]) {
                 return false;
 
         if (rankFilter.value!.equals.end_date.length != 0)
-            if (rank.filter(item => item.end_date.toLocaleLowerCase() === (rankFilter.value!.equals.end_date.toLocaleLowerCase())).length == 0)
+        if (rank.filter(item => {
+                var s = convertToDate(item.end_date);
+                var d = convertToDate(dateChange(rankFilter.value!.equals.end_date))!;
+                if (s == undefined) return false;
+                return s <= d;
+            }).length == 0)
                 return false;
 
         if (rankFilter.value!.equals.start_date.length != 0)
-            if (rank.filter(item => item.start_date.toLocaleLowerCase() === (rankFilter.value!.equals.start_date.toLocaleLowerCase())).length == 0)
+        if (rank.filter(item => {
+                var s = convertToDate(item.start_date);
+                var d = convertToDate(dateChange(rankFilter.value!.equals.start_date))!;
+                if (s == undefined) return false;
+                return s >= d;
+            }).length == 0)
                 return false;
 
         if (rankFilter.value!.equals.degree.length != 0)
@@ -536,6 +558,15 @@ async function openAccountWindow() {
 const page = ref(1);
 
 const items = ref<FullPerson[]>([]);
+
+function convertToDate(e: string) {
+    if (e.trim() === "НЕИЗВЕСТНО".trim()) return;
+
+    var s = e.split('.').map(s => parseInt(s));
+
+    console.log(`${new Date(s[2], s[1] - 1, s[0])} :: ${e}`);
+    return new Date(s[2], s[1] - 1, s[0]);
+}
 
 </script>
 
