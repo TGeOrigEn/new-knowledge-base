@@ -564,7 +564,6 @@ function convertToDate(e: string) {
 
     var s = e.split('.').map(s => parseInt(s));
 
-    console.log(`${new Date(s[2], s[1] - 1, s[0])} :: ${e}`);
     return new Date(s[2], s[1] - 1, s[0]);
 }
 
