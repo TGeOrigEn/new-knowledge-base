@@ -16,7 +16,6 @@ const props = defineProps({
             <div class="x-field-items-container">
                 <div class="x-dropdown-container">
                     <slot></slot>
-
                 </div>
             </div>
             <Button v-if="create != undefined" :disabled="readonly" :onClick="create" src="/plus.svg"

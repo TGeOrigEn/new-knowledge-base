@@ -683,18 +683,7 @@ async function openAccountWindow() {
                     </table>
                     <table id="table-body" style="width: 100%; border: 0">
                         <tbody style="width: 100%; display: block; max-height: 80vh; overflow: auto;">
-                            <!-- <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr> -->
-                            <tr v-for="item in     filterSearch()"
+                            <tr v-for="item in filterSearch()"
                                 :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
                                 <BiographyCell :person="item.person" />
                                 <EducationCell :value="item.person" />

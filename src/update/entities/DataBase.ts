@@ -98,8 +98,8 @@ class Command {
 
     public static async select<T>(table: string, condition?: any): Promise<T[] | undefined> {
         return condition == undefined
-            ? await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}/all`)).data
-            : await (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
+            ? (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}/all`)).data
+            : (await axios.get<T[]>(`${Command.CONNECTION_STRING}/${table}`, { params: { ...condition } })).data;
     }
 
     public static async delete<T>(table: string, token: string, condition: any): Promise<T | undefined> {
