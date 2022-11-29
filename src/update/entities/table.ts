@@ -49,8 +49,6 @@ export const size = () => {
             for (var i = 0; i < rows.length; i++)
                 nextColumns.push(rows[i].getElementsByTagName('td')[index + 1]);
 
-
-
         currentColumn.style.width = getComputedPropertyValue(currentColumn, 'width');
         currentColumns.forEach(column => column.style.width = getComputedPropertyValue(currentColumn, 'width'));
 

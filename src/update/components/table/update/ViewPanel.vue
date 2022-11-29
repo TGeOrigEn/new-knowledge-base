@@ -744,7 +744,7 @@ function convertToDate(e: string) {
                         :onClick="() => filterSearch().then(e => { items = e; page = 1; })"></Button>
                 </div>
                 <div
-                    style="margin-top: 5px; background-color: #f8f9fa; border: 1px solid #85858560; max-height: 80vh; min-height: 80vh; width: 97vw; overflow: auto; margin-left: auto; margin-right: auto;">
+                    style="margin-top: 5px; max-height: 80vh; min-height: 80vh; background-color: #f8f9fa; border: 1px solid #85858560; width: 97vw; overflow: hidden; overflow-x: auto; margin-left: auto; margin-right: auto;">
                     <table id="table-head" style="width: 100%; border: 0px solid black;">
                         <thead>
                             <tr>
@@ -761,7 +761,7 @@ function convertToDate(e: string) {
                         </thead>
                     </table>
                     <table id="table-body" style="width: 100%; border: 0">
-                        <tbody style="width: 100%; display: block; overflow: auto;">
+                        <tbody style="width: 100%; max-height: 80vh; min-height: 80vh; display: block; overflow: auto;">
                             <tr v-for="item in showPage()"
                                 :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
                                 <BiographyCell :person="item.person" />
