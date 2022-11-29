@@ -245,6 +245,8 @@ function filter(person: FullPerson): boolean {
     var property = true;
     var place = false;
 
+    console.log(propertyFilter.value);
+
     if (propertyFilter.value != undefined) {
         if (propertyFilter.value.contains.length != 0) {
             property = person.person.property.toLocaleLowerCase().trim().includes(propertyFilter.value.contains.toLocaleLowerCase().trim());
@@ -321,7 +323,7 @@ function fCareerFilter(career: Career[]) {
                 return false;
 
         if (careerFilter.value!.equals.start_date.length != 0)
-        if (career.filter(item => {
+            if (career.filter(item => {
                 var s = convertToDate(item.start_date);
                 var d = convertToDate(dateChange(careerFilter.value!.equals.start_date))!;
                 if (s == undefined) return false;
@@ -349,7 +351,7 @@ function fRankFilter(rank: Rank[]) {
                 return false;
 
         if (rankFilter.value!.equals.end_date.length != 0)
-        if (rank.filter(item => {
+            if (rank.filter(item => {
                 var s = convertToDate(item.end_date);
                 var d = convertToDate(dateChange(rankFilter.value!.equals.end_date))!;
                 if (s == undefined) return false;
@@ -358,7 +360,7 @@ function fRankFilter(rank: Rank[]) {
                 return false;
 
         if (rankFilter.value!.equals.start_date.length != 0)
-        if (rank.filter(item => {
+            if (rank.filter(item => {
                 var s = convertToDate(item.start_date);
                 var d = convertToDate(dateChange(rankFilter.value!.equals.start_date))!;
                 if (s == undefined) return false;
@@ -579,7 +581,8 @@ function convertToDate(e: string) {
         </AuthorizationCard>
 
         <TextFilterCard v-if="displayed.textFilterState" :title="displayed.title" :filter="displayed.textFilter"
-            :close="displayed.close" :remove="displayed.remove">
+            :close="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.close(); }"
+            :remove="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.remove(); }">
         </TextFilterCard>
 
         <CareerFilterCard v-if="displayed.careerFilter" :title="displayed.title" :filter="careerFilter!"
