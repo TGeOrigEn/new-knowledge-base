@@ -228,7 +228,7 @@ async function filterSearch() {
 
 function showPage() {
 
-    const s = Array.from(items.value).slice(page.value * 10 - 10, page.value * 10 + 1);
+    const s = Array.from(items.value).slice(page.value * 10 - 10, page.value * 10);
 
     return s;
 }
