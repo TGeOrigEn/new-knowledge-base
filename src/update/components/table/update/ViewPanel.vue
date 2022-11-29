@@ -117,105 +117,105 @@ async function filterSearch() {
     if (search.value === "") return s.filter(person => filter(person));
 
     s.filter(person => filter(person)).forEach(person => {
-        if (person.person.surname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.surname.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.name.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.patronymic.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.patronymic.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.date_birth.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.date_birth.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.religion.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.religion.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.origin.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.origin.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.level_education.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.level_education.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.educational_institution.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.educational_institution.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.location_educational_institution.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.location_educational_institution.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.property.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.property.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.awards.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.awards.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.salary.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.salary.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
-        if (person.person.marital_status.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+        if (person.person.marital_status.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
             array.push(person);
             return;
         }
         person.rank.forEach(rank => {
-            if (rank.degree.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (rank.degree.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
-            if (rank.end_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (rank.end_date.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
-            if (rank.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (rank.name.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
-            if (rank.start_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (rank.start_date.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
         })
         person.career.forEach(career => {
-            if (career.post.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (career.post.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
-            if (career.end_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (career.end_date.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
-            if (career.place.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (career.place.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
-            if (career.start_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (career.start_date.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
         })
         person.activity.forEach(activity => {
-            if (activity.activity.description.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+            if (activity.activity.description.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 if (array.includes(person)) array.push(person);
                 return;
             }
             activity.place.forEach(place => {
-                // if (place.description.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                // if (place.description.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                 //     if (!array.includes(person)) array.push(person);
                 //     return;
                 // }
-                if (place.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+                if (place.name.toLocaleLowerCase().trim().includes(search.value.toLocaleLowerCase().trim())) {
                     if (array.includes(person)) array.push(person);
                     return;
                 }
@@ -247,35 +247,35 @@ function filter(person: FullPerson): boolean {
 
     if (propertyFilter.value != undefined) {
         if (propertyFilter.value.contains.length != 0) {
-            property = person.person.property.toLocaleLowerCase().includes(propertyFilter.value.contains.toLocaleLowerCase());
-        } else if (propertyFilter.value.equals.length != 0) property = person.person.property.toLocaleLowerCase() === propertyFilter.value.equals.toLocaleLowerCase();
+            property = person.person.property.toLocaleLowerCase().trim().includes(propertyFilter.value.contains.toLocaleLowerCase().trim());
+        } else if (propertyFilter.value.equals.length != 0) property = person.person.property.toLocaleLowerCase().trim() === propertyFilter.value.equals.toLocaleLowerCase().trim();
     }
 
     if (awardsFilter.value != undefined) {
         if (awardsFilter.value.contains.length != 0) {
-            property = person.person.awards.toLocaleLowerCase().includes(awardsFilter.value.contains.toLocaleLowerCase());
-        } else if (awardsFilter.value.equals.length != 0) property = person.person.awards.toLocaleLowerCase() === awardsFilter.value.equals.toLocaleLowerCase();
+            property = person.person.awards.toLocaleLowerCase().trim().includes(awardsFilter.value.contains.toLocaleLowerCase().trim());
+        } else if (awardsFilter.value.equals.length != 0) property = person.person.awards.toLocaleLowerCase().trim() === awardsFilter.value.equals.toLocaleLowerCase().trim();
     }
 
     if (salaryFilter.value != undefined) {
         if (salaryFilter.value.contains.length != 0) {
-            salary = person.person.salary.toLocaleLowerCase().includes(salaryFilter.value.contains.toLocaleLowerCase());
-        } else if (salaryFilter.value.equals.length != 0) salary = person.person.salary.toLocaleLowerCase() === salaryFilter.value.equals.toLocaleLowerCase();
+            salary = person.person.salary.toLocaleLowerCase().trim().includes(salaryFilter.value.contains.toLocaleLowerCase().trim());
+        } else if (salaryFilter.value.equals.length != 0) salary = person.person.salary.toLocaleLowerCase().trim() === salaryFilter.value.equals.toLocaleLowerCase().trim();
     }
 
     if (marital_statusFilter.value != undefined) {
         if (marital_statusFilter.value.contains.length != 0) {
-            marital_status = person.person.marital_status.toLocaleLowerCase().includes(marital_statusFilter.value.contains.toLocaleLowerCase());
-        } else if (marital_statusFilter.value.equals.length != 0) marital_status = person.person.marital_status.toLocaleLowerCase() === marital_statusFilter.value.equals.toLocaleLowerCase();
+            marital_status = person.person.marital_status.toLocaleLowerCase().trim().includes(marital_statusFilter.value.contains.toLocaleLowerCase().trim());
+        } else if (marital_statusFilter.value.equals.length != 0) marital_status = person.person.marital_status.toLocaleLowerCase().trim() === marital_statusFilter.value.equals.toLocaleLowerCase().trim();
     }
 
     if (activityFilter.value != undefined) {
         if (person.activity.length == 0) return false;
 
         if (activityFilter.value.contains.length != 0) {
-            activity = person.activity.filter(item => item.activity.description.toLocaleLowerCase().includes(activityFilter.value!.contains.toLocaleLowerCase())).length != 0;
+            activity = person.activity.filter(item => item.activity.description.toLocaleLowerCase().trim().includes(activityFilter.value!.contains.toLocaleLowerCase().trim())).length != 0;
         } else if (activityFilter.value.equals.length != 0)
-            activity = person.activity.filter(item => item.activity.description.toLocaleLowerCase().includes(activityFilter.value!.equals.toLocaleLowerCase())).length != 0;
+            activity = person.activity.filter(item => item.activity.description.toLocaleLowerCase().trim().includes(activityFilter.value!.equals.toLocaleLowerCase().trim())).length != 0;
     }
 
     career = fCareerFilter(person.career);
@@ -304,11 +304,11 @@ function fCareerFilter(career: Career[]) {
 
         if (careerFilter.value.contains.post.length != 0) {
 
-            if (career.filter(item => item.post.toLocaleLowerCase().includes(careerFilter.value!.contains.post.toLocaleLowerCase())).length == 0)
+            if (career.filter(item => item.post.toLocaleLowerCase().trim().includes(careerFilter.value!.contains.post.toLocaleLowerCase().trim())).length == 0)
                 return false;
 
         } else if (careerFilter.value.equals.post.length != 0)
-            if (career.filter(item => item.post.toLocaleLowerCase() === (careerFilter.value!.equals.post.toLocaleLowerCase())).length == 0)
+            if (career.filter(item => item.post.toLocaleLowerCase().trim() === (careerFilter.value!.equals.post.toLocaleLowerCase().trim())).length == 0)
                 return false;
 
         if (careerFilter.value!.equals.end_date.length != 0)
@@ -330,7 +330,7 @@ function fCareerFilter(career: Career[]) {
                 return false;
 
         if (careerFilter.value!.equals.place.length != 0)
-            if (career.filter(item => item.place.toLocaleLowerCase() === (careerFilter.value!.equals.place.toLocaleLowerCase())).length == 0)
+            if (career.filter(item => item.place.toLocaleLowerCase().trim() === (careerFilter.value!.equals.place.toLocaleLowerCase().trim())).length == 0)
                 return false;
     }
     return true;
@@ -342,10 +342,10 @@ function fRankFilter(rank: Rank[]) {
         if (rank.length == 0) return false;
 
         if (rankFilter.value.contains.name.length != 0) {
-            if (rank.filter(item => item.name.toLocaleLowerCase().includes(rankFilter.value!.contains.name.toLocaleLowerCase())).length == 0)
+            if (rank.filter(item => item.name.toLocaleLowerCase().trim().includes(rankFilter.value!.contains.name.toLocaleLowerCase().trim())).length == 0)
                 return false;
         } else if (rankFilter.value.equals.name.length != 0)
-            if (rank.filter(item => item.name.toLocaleLowerCase() === (rankFilter.value!.equals.name.toLocaleLowerCase())).length == 0)
+            if (rank.filter(item => item.name.toLocaleLowerCase().trim() === (rankFilter.value!.equals.name.toLocaleLowerCase().trim())).length == 0)
                 return false;
 
         if (rankFilter.value!.equals.end_date.length != 0)
@@ -367,7 +367,7 @@ function fRankFilter(rank: Rank[]) {
                 return false;
 
         if (rankFilter.value!.equals.degree.length != 0)
-            if (rank.filter(item => item.degree.toLocaleLowerCase() === (rankFilter.value!.equals.degree.toLocaleLowerCase())).length == 0)
+            if (rank.filter(item => item.degree.toLocaleLowerCase().trim() === (rankFilter.value!.equals.degree.toLocaleLowerCase().trim())).length == 0)
                 return false;
     }
     return true;
@@ -376,17 +376,17 @@ function fRankFilter(rank: Rank[]) {
 function fPlaceFilter(rank: Place[]) {
     if (placeFilter.value != undefined) {
         if (placeFilter.value.contains.name.length != 0) {
-            if (rank.filter(item => item.name.toLocaleLowerCase().includes(placeFilter.value!.contains.name.toLocaleLowerCase())).length == 0)
+            if (rank.filter(item => item.name.toLocaleLowerCase().trim().includes(placeFilter.value!.contains.name.toLocaleLowerCase().trim())).length == 0)
                 return false;
         } else if (placeFilter.value.equals.name.length != 0)
-            if (rank.filter(item => item.name.toLocaleLowerCase() === (placeFilter.value!.equals.name.toLocaleLowerCase())).length == 0)
+            if (rank.filter(item => item.name.toLocaleLowerCase().trim() === (placeFilter.value!.equals.name.toLocaleLowerCase().trim())).length == 0)
                 return false;
 
         if (placeFilter.value.contains.description.length != 0) {
-            if (rank.filter(item => item.description.toLocaleLowerCase().includes(placeFilter.value!.contains.description.toLocaleLowerCase())).length == 0)
+            if (rank.filter(item => item.description.toLocaleLowerCase().trim().includes(placeFilter.value!.contains.description.toLocaleLowerCase().trim())).length == 0)
                 return false;
         } else if (placeFilter.value.equals.description.length != 0)
-            if (rank.filter(item => item.description.toLocaleLowerCase() === (placeFilter.value!.equals.description.toLocaleLowerCase())).length == 0)
+            if (rank.filter(item => item.description.toLocaleLowerCase().trim() === (placeFilter.value!.equals.description.toLocaleLowerCase().trim())).length == 0)
                 return false;
     }
     return true;
@@ -395,18 +395,18 @@ function fPlaceFilter(rank: Place[]) {
 function fEducationFilter(person: Person) {
     if (educationFilter.value != undefined) {
         if (educationFilter.value.contains.educational_institution.length != 0) {
-            if (!person.educational_institution.toLocaleLowerCase().includes(educationFilter.value!.contains.educational_institution.toLocaleLowerCase()))
+            if (!person.educational_institution.toLocaleLowerCase().trim().includes(educationFilter.value!.contains.educational_institution.toLocaleLowerCase().trim()))
                 return false;
         } else if (educationFilter.value.equals.educational_institution.length != 0)
-            if (person.educational_institution.toLocaleLowerCase() !== (educationFilter.value!.equals.educational_institution.toLocaleLowerCase()))
+            if (person.educational_institution.toLocaleLowerCase().trim() !== (educationFilter.value!.equals.educational_institution.toLocaleLowerCase().trim()))
                 return false;
 
         if (educationFilter.value!.equals.level_education.length != 0)
-            if (person.level_education.toLocaleLowerCase() !== (educationFilter.value!.equals.level_education.toLocaleLowerCase()))
+            if (person.level_education.toLocaleLowerCase().trim() !== (educationFilter.value!.equals.level_education.toLocaleLowerCase().trim()))
                 return false;
 
         if (educationFilter.value!.equals.location_educational_institution.length != 0)
-            if (person.location_educational_institution.toLocaleLowerCase() !== educationFilter.value!.equals.location_educational_institution.toLocaleLowerCase())
+            if (person.location_educational_institution.toLocaleLowerCase().trim() !== educationFilter.value!.equals.location_educational_institution.toLocaleLowerCase().trim())
                 return false;
     }
 
@@ -417,42 +417,42 @@ function fBiographyFilter(person: Person) {
     if (biographyFilter.value != undefined) {
 
         if (biographyFilter.value.contains.name.length != 0) {
-            if (!person.name.toLocaleLowerCase().includes(biographyFilter.value!.contains.name.toLocaleLowerCase()))
+            if (!person.name.toLocaleLowerCase().trim().includes(biographyFilter.value!.contains.name.toLocaleLowerCase().trim()))
                 return false;
         } else if (biographyFilter.value.equals.name.length != 0)
-            if (person.name.toLocaleLowerCase() !== (biographyFilter.value!.equals.name.toLocaleLowerCase()))
+            if (person.name.toLocaleLowerCase().trim() !== (biographyFilter.value!.equals.name.toLocaleLowerCase().trim()))
                 return false;
 
         if (biographyFilter.value.contains.date_birth.length != 0) {
-            if (!person.date_birth.toLocaleLowerCase().includes(biographyFilter.value!.contains.date_birth.toLocaleLowerCase()))
+            if (!person.date_birth.toLocaleLowerCase().trim().includes(biographyFilter.value!.contains.date_birth.toLocaleLowerCase().trim()))
                 return false;
         } else if (biographyFilter.value.equals.date_birth.length != 0)
-            if (person.date_birth.toLocaleLowerCase() !== (biographyFilter.value!.equals.date_birth.toLocaleLowerCase()))
+            if (person.date_birth.toLocaleLowerCase().trim() !== (biographyFilter.value!.equals.date_birth.toLocaleLowerCase().trim()))
                 return false;
 
         if (biographyFilter.value.contains.origin.length != 0) {
-            if (!person.origin.toLocaleLowerCase().includes(biographyFilter.value!.contains.origin.toLocaleLowerCase()))
+            if (!person.origin.toLocaleLowerCase().trim().includes(biographyFilter.value!.contains.origin.toLocaleLowerCase().trim()))
                 return false;
         } else if (biographyFilter.value.equals.origin.length != 0)
-            if (person.origin.toLocaleLowerCase() !== (biographyFilter.value!.equals.origin.toLocaleLowerCase()))
+            if (person.origin.toLocaleLowerCase().trim() !== (biographyFilter.value!.equals.origin.toLocaleLowerCase().trim()))
                 return false;
 
         if (biographyFilter.value.contains.patronymic.length != 0) {
-            if (!person.patronymic.toLocaleLowerCase().includes(biographyFilter.value!.contains.patronymic.toLocaleLowerCase()))
+            if (!person.patronymic.toLocaleLowerCase().trim().includes(biographyFilter.value!.contains.patronymic.toLocaleLowerCase().trim()))
                 return false;
         } else if (biographyFilter.value.equals.patronymic.length != 0)
-            if (person.patronymic.toLocaleLowerCase() !== (biographyFilter.value!.equals.patronymic.toLocaleLowerCase()))
+            if (person.patronymic.toLocaleLowerCase().trim() !== (biographyFilter.value!.equals.patronymic.toLocaleLowerCase().trim()))
                 return false;
 
         if (biographyFilter.value.contains.surname.length != 0) {
-            if (!person.surname.toLocaleLowerCase().includes(biographyFilter.value!.contains.surname.toLocaleLowerCase()))
+            if (!person.surname.toLocaleLowerCase().trim().includes(biographyFilter.value!.contains.surname.toLocaleLowerCase().trim()))
                 return false;
         } else if (biographyFilter.value.equals.surname.length != 0)
-            if (person.surname.toLocaleLowerCase() !== biographyFilter.value!.equals.surname.toLocaleLowerCase())
+            if (person.surname.toLocaleLowerCase().trim() !== biographyFilter.value!.equals.surname.toLocaleLowerCase().trim())
                 return false;
 
         if (biographyFilter.value!.equals.religion.length != 0)
-            if (person.religion.toLocaleLowerCase() !== biographyFilter.value!.equals.religion.toLocaleLowerCase())
+            if (person.religion.toLocaleLowerCase().trim() !== biographyFilter.value!.equals.religion.toLocaleLowerCase().trim())
                 return false;
     }
     return true;
