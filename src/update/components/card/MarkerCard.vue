@@ -74,8 +74,8 @@ function save() {
             <Section :isOpen="true" header="Место">
                 <TextAreaField label="Название:" :readonly="readonly" v-model:value="place.name" />
                 <TextAreaField label="Описание:" :readonly="readonly" v-model:value="place.description" />
-                <TextField label="Долгота:" :readonly="readonly" v-model:value="place.longitude" />
                 <TextField label="Широта:" :readonly="readonly" v-model:value="place.latitude" />
+                <TextField label="Долгота:" :readonly="readonly" v-model:value="place.longitude" />
             </Section>
 
             <Section :isOpen="true" header="Личности">

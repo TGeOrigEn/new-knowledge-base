@@ -24,6 +24,9 @@ const props = defineProps({
     close: { type: Function, required: true },
     title: { type: String, required: true }
 });
+
+const options = ref(["Без класса", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]);
+
 </script>
 
 <template>
@@ -36,7 +39,7 @@ const props = defineProps({
                     v-model:value="props.filter.equals.name" />
                 <TextField label="Дата начала:" :type="'date'" v-model:value="props.filter.equals.start_date" />
                 <TextField label="Дата окончания:" :type="'date'" v-model:value="props.filter.equals.end_date" />
-                <SelectField :options="[]" label="Место:" v-model:value="props.filter.equals.start_date" />
+                <SelectField label="Класс:" :options="options" v-model:value="props.filter.equals.degree" />
             </Section>
 
             <Section :isOpen="true" header="Содержится">

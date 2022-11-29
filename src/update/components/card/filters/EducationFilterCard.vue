@@ -24,6 +24,10 @@ const props = defineProps({
     close: { type: Function, required: true },
     title: { type: String, required: true }
 });
+
+const educationOptions = ref(["Нет образования", "Начальное образование", "Домашнее образование", "Среднее образование", "Среднее военное образование", "Высшее образование", "Высшее военное образование"]);
+const locationOptions = ref(["Неизвестно", "Европейская часть", "Сибирь"]);
+
 </script>
 
 <template>
@@ -35,9 +39,9 @@ const props = defineProps({
                 <TextField label="Учебное учреждение:"
                     :disabled="props.filter.contains.educational_institution.length != 0"
                     v-model:value="props.filter.equals.educational_institution" />
-                <SelectField :options="[]" label="Уровень образования:"
+                <SelectField :options="educationOptions" label="Уровень образования:"
                     v-model:value="props.filter.equals.level_education" />
-                <SelectField :options="[]" label="Место учёбы:"
+                <SelectField :options="locationOptions" label="Место учёбы:"
                     v-model:value="props.filter.equals.location_educational_institution" />
             </Section>
 

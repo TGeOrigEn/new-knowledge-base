@@ -102,13 +102,21 @@ async function refresh() {
         const fullActivity = bActivity.map(activity => new FullActivity(activity, place.value.filter(item => link.value.filter(link => link.activity_id == activity.id).map(link => link.place_id).includes(item.id))));
         fullPerson.value.push(new FullPerson(person, fullActivity, bCareer, bRank));
     });
+
+    items.value = Array.from(fullPerson.value);
+
+    filterSearch().then(e => { items.value = e; page.value = 1; });
 }
 
-function filterSearch() {
-    if (search.value === "") return fullPerson.value.filter(person => filter(person));
+async function filterSearch() {
+
+
+    const s = Array.from(fullPerson.value);
     const array: FullPerson[] = [];
 
-    fullPerson.value.filter(person => filter(person)).forEach(person => {
+    if (search.value === "") return s.filter(person => filter(person));
+
+    s.filter(person => filter(person)).forEach(person => {
         if (person.person.surname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
             array.push(person);
             return;
@@ -163,43 +171,43 @@ function filterSearch() {
         }
         person.rank.forEach(rank => {
             if (rank.degree.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
             if (rank.end_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
             if (rank.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
             if (rank.start_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
         })
         person.career.forEach(career => {
             if (career.post.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
             if (career.end_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
             if (career.place.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
             if (career.start_date.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
         })
         person.activity.forEach(activity => {
             if (activity.activity.description.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                if (!array.includes(person)) array.push(person);
+                if (array.includes(person)) array.push(person);
                 return;
             }
             activity.place.forEach(place => {
@@ -208,7 +216,7 @@ function filterSearch() {
                 //     return;
                 // }
                 if (place.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-                    if (!array.includes(person)) array.push(person);
+                    if (array.includes(person)) array.push(person);
                     return;
                 }
             })
@@ -216,6 +224,13 @@ function filterSearch() {
     })
 
     return array;
+}
+
+function showPage() {
+
+    const s = Array.from(items.value).slice(page.value * 10 - 10, page.value * 10 + 1);
+
+    return s;
 }
 
 function filter(person: FullPerson): boolean {
@@ -423,7 +438,10 @@ function fBiographyFilter(person: Person) {
 
 const verified = ref(false);
 
-const mounted = onUpdated(async () => { size(); verified.value = await Command.verified(); });
+const mounted = onUpdated(async () => {
+    size();
+    verified.value = await Command.verified();
+});
 
 const activityFilter = ref<TextFilter | undefined>();
 const biographyFilter = ref<BiographyFilter | undefined>();
@@ -514,6 +532,11 @@ async function openAccountWindow() {
         displayed.value.alertCard = true;
     else displayed.value.authorizationCard = true;
 }
+
+const page = ref(1);
+
+const items = ref<FullPerson[]>([]);
+
 </script>
 
 <template>
@@ -530,24 +553,34 @@ async function openAccountWindow() {
         </TextFilterCard>
 
         <CareerFilterCard v-if="displayed.careerFilter" :title="displayed.title" :filter="careerFilter!"
-            :close="displayed.close" :remove="displayed.remove"></CareerFilterCard>
+            :close="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.close(); }"
+            :remove="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.remove(); }">
+        </CareerFilterCard>
 
         <RankFilterCard v-if="displayed.rankFilter" :title="displayed.title" :filter="rankFilter!"
-            :close="displayed.close" :remove="displayed.remove"></RankFilterCard>
+            :close="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.close(); }"
+            :remove="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.remove(); }">
+        </RankFilterCard>
 
         <PlaceFilterCard v-if="displayed.placeFilter" :title="displayed.title" :filter="placeFilter!"
-            :close="displayed.close" :remove="displayed.remove"></PlaceFilterCard>
+            :close="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.close(); }"
+            :remove="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.remove(); }">
+        </PlaceFilterCard>
 
         <EducationFilterCard v-if="displayed.educationFilter" :title="displayed.title" :filter="educationFilter!"
-            :close="displayed.close" :remove="displayed.remove"></EducationFilterCard>
+            :close="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.close(); }"
+            :remove="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.remove(); }">
+        </EducationFilterCard>
 
         <BiographyFilterCard v-if="displayed.biographyFilter" :title="displayed.title" :filter="biographyFilter!"
-            :close="displayed.close" :remove="displayed.remove">></BiographyFilterCard>
+            :close="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.close(); }"
+            :remove="() => { filterSearch().then(e => { items = e; page = 1; }); displayed.remove(); }">>
+        </BiographyFilterCard>
 
         <PersonCard v-if="card.disabled" :readonly="!verified" :id="card.id" :close="() => card.disabled = false">
         </PersonCard>
 
-        <MapCard v-if="map" :place="place" :readonly="!verified" :person="filterSearch()" :close="() => map = false">
+        <MapCard v-if="map" :place="place" :readonly="!verified" :person="items" :close="() => map = false">
         </MapCard>
 
         <div v-if="forceUpdate"></div>
@@ -577,43 +610,53 @@ async function openAccountWindow() {
 
                         <Item v-if="biographyFilter != undefined" :readonly="false"
                             :open="() => { displayed.title = 'Фильтр: Биография'; displayed.remove = () => { displayed.biographyFilter = false; biographyFilter = undefined; }; displayed.close = () => displayed.biographyFilter = false; displayed.biographyFilter = true; }"
-                            :text="'Биография'" :remove="() => biographyFilter = undefined" />
+                            :text="'Биография'"
+                            :remove="() => { biographyFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="educationFilter != undefined" :readonly="false"
                             :open="() => { displayed.title = 'Фильтр: Образование'; displayed.remove = () => { displayed.educationFilter = false; educationFilter = undefined; }; displayed.close = () => displayed.educationFilter = false; displayed.educationFilter = true; }"
-                            :text="'Образование'" :remove="() => educationFilter = undefined" />
+                            :text="'Образование'"
+                            :remove="() => { educationFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="awardsFilter != undefined" :readonly="false"
                             :open="() => { displayed.textFilter = awardsFilter!; displayed.title = 'Фильтр: Награды'; displayed.remove = () => { displayed.textFilterState = false; awardsFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Награды'" :remove="() => awardsFilter = undefined" />
+                            :text="'Награды'"
+                            :remove="() => { awardsFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="salaryFilter != undefined" :readonly="false"
                             :open="() => { displayed.textFilter = salaryFilter!; displayed.title = 'Фильтр: Жалование'; displayed.remove = () => { displayed.textFilterState = false; salaryFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Жалование'" :remove="() => salaryFilter = undefined" />
+                            :text="'Жалование'"
+                            :remove="() => { salaryFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="propertyFilter != undefined" :readonly="false"
                             :open="() => { displayed.textFilter = propertyFilter!; displayed.title = 'Фильтр: Имущество'; displayed.remove = () => { displayed.textFilterState = false; propertyFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Имущество'" :remove="() => propertyFilter = undefined" />
+                            :text="'Имущество'"
+                            :remove="() => { propertyFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="marital_statusFilter != undefined" :readonly="false"
                             :open="() => { displayed.textFilter = marital_statusFilter!; displayed.title = 'Фильтр: Семейное положение'; displayed.remove = () => { displayed.textFilterState = false; marital_statusFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Семейное положение'" :remove="() => marital_statusFilter = undefined" />
+                            :text="'Семейное положение'"
+                            :remove="() => { marital_statusFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="careerFilter != undefined" :readonly="false"
                             :open="() => { displayed.title = 'Фильтр: Карьера'; displayed.remove = () => { displayed.careerFilter = false; careerFilter = undefined; }; displayed.close = () => displayed.careerFilter = false; displayed.careerFilter = true; }"
-                            :text="'Карьера'" :remove="() => careerFilter = undefined" />
+                            :text="'Карьера'"
+                            :remove="() => { careerFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="rankFilter != undefined" :readonly="false"
                             :open="() => { displayed.title = 'Фильтр: Чин'; displayed.remove = () => { displayed.rankFilter = false; rankFilter = undefined; }; displayed.close = () => displayed.rankFilter = false; displayed.rankFilter = true; }"
-                            :text="'Чин'" :remove="() => rankFilter = undefined" />
+                            :text="'Чин'"
+                            :remove="() => { rankFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="activityFilter != undefined" :readonly="false"
                             :open="() => { displayed.textFilter = activityFilter!; displayed.title = 'Фильтр: Деятельность'; displayed.remove = () => { displayed.textFilterState = false; activityFilter = undefined; }; displayed.close = () => displayed.textFilterState = false; displayed.textFilterState = true; }"
-                            :text="'Деятельность'" :remove="() => activityFilter = undefined" />
+                            :text="'Деятельность'"
+                            :remove="() => { activityFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Item v-if="placeFilter != undefined" :readonly="false"
                             :open="() => { displayed.title = 'Фильтр: Место'; displayed.remove = () => { displayed.placeFilter = false; placeFilter = undefined; }; displayed.close = () => displayed.placeFilter = false; displayed.placeFilter = true; }"
-                            :text="'Место'" :remove="() => placeFilter = undefined" />
+                            :text="'Место'"
+                            :remove="() => { placeFilter = undefined; filterSearch().then(e => { items = e; page = 1; }); }" />
 
                         <Dropdown
                             v-if="activityFilter == undefined || biographyFilter == undefined || careerFilter == undefined || educationFilter == undefined || rankFilter == undefined || marital_statusFilter == undefined || salaryFilter == undefined || awardsFilter == undefined || propertyFilter == undefined || placeFilter == undefined">
@@ -662,10 +705,13 @@ async function openAccountWindow() {
                     </Filter>
                     <Search v-model:value="search" :placeholder="'Поиск по тексту в таблице...'"
                         style="flex: 1; height: 20px; margin-left: auto;">
+
                     </Search>
+                    <Button :src="'/search.svg'" class="x-button-def"
+                        :onClick="() => filterSearch().then(e => { items = e; page = 1; })"></Button>
                 </div>
                 <div
-                    style="margin-top: 5px; border: 1px solid #85858560; width: 97vw; overflow: auto; margin-left: auto; margin-right: auto;">
+                    style="margin-top: 5px; background-color: #f8f9fa; border: 1px solid #85858560; max-height: 80vh; min-height: 80vh; width: 97vw; overflow: auto; margin-left: auto; margin-right: auto;">
                     <table id="table-head" style="width: 100%; border: 0px solid black;">
                         <thead>
                             <tr>
@@ -682,8 +728,8 @@ async function openAccountWindow() {
                         </thead>
                     </table>
                     <table id="table-body" style="width: 100%; border: 0">
-                        <tbody style="width: 100%; display: block; max-height: 80vh; overflow: auto;">
-                            <tr v-for="item in filterSearch()"
+                        <tbody style="width: 100%; display: block; overflow: auto;">
+                            <tr v-for="item in showPage()"
                                 :ondblclick="() => { card.id = item.person.id; card.disabled = true; }">
                                 <BiographyCell :person="item.person" />
                                 <EducationCell :value="item.person" />
@@ -698,18 +744,22 @@ async function openAccountWindow() {
                         </tbody>
                     </table>
                 </div>
-                <div style="display:none;">
+                <div>
                     <div
                         style="background-color: #f8f9fa; align-items: center;  text-align: center;  justify-content: center;  margin-top: 15px; border: 1px solid #85858560; width: max-content; display: flex; margin-left: auto; margin-right: auto;">
                         <div
                             style="background-color: #f8f9fa;    display: flex; align-items: center; margin-right: auto;">
-                            <Button style="transform:rotate(180deg); padding: 7.5px;" class="x-button-def"
-                                src="/double-arrow.svg"></Button>
-                            <Button style="transform:rotate(90deg)" class="x-button-def" src="/arrow.svg"></Button>
-                            <Search style="width: 17px; text-align: center;"></Search>
-                            <div> из 20</div>
-                            <Button style="transform:rotate(270deg)" class="x-button-def" src="/arrow.svg"></Button>
-                            <Button style="transform:rotate(0deg); padding: 7.5px;" class="x-button-def"
+                            <Button @click="() => { page = 1 }" style="transform:rotate(180deg); padding: 7.5px;"
+                                class="x-button-def" src="/double-arrow.svg"></Button>
+                            <Button @click="() => { if (page > 1) page-- }" style="transform:rotate(90deg)"
+                                class="x-button-def" src="/arrow.svg"></Button>
+                            <div>{{ page }} из {{ Math.floor(items.length / 10) == 0 ? 1 : Math.floor(items.length / 10)
+                            }}</div>
+                            <Button @click="() => { if (page < Math.floor(items.length / 10)) page++ }"
+                                style="transform:rotate(270deg)" class="x-button-def" src="/arrow.svg"></Button>
+                            <Button
+                                @click="() => { page = Math.floor(items.length / 10) == 0 ? 1 : Math.floor(items.length / 10) }"
+                                style="transform:rotate(0deg); padding: 7.5px;" class="x-button-def"
                                 src="/double-arrow.svg"></Button>
                         </div>
                     </div>

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue';
 
-import { Command, FullPerson, Link, Person, Place, Rank } from '../../../entities/DataBase';
-
-import TextAreaField from '../../fields/TextAreaField.vue';
 import ButtonGroup from '../../buttons/ButtonGroup.vue';
 import TextField from '../../fields/TextField.vue';
 import Footer from '../../windows/Footer.vue';
@@ -11,11 +8,7 @@ import Button from '../../buttons/Button.vue';
 import Window from '../../windows/Window.vue';
 import Body from '../../windows/Body.vue';
 import Section from '../../Section.vue';
-import DropdownField from '../../fields/dropdown/DropdownField.vue';
-import Item from '../../fields/list/Item.vue';
-import List from '../../fields/list/List.vue';
-import PersonCard from '../PersonCard.vue';
-import { BiographyFilter, TextFilter } from '@/update/entities/Filter';
+import { BiographyFilter } from '@/update/entities/Filter';
 import SelectField from '../../fields/SelectField.vue';
 
 const props = defineProps({
@@ -24,6 +17,8 @@ const props = defineProps({
     close: { type: Function, required: true },
     title: { type: String, required: true }
 });
+
+const religionOptions = ref(["Православное", "Римско-католическое", "Евангельско-лютеранское", "Иное"]);
 </script>
 
 <template>
@@ -40,7 +35,8 @@ const props = defineProps({
                     v-model:value="props.filter.equals.patronymic" />
                 <TextField label="Дата рождения:" :disabled="props.filter.contains.date_birth.length != 0"
                     v-model:value="props.filter.equals.date_birth" />
-                <SelectField :options="[]" label="Вероисповедание:" v-model:value="props.filter.equals.religion" />
+                <SelectField :options="religionOptions" label="Вероисповедание:"
+                    v-model:value="props.filter.equals.religion" />
                 <TextField label="Происхождение:" :disabled="props.filter.contains.origin.length != 0"
                     v-model:value="props.filter.equals.origin" />
             </Section>

@@ -41,7 +41,7 @@ const card = ref({
 
                 <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
                 <l-marker v-for="marker in place" :onClick="() => { card.id = marker.id; card.displayed = true; }"
-                    :lat-lng="[marker.longitude, marker.latitude]">
+                    :lat-lng="[marker.latitude, marker.longitude]">
                 </l-marker>
             </l-map>
         </Body>
